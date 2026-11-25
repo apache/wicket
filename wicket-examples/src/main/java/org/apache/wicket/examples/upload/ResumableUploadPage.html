@@ -1,0 +1,34 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+	<wicket:extend>
+		<fieldset>
+			<legend>Upload files in chunks to a <em>mounted resource</em></legend>
+			<div wicket:id="dropZone" class="upload-drop-zone">
+				<p>Drop files here, or choose them: each goes as soon as it is chosen.</p>
+				<p>
+					<label wicket:for="files">Files</label>
+					<input wicket:id="files" type="file" multiple="multiple"/>
+				</p>
+				<ul wicket:id="fileList" class="file-list resumable-file-list"></ul>
+			</div>
+			<button wicket:id="pause" type="button">Pause all</button>
+			<button wicket:id="resume" type="button">Resume all</button>
+			<button wicket:id="cancel" type="button">Cancel all</button>
+		</fieldset>
+		<div wicket:id="feedback"></div>
+		<div wicket:id="tracked">
+			<h3>Your uploads, as the server keeps track of them</h3>
+			<ul class="received">
+				<li wicket:id="uploads"><span wicket:id="name"></span>: <span wicket:id="state"></span>
+					<a wicket:id="take" href="#">Take</a></li>
+			</ul>
+		</div>
+		<div wicket:id="received">
+			<h3>Files received</h3>
+			<ul class="received">
+				<li wicket:id="files"><span wicket:id="file"></span></li>
+			</ul>
+		</div>
+	</wicket:extend>
+</body>
+</html>

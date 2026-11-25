@@ -16,8 +16,12 @@
  */
 package org.apache.wicket.examples.upload;
 
+import java.time.Duration;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.extensions.ajax.markup.html.form.upload.resumable.HmacGrantSigner;
+import org.apache.wicket.extensions.ajax.markup.html.form.upload.resumable.ResumableUploadResourceReference;
 import org.apache.wicket.markup.html.form.upload.resource.FileUploadResourceReference;
 import org.apache.wicket.markup.html.form.upload.resource.FolderUploadsFileManager;
 import org.apache.wicket.markup.html.form.upload.resource.IUploadsFileManager;
@@ -35,6 +39,8 @@ public class UploadApplication extends WicketExampleApplication
 	private Folder uploadFolder = null;
 
 	private IUploadsFileManager uploadsFileManager;
+
+	private final VisitorUploadsTracker uploadsTracker = new VisitorUploadsTracker();
 
 	@Override
 	public Class<? extends Page> getHomePage()
@@ -64,16 +70,46 @@ public class UploadApplication extends WicketExampleApplication
 		uploadsFileManager = new FolderUploadsFileManager(uploadFolder);
 
 		mountResource("/uploads", FileUploadResourceReference.createNewInstance(uploadsFileManager));
+		mountResource("/resumable-uploads",
+			new ResumableUploadResourceReference(uploadsFileManager)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected String getCurrentOwner()
+				{
+					// the visitor, known by a cookie: the uploads outlive the session
+					String visitor = UploadVisitor.owner();
+					return visitor != null ? visitor : super.getCurrentOwner();
+				}
+			}
+				.setMaxFileSize(Bytes.megabytes(200))
+				.setMaxChunkSize(Bytes.megabytes(1))
+				// a key of the application rather than one of each session: a page goes on with
+				// the uploads of its owner after the session that rendered it ended
+				.setGrantSigner(HmacGrantSigner.random())
+				// kept a day for the visitor, and listed on the page
+				.setOwnerExpiry(Duration.ofDays(1))
+				.setUploadsTracker(uploadsTracker));
 
 		mountPage("/multi", MultiUploadPage.class);
 		mountPage("/single", UploadPage.class);
 		mountPage("/uploadToResource", UploadToResourcePage.class);
+		mountPage("/resumableUpload", ResumableUploadPage.class);
 
 		getApplicationSettings().setUploadProgressUpdatesEnabled(true);
 	}
 
 	public IUploadsFileManager getUploadsFileManager() {
 		return uploadsFileManager;
+	}
+
+	/**
+	 * @return what keeps track of the resumable uploads of the visitors
+	 */
+	public VisitorUploadsTracker getUploadsTracker()
+	{
+		return uploadsTracker;
 	}
 
 	public static UploadApplication getInstance() {
