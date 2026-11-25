@@ -147,9 +147,6 @@ public class UrlRenderer
 		{
 			Url base = new Url(baseUrl);
 			base.resolveRelative(url);
-			// resolveRelative() keeps the fragment of the base url, the rendered url needs the one
-			// of the url being rendered
-			base.setFragment(url.getFragment());
 			path = new StringBuilder(base.toString());
 		}
 

@@ -1055,7 +1055,8 @@ public class Url implements Serializable
 	 * Makes this url the result of resolving the {@code relative} url against this url.
 	 * <p>
 	 * Segments will be properly resolved, handling any {@code ..} references, while the query
-	 * parameters will be completely replaced with {@code relative}'s query parameters.
+	 * parameters and the fragment will be completely replaced with {@code relative}'s query
+	 * parameters and fragment.
 	 * </p>
 	 * <p>
 	 * For example:
@@ -1128,6 +1129,8 @@ public class Url implements Serializable
 		// replace query params with the ones from relative
 		parameters.clear();
 		parameters.addAll(relative.getQueryParameters());
+
+		fragment = relative.getFragment();
 	}
 
 	/**
