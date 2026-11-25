@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -38,13 +39,12 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.Request;
+import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.openjson.JSONArray;
@@ -54,6 +54,9 @@ import com.github.openjson.JSONObject;
  * Implementation of FileUploadField capable to uploading a file into a wicket mounted resource.
  * This field does not require a {@link org.apache.wicket.markup.html.form.Form}!
  * The upload of the file id done via the {@link #startUpload(IPartialPageRequestHandler)} method.
+ * <p>
+ * A {@link FileDropZoneBehavior} makes a component a zone the files to upload can be dropped on,
+ * and a {@link FileListBehavior} lists the files chosen, which then add up over several choices.
  */
 public abstract class FileUploadToResourceField extends FileUploadField
 {
@@ -189,9 +192,29 @@ public abstract class FileUploadToResourceField extends FileUploadField
         }
     }
 
-    private static final JavaScriptResourceReference JS = new JavaScriptResourceReference(FileUploadToResourceField.class, "FileUploadToResourceField.js");
+    static final JavaScriptResourceReference JS = new JavaScriptResourceReference(FileUploadToResourceField.class, "FileUploadToResourceField.js");
 
     public static String UPLOAD_CANCELED = "upload.canceled";
+
+    /**
+     * The resource key of the text of an upload that failed for a reason other than a limit.
+     *
+     * @since 10.13.0
+     */
+    public static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadToResourceFailed";
+
+    /**
+     * The resource key of the text of an upload whose connection broke off before the server
+     * answered, which the browser reports under this key.
+     *
+     * @since 10.13.0
+     */
+    public static final String CONNECTION_LOST_RESOURCE_KEY = "uploadConnectionLost";
+
+    private static final Set<String> ERROR_RESOURCE_KEYS = Set.of(
+        AbstractFileUploadResource.NO_FILE_SELECTED, CONNECTION_LOST_RESOURCE_KEY,
+        Form.UPLOAD_TOO_LARGE_RESOURCE_KEY, Form.UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY,
+        Form.UPLOAD_TOO_MANY_FILES_RESOURCE_KEY);
 
 
     private static abstract class FileModel implements IModel<List<UploadInfo>>
@@ -278,10 +301,10 @@ public abstract class FileUploadToResourceField extends FileUploadField
             @Override
             protected void respond(AjaxRequestTarget target)
             {
-                Request request = RequestCycle.get().getRequest();
-                boolean error = request.getRequestParameters().getParameterValue("error").toBoolean(true);
+                IRequestParameters parameters = RequestCycle.get().getRequest().getRequestParameters();
+                boolean error = parameters.getParameterValue("error").toBoolean(true);
                 if (!error) {
-                    String filesIfo = request.getRequestParameters().getParameterValue("filesInfo").toString();
+                    String filesIfo = parameters.getParameterValue("filesInfo").toString();
                     List<UploadInfo> reportedInfos = UploadInfo.fromJson(filesIfo);
                     if (getFileCountMax() > -1 && reportedInfos.size() > getFileCountMax())
                     {
@@ -299,14 +322,14 @@ public abstract class FileUploadToResourceField extends FileUploadField
                 }
                 else
                 {
-                    String errorMessage = request.getRequestParameters().getParameterValue("errorMessage").toString(null);
-                    if (UPLOAD_CANCELED.equals(errorMessage))
+                    String errorKey = parameters.getParameterValue("errorMessage").toString(null);
+                    if (UPLOAD_CANCELED.equals(errorKey))
                     {
                         onUploadCanceled(target);
                     }
                     else
                     {
-                        reportFailure(target, errorMessage);
+                        reportFailure(target, errorKey);
                     }
                 }
             }
@@ -314,27 +337,36 @@ public abstract class FileUploadToResourceField extends FileUploadField
         add(ajaxBehavior);
     }
 
-    private void reportFailure(AjaxRequestTarget target, String errorMessage)
+    private void reportFailure(AjaxRequestTarget target, String errorKey)
     {
         fileUploadInfos = new ArrayList<>();
-        if (AbstractFileUploadResource.NO_FILE_SELECTED.equals(errorMessage))
-        {
-            errorMessage = getString(AbstractFileUploadResource.NO_FILE_SELECTED);
-        }
-        else
-        {
-            final Map<String, Object> model = new HashMap<>();
-            if (Strings.isEmpty(errorMessage)) {
-                errorMessage = "uploadTooLarge";
-            }
-            model.put("exception", errorMessage);
-            model.put("maxSize", getMaxSize());
-            model.put("fileMaxSize", getFileMaxSize());
-            model.put("fileCountMax", getFileCountMax());
-            errorMessage = getString(errorMessage, Model.ofMap(model));
-        }
+        String errorMessage = getUploadErrorMessage(errorKey);
         error(errorMessage);
         onUploadFailure(target, errorMessage);
+    }
+
+    /**
+     * Words the error of a failed upload, which {@link #onUploadFailure(AjaxRequestTarget, String)}
+     * then receives. The key comes from the browser, which can send any, so it is never looked up
+     * as given: a key this method does not know gets the text of
+     * {@link #UPLOAD_FAILED_RESOURCE_KEY}. An override words the keys it knows, such as those its
+     * own script reports, and leaves the others to this method.
+     *
+     * @param errorKey
+     *            the key of the error the browser reported, or {@code null}
+     * @return the text of a limit, of no files selected or of
+     *         {@link #CONNECTION_LOST_RESOURCE_KEY}, else that of {@link #UPLOAD_FAILED_RESOURCE_KEY}
+     * @since 10.13.0
+     */
+    protected String getUploadErrorMessage(String errorKey)
+    {
+        final Map<String, Object> model = new HashMap<>();
+        model.put("maxSize", getMaxSize());
+        model.put("fileMaxSize", getFileMaxSize());
+        model.put("fileCountMax", getFileCountMax());
+        String key = errorKey != null && ERROR_RESOURCE_KEYS.contains(errorKey) ? errorKey
+            : UPLOAD_FAILED_RESOURCE_KEY;
+        return getString(key, Model.ofMap(model));
     }
 
     private List<UploadInfo> getFileUploadInfos()
@@ -381,7 +413,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
      *  Override to do something on a non successful upload
      *
      * @param target The {@link AjaxRequestTarget}
-     * @param errorInfo The cause of the failure
+     * @param errorInfo The cause of the failure, as {@link #getUploadErrorMessage(String)} words it
      */
     protected void onUploadFailure(AjaxRequestTarget target, String errorInfo)
     {
@@ -518,7 +550,10 @@ public abstract class FileUploadToResourceField extends FileUploadField
     }
 
     /**
-     * Starts the upload via an AJAX request.
+     * Starts the upload via an AJAX request. Only one upload of the field runs at a time: while one
+     * runs, starting another one does nothing. Files beyond the limits of the field are not sent:
+     * {@link #onUploadFailure(AjaxRequestTarget, String)} is called with the text of the limit
+     * instead.
      *
      * @param target The {@link AjaxRequestTarget}
      */
@@ -545,13 +580,13 @@ public abstract class FileUploadToResourceField extends FileUploadField
     }
 
     /**
-     * See jQuery.ajax documentation.
-     *
-     * @return A JavaScript function to be executed on beforeSend the upload request.
+     * @return A JavaScript function called with the {@code XMLHttpRequest} of the upload before it
+     *         is sent. If it returns {@code false}, the upload is not sent, and
+     *         {@link #onUploadCanceled(AjaxRequestTarget)} is called.
      */
     protected CharSequence getClientBeforeSendCallBack()
     {
-        return "function (xhr, settings) { return true; }";
+        return "function (xhr) { return true; }";
     }
 
     /**
@@ -565,7 +600,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
 
     /**
      * @return A JavaScript function to be executed on upload canceled. This is, besides the normal wicket
-     * AJAX request (see {@link #onUploadFailure(AjaxRequestTarget, String)}).
+     * AJAX request (see {@link #onUploadCanceled(AjaxRequestTarget)}).
      */
     protected CharSequence getClientSideCancelCallBack()
     {
@@ -573,9 +608,10 @@ public abstract class FileUploadToResourceField extends FileUploadField
     }
 
     /**
-     * @return A JavaScript function to be executed on upload canceled. This is, besides the normal wicket
+     * @return A JavaScript function to be executed on upload failed. This is, besides the normal wicket
      * AJAX request (see {@link #onUploadFailure(AjaxRequestTarget, String)}). It receives as parameter a JSON object
-     * like <code>{'error': true, errorMessage: 'xxx'}</code>.
+     * like <code>{'error': true, errorMessage: 'uploadTooLarge'}</code>, where {@code errorMessage} is the
+     * resource key of the error.
      */
     protected CharSequence getClientSideUploadErrorCallBack()
     {

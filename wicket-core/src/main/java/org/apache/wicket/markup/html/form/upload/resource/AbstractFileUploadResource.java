@@ -62,7 +62,8 @@ import jakarta.servlet.http.HttpServletResponse;
  * <p>
  * The main difference is that there some JQuery plugin is used at client side (and it supports multiple uploads +
  * some UI allowing to delete/preview files and so on).
- * Here we are just using plain jQuery code at client side to upload a single file.
+ * Here {@link FileUploadToResourceField} sends all the files of its input in one request, with a
+ * plain {@code XMLHttpRequest}.
  */
 public abstract class AbstractFileUploadResource extends AbstractResource
 {
@@ -163,76 +164,28 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 			Map<String, List<FileItem>> files = multiPartRequest.getFiles();
 			List<FileItem> fileItems = files.get(PARAM_NAME);
 
-			if (fileItems != null)
+			if (fileItems == null)
 			{
-				List<FileUpload> fileUploads = new ArrayList<>();
-				for (FileItem fileItem : fileItems)
-				{
-					fileUploads.add(new FileUpload(fileItem));
-				}
-				saveFiles(fileUploads, uploadId);
-				prepareResponse(resourceResponse, webRequest, fileUploads);
+				return createErrorResponse(resourceResponse, NO_FILE_SELECTED);
 			}
-			else
+			List<FileUpload> fileUploads = new ArrayList<>();
+			for (FileItem fileItem : fileItems)
 			{
-				resourceResponse.setContentType("application/json");
-				resourceResponse.setWriteCallback(new WriteCallback()
-				{
-					@Override
-					public void writeData(Attributes attributes) throws IOException
-					{
-						JSONObject json = new JSONObject();
-						json.put("error", true);
-						json.put("errorMessage", NO_FILE_SELECTED);
-						String error = json.toString();
-						attributes.getResponse().write(error);
-					}
-				});
+				fileUploads.add(new FileUpload(fileItem));
 			}
+			saveFiles(fileUploads, uploadId);
+			prepareResponse(resourceResponse, webRequest, fileUploads);
 			return resourceResponse;
-
 		}
 		catch (FileUploadException fux)
 		{
-			resourceResponse.setContentType("application/json");
-			// even when this is an exceptional situation we want the request to be successful
-			// as we are just sending back to the client some JSON with error messages,
-			// which will in turn be sent to wicket component (who will handle the errors)
-			resourceResponse.setStatusCode(HttpServletResponse.SC_OK);
-			JSONObject json = new JSONObject();
-			json.put("error", true);
-			String errorMessage = getFileUploadExceptionKey(fux);
-			json.put("errorMessage", errorMessage);
-			String error = json.toString();
-			resourceResponse.setWriteCallback(new WriteCallback()
-			{
-				@Override
-				public void writeData(Attributes attributes) throws IOException
-				{
-					attributes.getResponse().write(error);
-				}
-			});
-			return resourceResponse;
+			return createErrorResponse(resourceResponse, getFileUploadExceptionKey(fux));
 		}
-		catch (Exception fux)
+		catch (Exception e)
 		{
-			resourceResponse.setContentType("application/json");
-			JSONObject json = new JSONObject();
-			json.put("error", true);
-			String errorMessage = LOG.isDebugEnabled() ? fux.getMessage() :  Form.UPLOAD_FAILED_RESOURCE_KEY;
-			json.put("errorMessage", errorMessage);
-			String error = json.toString();
-			resourceResponse.setWriteCallback(new WriteCallback()
-			{
-				@Override
-				public void writeData(Attributes attributes) throws IOException
-				{
-					attributes.getResponse().write(error);
-				}
-			});
+			LOG.error("Upload to '{}' failed", uploadId, e);
+			return createErrorResponse(resourceResponse, Form.UPLOAD_FAILED_RESOURCE_KEY);
 		}
-
-		return resourceResponse;
 	}
 
 	private static String serializeUploadSettings(String uploadId, Bytes maxSize, Bytes fileMaxSize,
@@ -290,6 +243,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	private ResourceResponse createErrorResponse(ResourceResponse resourceResponse, String errorMessage)
 	{
 		resourceResponse.setContentType("application/json");
+		// the error goes to the field in the JSON, which it reads from successful answers only
 		resourceResponse.setStatusCode(HttpServletResponse.SC_OK);
 		JSONObject json = new JSONObject();
 		json.put("error", true);

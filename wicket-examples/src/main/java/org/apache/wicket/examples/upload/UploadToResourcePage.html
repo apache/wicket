@@ -9,17 +9,23 @@
 <body>
     <wicket:extend>
 		<p>Wicket can upload to a <em>mounted resource.</em></p>
-		<p>This upload is done via jQuery AJAX and <em>does not</em> block Wicket AJAX</p>
+		<p>This upload is done with a plain XMLHttpRequest and <em>does not</em> block Wicket AJAX</p>
+		<p>Files chosen several times or dropped on the zone add up in a list, from which each can be removed before the upload</p>
+		<p>The limits of the field, 100 KB in all, 90 KB a file and 5 files, are checked before anything is sent: files beyond them are refused without being uploaded</p>
 		<p><em>Upload progressbar</em> has been updated to work with this component</p>
 		<br/>
 
 		<div>
 		 <fieldset>
 			 <legend>Upload a file(s) to a <em>mounted resource</em></legend>
-			<p>
-				<label wicket:for="fileInput">File</label>
-				<input wicket:id="fileInput" type="file" multiple="multiple"/>
-			</p>
+			<div wicket:id="dropZone" class="upload-drop-zone">
+				<p>Drop files here, or choose them, as often as you like:</p>
+				<p>
+					<label wicket:for="fileInput">Files</label>
+					<input wicket:id="fileInput" type="file" multiple="multiple"/>
+				</p>
+				<ul wicket:id="fileList" class="file-list"></ul>
+			</div>
 			<form wicket:id="form">
 				<p>
 					<input wicket:id="allowToLeavePageWhileUploading" type="checkbox"/>
