@@ -182,11 +182,12 @@ public class WebSocketTester
 	}
 
 	/**
-	 * @return {@code true} while the connection this tester opened is still open. A connection the
-	 *      application refused - by an {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter}
-	 *      or because the {@link org.apache.wicket.authorization.IAuthorizationStrategy} did not
-	 *      allow the {@link org.apache.wicket.protocol.ws.api.WebSocketResource} it named - is
-	 *      already closed when the constructor returns.
+	 * @return {@code true} while the connection this tester opened is still open. A connection to a
+	 *      page the page store no longer holds is already closed when the constructor returns, with
+	 *      the reason "Page expired". So is a connection the application refused - by an
+	 *      {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter} or because the
+	 *      {@link org.apache.wicket.authorization.IAuthorizationStrategy} did not allow the
+	 *      {@link org.apache.wicket.protocol.ws.api.WebSocketResource} it named.
 	 */
 	public boolean isConnectionOpen()
 	{
