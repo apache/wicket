@@ -130,6 +130,10 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			{
 				throw new IllegalArgumentException("Request parameter 'pageId' must be a number", e);
 			}
+			if (this.pageId < 0)
+			{
+				throw new IllegalArgumentException("Request parameter 'pageId' must be a non-negative number");
+			}
 		}
 		else
 		{
