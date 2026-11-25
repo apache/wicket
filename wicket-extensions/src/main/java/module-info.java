@@ -34,6 +34,7 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.ajax.markup.html;
     exports org.apache.wicket.extensions.ajax.markup.html.autocomplete;
     exports org.apache.wicket.extensions.ajax.markup.html.form.upload;
+    exports org.apache.wicket.extensions.ajax.markup.html.form.upload.resumable;
     exports org.apache.wicket.extensions.ajax.markup.html.modal;
     exports org.apache.wicket.extensions.ajax.markup.html.modal.theme;
     exports org.apache.wicket.extensions.ajax.markup.html.repeater;
@@ -78,6 +79,7 @@ module org.apache.wicket.extensions {
     opens org.apache.wicket.extensions.ajax;
     opens org.apache.wicket.extensions.ajax.markup.html;
     opens org.apache.wicket.extensions.ajax.markup.html.form.upload;
+    opens org.apache.wicket.extensions.ajax.markup.html.form.upload.resumable;
     opens org.apache.wicket.extensions.ajax.markup.html.autocomplete;
     opens org.apache.wicket.extensions.ajax.markup.html.repeater;
     opens org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;

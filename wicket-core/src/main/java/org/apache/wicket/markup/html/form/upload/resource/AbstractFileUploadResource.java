@@ -246,7 +246,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * @param webRequest
 	 *            ServletWebRequest
 	 * @param fileItems
-	 *            List<FileUpload>
+	 *            the uploaded files
 	 * @param fileNames
 	 *            the names the files were stored under, in the order of {@code fileItems}
 	 */
@@ -271,7 +271,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * Delegates to FileManager to store the uploaded files
 	 *
 	 * @param fileItems
-	 *            List<FileUpload>
+	 *            the uploaded files
 	 * @param uploadId
 	 *            the unique ID of the upload field
 	 * @return the names the files were stored under, in the order of {@code fileItems}
@@ -352,7 +352,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * @param webRequest
 	 *            ServletWebRequest
 	 * @param files
-	 *            List<FileUpload>
+	 *            the uploaded files
 	 * @param fileNames
 	 *            the names the files were stored under, in the order of {@code files}; the browser
 	 *            sends them back for {@link FileUploadToResourceField} to find the files
