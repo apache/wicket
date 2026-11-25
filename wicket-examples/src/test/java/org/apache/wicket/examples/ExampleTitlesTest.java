@@ -19,6 +19,7 @@ package org.apache.wicket.examples;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
@@ -94,7 +95,8 @@ class ExampleTitlesTest extends WicketTestCase
 				.map(Path::toString)
 				.filter(file -> file.endsWith(".class"))
 				.map(file -> WicketExamplePage.class.getPackageName() + '.' +
-					file.substring(0, file.length() - ".class".length()).replace('/', '.'))
+					file.substring(0, file.length() - ".class".length())
+						.replace(File.separatorChar, '.'))
 				.<Class<?>> map(ExampleTitlesTest::load)
 				.filter(WicketExamplePage.class::isAssignableFrom)
 				.filter(type -> type != WicketExamplePage.class)
@@ -119,3 +121,4 @@ class ExampleTitlesTest extends WicketTestCase
 		}
 	}
 }
+

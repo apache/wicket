@@ -109,7 +109,7 @@ class AjaxEventBehaviorTest extends WicketTestCase
 		assertEquals(1, counter.get());
 		String responseAsString = tester.getLastResponseAsString();
 		System.err.println(responseAsString);
-		assertTrue(responseAsString.contains("function(){Wicket.Ajax.ajax({\"u\":\"./page?0-1.0-comp\",\"c\":\"comp1\",\"e\":\"load\"});"));
+		assertTrue(responseAsString.contains("function(){Wicket.Ajax.ajax({\"u\":\"./page?0-1.0-comp\",\"c\":\"comp_1\",\"e\":\"load\"});"));
 	}
 
 	private static class EventNamesBehavior extends AjaxEventBehavior

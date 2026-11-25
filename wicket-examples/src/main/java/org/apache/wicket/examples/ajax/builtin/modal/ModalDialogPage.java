@@ -30,6 +30,7 @@ import org.apache.wicket.extensions.ajax.markup.html.repeater.AjaxListPanel;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
@@ -69,7 +70,7 @@ public class ModalDialogPage extends BasePage
 		queue(new Radio<Boolean>("yes", Model.of(true)));
 		queue(new Radio<Boolean>("no", Model.of(false)));
 
-		queue(new ModalFragment("start"));
+		queue(new ModalFragment("start", 0));
 
 		stackedDialogs = new AjaxListPanel("stackedDialogs");
 		queue(stackedDialogs);
@@ -87,19 +88,27 @@ public class ModalDialogPage extends BasePage
 	private class ModalFragment extends Fragment
 	{
 
+		private final int level;
+
+		private final Label header;
+
 		private ModalDialog nestedDialog;
 
-		public ModalFragment(String id)
+		public ModalFragment(String id, int level)
 		{
 			super(id, "fragment", ModalDialogPage.this);
 
+			this.level = level;
+
 			Form<Void> form = new Form<Void>("form");
 			queue(form);
-			
+
+			header = new Label("header", level == 0 ? "Modal dialogs" : "Dialog " + level);
+			queue(header);
+
 			nestedDialog = new ModalDialog("nestedDialog");
 			nestedDialog.add(new DefaultTheme());
 			nestedDialog.trapFocus();
-			nestedDialog.closeOnEscape();
 			queue(nestedDialog);
 
 			queue(new AjaxLink<Void>("ajaxOpenDialog")
@@ -181,7 +190,7 @@ public class ModalDialogPage extends BasePage
 
 		private void openDialog(AjaxRequestTarget target)
 		{
-			ModalFragment fragment = new ModalFragment(ModalDialog.CONTENT_ID);
+			ModalFragment fragment = new ModalFragment(ModalDialog.CONTENT_ID, level + 1);
 			if (stacked)
 			{
 				// stack a new dialog
@@ -194,15 +203,14 @@ public class ModalDialogPage extends BasePage
 					}
 				};
 				dialog.add(new DefaultTheme());
-				dialog.trapFocus();
-				dialog.closeOnEscape();
+				dialog.labelledBy(fragment.header);
 				dialog.setContent(fragment);
 				stackedDialogs.append(dialog, target).open(target);
 			}
 			else
 			{
 				// use the nested dialog
-				nestedDialog.open(fragment, target);
+				nestedDialog.labelledBy(fragment.header).open(fragment, target);
 			}
 		}
 	}

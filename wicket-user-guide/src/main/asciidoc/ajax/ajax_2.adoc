@@ -135,6 +135,18 @@ _DefaultTheme_ to this component if aren't styling these CSS classes by yourself
 
 The modal dialog can be closed from code using its method _close(AjaxRequestTarget target)_.
 
+_ModalDialog_ follows the https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/[WAI-ARIA pattern of a modal dialog]. Its dialog element has _role="dialog"_ and _aria-modal="true"_, so screen readers announce it as a dialog and keep to its content. When the dialog opens, the focus moves into it: to an element with an _autofocus_ attribute, or else to its first element that can be focused. When it closes, the focus goes back to the element that had it before, usually the link or button that opened the dialog. While the dialog is open, Tab and Shift+Tab cycle through its elements, and the Escape key closes it.
+
+Screen readers also announce the name of a dialog when it opens. Method _labelledBy(Component)_ names the dialog after a component in its content, usually its heading, and renders _aria-labelledby_. A dialog that shows no title gets a name with _label(IModel<String>)_, which renders _aria-label_:
+
+[source,java]
+----
+ConfirmPanel content = new ConfirmPanel(ModalDialog.CONTENT_ID);
+modal.labelledBy(content.getHeading()).open(content, target);
+----
+
+A dialog that the user must not dismiss with Escape, for example because a choice has to be made, calls _closeOnEscape(false)_. With _trapFocus(false)_, Tab moves on from the last element of the dialog to the page behind it. _trapFocus()_ adds a _TrapFocusBehavior_, which also pulls the focus back into the dialog when something else, such as a script, moves it outside. Leave it out when a widget in the dialog opens a popup that is rendered outside of the dialog and takes the focus, such as a date picker attached to the body of the page.
+
 === Tree repeaters
 
 Class _org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree_ is the base class of another family of repeaters called tree repeaters and designed to display a data hierarchy as a tree, resembling the behavior and the look & feel of desktop tree components. A classic example of tree component on desktop is the tree used by nearly all file managers to navigate file system:

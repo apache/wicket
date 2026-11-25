@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +36,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -173,6 +176,48 @@ public class PropertyResolverTest extends WicketTestCase
 		catch (WicketRuntimeException ex)
 		{
 		}
+	}
+
+	/**
+	 * A private field named like the property must not prevent the public getter from being used
+	 * when the field belongs to a class in a package that its module does not open.
+	 */
+	@Test
+	void getterOfJdkClassWithInaccessibleFieldOfSameName()
+	{
+		assertEquals(2020, PropertyResolver.getValue("year", LocalDate.of(2020, 1, 2)));
+	}
+
+	@Test
+	void getterAndSetterOfJdkClassWithInaccessibleFieldOfSameName()
+	{
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode("x");
+
+		assertEquals("x", PropertyResolver.getValue("userObject", node));
+
+		PropertyResolver.setValue("userObject", node, "y", CONVERTER);
+		assertEquals("y", node.getUserObject());
+	}
+
+	@Test
+	void setterIsMissingOnJdkClassWithInaccessibleFieldOfSameName()
+	{
+		LocalDate date = LocalDate.of(2020, 1, 2);
+
+		WicketRuntimeException e = assertThrows(WicketRuntimeException.class,
+			() -> PropertyResolver.setValue("year", date, 2021, CONVERTER));
+		assertTrue(e.getMessage().toLowerCase(Locale.ROOT).contains("set method defined"),
+			e.getMessage());
+	}
+
+	@Test
+	void inaccessibleFieldOfJdkClassWithoutGetterIsNotResolved()
+	{
+		LocalDate date = LocalDate.of(2020, 1, 2);
+
+		WicketRuntimeException e = assertThrows(WicketRuntimeException.class,
+			() -> PropertyResolver.getValue("day", date));
+		assertTrue(e.getMessage().contains("Property could not be resolved"), e.getMessage());
 	}
 
 	/**

@@ -21,10 +21,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
@@ -554,11 +556,22 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 		else if (other.namedParameters == null)
 			return false;
-		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
+		else if (!containSameElements(namedParameters, other.namedParameters))
 			return false;
 		if(!Strings.isEqual(other.fragment, fragment))
 			return false;
 		return true;
+	}
+
+	private static boolean containSameElements(List<NamedPair> a, List<NamedPair> b)
+	{
+		return a.size() == b.size() && countOccurrences(a).equals(countOccurrences(b));
+	}
+
+	private static Map<NamedPair, Long> countOccurrences(List<NamedPair> pairs)
+	{
+		return pairs.stream()
+			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 	}
 
 	/**

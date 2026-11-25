@@ -16,15 +16,9 @@
 -->
 # Migration to Wicket 12
 
-This guide lists the changes in Wicket 12.0.0 that break code written for Wicket 11, or change what a running application does, and what you have to do about them. Wicket 12 is in development, and the guide grows with every change that lands on master.
+This guide lists the changes in Wicket 12.0.0 that break code written for Wicket 11, or deliberately change its intended behaviour, and what you have to do about them. Wicket 12 is in development, and the guide grows with every change that lands on master.
 
 To come from Wicket 10, migrate to Wicket 11 first, with the [migration guide to Wicket 11](https://github.com/apache/wicket/blob/wicket-11.x/migration-to-11.md).
-
-## `PageParameters` in hash-based collections
-
-`PageParameters.hashCode()` now agrees with `equals()`, which ignores the order of the named parameters ([#1866](https://github.com/apache/wicket/issues/1866)). The fix is backported to Wicket 11.1.0 and 10.13.0, so an application already on one of those sees no change. Before, two `PageParameters` that differed only in that order were equal but had different hashes, so a `HashMap` or `HashSet` kept them as two keys.
-
-This shows in rendered pages. When a page renders a CSS or JavaScript reference header item twice for the same resource, with the same page parameters added in a different order, it now gets one `<link>` or `<script>` tag, with the URL of the first item. Before, it got two. An application that keeps `PageParameters` in a hash-based collection of its own now finds reordered parameters under the same entry.
 
 ## Pages render `lang` and `dir` on `<html>`
 
@@ -53,6 +47,14 @@ protected void onHtmlTag(ComponentTag tag)
 
 The same method adds other attributes that belong to the whole document, such as a theme class. To render neither `lang` nor `dir`, override it without calling `super`. The `<html>` tag is not rendered again on an Ajax request, so an attribute that has to change during one, such as a theme switched by an `AjaxLink`, has to be changed in the browser with JavaScript as well.
 
+## Development mode markup ids separate the component id from the sequence
+
+In development mode, `DefaultMarkupIdGenerator` now puts an underscore between the component id and the hexadecimal sequence number ([#1951](https://github.com/apache/wicket/issues/1951), WICKET-7114). A link with the id `link` now gets the markup id `link_1` where it got `link1`. Before, nothing separated the two parts, so two components could get the same id: component `1` with sequence `1a` and component `11` with sequence `a` both got `id11a`. Repeater children have numeric ids, so this happened in list views, and the duplicate id made an Ajax update replace the wrong element.
+
+Deployment mode is unchanged: ids are still `id` followed by the sequence, such as `id1a`.
+
+If your tests compare rendered pages with expected files, or look components up by a generated markup id written into the test, update those ids. A markup id you set yourself with `setMarkupId` is not affected.
+
 ## Markup encoding from `<meta charset>`
 
 Wicket now reads the character encoding of a markup file from an HTML5 `<meta charset="...">` tag, or from `<meta http-equiv="Content-Type" content="text/html; charset=...">`, when the file has no XML declaration ([#1953](https://github.com/apache/wicket/issues/1953)). Before, it only looked at `<?xml version="1.0" encoding="..."?>` and otherwise read the file with `MarkupSettings#getDefaultMarkupEncoding()`, or the JVM default when that is not set.
@@ -77,6 +79,34 @@ The other changes:
 - A backslash no longer escapes a quote. `title="C:\dir\"` is the value `C:\dir\`; markup that used `\"` inside a quoted value now has the value end at that quote.
 - The body of a `<script>` with an empty type, a JavaScript MIME type such as `application/javascript`, or a JSON type such as `application/ld+json` is raw text and passed through untouched. Before, such a script was parsed as a template, so a Wicket component inside one is no longer found. Scripts of other types, such as `text/x-handlebars-template`, are still templates.
 - A custom element whose name only starts with `script` or `style`, such as `<script-loader>`, is parsed as markup. Before, its content was skipped up to the next `</script>` or `</style>`, Wicket components included.
+
+## `ModalDialog` is accessible by default
+
+`ModalDialog` now follows the [WAI-ARIA pattern of a modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) ([#1927](https://github.com/apache/wicket/issues/1927)). Before, it was a plain `<div>` that screen readers did not announce as a dialog, and focus handling and Escape only worked after `trapFocus()` and `closeOnEscape()`.
+
+These changes need nothing from you:
+
+- The dialog element, the one with the class `modal-dialog`, renders `role="dialog"`, `aria-modal="true"` and a markup id. A `role` or `aria-modal` that your markup sets, or an `AttributeModifier` that you add in `newDialog`, is kept, so the workaround of setting them yourself keeps working and can go. If your tests compare rendered pages with expected files, the dialog `<div>` of an open dialog has these attributes now.
+- When the dialog opens, the focus moves into it: to an element with `autofocus`, else to its first element that can be focused, else to the dialog itself. When it closes, the focus goes back to the element that had it before. A dialog's content that moves the focus itself, or a `focusComponent` on the `AjaxRequestTarget`, still decides where it goes.
+- `labelledBy(Component)` names the dialog after a component in it, such as the heading of its content, and `label(IModel<String>)` names a dialog without a visible title. Without either, the dialog has no accessible name, as before.
+
+These change what users see, and can be switched off:
+
+- Tab and Shift+Tab cycle through the dialog. Before, Tab moved on from the last element of the dialog to the page behind the overlay, unless you called `trapFocus()`. `trapFocus(false)` gives the old behaviour back. `trapFocus()` still adds a `TrapFocusBehavior`, which in addition pulls the focus back into the dialog when it moves outside, for example into a popup that a widget renders at the end of the page's body.
+- Escape closes the dialog, through `close(AjaxRequestTarget)`. Before, it did only after `closeOnEscape()`, which is now the default and can stay. A dialog that has to stay open until the user makes a choice calls `closeOnEscape(false)`. So does a dialog whose Cancel button does more than `close()`, unless you move that work into an override of `close(AjaxRequestTarget)`.
+- Escape closes only the innermost open dialog, also when no element has the focus, and a dialog no longer stops the propagation of every key pressed in it. The request that Escape sends is no longer bound to a `keydown` event of the overlay: `postProcessCloseBehaviorAjaxAttributes` now gets its attributes for every open dialog that closes on Escape, and `attrs.event` is the keyboard event in the browser.
+- An open dialog that closes on Escape has an Ajax behavior, so a stateless page that renders one open becomes stateful. `closeOnEscape(false)` keeps it stateless.
+
+## Dependencies
+
+Wicket's modules no longer bring in libraries they don't use themselves. If your application or its tests use one of these, declare it as a dependency of your own.
+
+| Module | No longer brings in |
+|---|---|
+| `wicket-tester`, `wicket-extensions-tester`, `wicket-native-websocket-tester` | AssertJ (`org.assertj:assertj-core`), the JUnit Jupiter engine (`org.junit.jupiter:junit-jupiter-engine`) and JUnit Jupiter params (`org.junit.jupiter:junit-jupiter-params`). They bring in only `org.junit.jupiter:junit-jupiter-api`. |
+| `wicket-ioc`, and through it `wicket-spring` and `wicket-guice` | ASM (`org.ow2.asm:asm`) |
+
+Check that your build declares a JUnit engine in test scope, `org.junit.jupiter:junit-jupiter-engine` or `org.junit.jupiter:junit-jupiter`. Without one, Maven Surefire finds no tests to run and the build still passes. Projects created from the quickstart archetype declare the engine.
 
 ## `IPageAndComponentProvider#hasComponent()`
 
