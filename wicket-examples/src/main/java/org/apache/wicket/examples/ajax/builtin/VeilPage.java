@@ -23,6 +23,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.veil.LocalVeilBehavior;
@@ -41,8 +42,9 @@ import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * Demonstrates {@link PageVeilBehavior} and {@link LocalVeilBehavior}, including nested local
- * veils with their own timings, and the cases a veil has to hold in: the keyboard, a delegated
- * behavior, and hosts that scroll, are positioned or sit under a sticky header.
+ * veils with their own timings, and the cases a veil has to hold in: the keyboard, a click
+ * released on the veil of a field's update, a delegated behavior, and hosts that scroll, are
+ * positioned or sit under a sticky header.
  */
 public class VeilPage extends BasePage
 {
@@ -82,6 +84,7 @@ public class VeilPage extends BasePage
 		inner.add(new SleepingLink("innerShort", Duration.ofMillis(200), innerCounter, false));
 
 		addKeyboardForm();
+		addUpdatingForm();
 		addDelegatedRows();
 		addObjectMemberId();
 		addScroller();
@@ -105,6 +108,39 @@ public class VeilPage extends BasePage
 			{
 				sleep(Duration.ofSeconds(2));
 				increment(counter, target);
+			}
+		});
+	}
+
+	private void addUpdatingForm()
+	{
+		Form<Void> form = new Form<>("updatingForm");
+		add(form);
+
+		Label updates = counter(this, "updateCounter");
+		TextField<String> city = new TextField<>("city", Model.of(""));
+		city.add(new AjaxFormComponentUpdatingBehavior("change")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				sleep(Duration.ofSeconds(1));
+				increment(updates, target);
+			}
+		});
+		form.add(city);
+
+		Label saves = counter(this, "citySaveCounter");
+		form.add(new AjaxButton("saveCity")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				increment(saves, target);
 			}
 		});
 	}

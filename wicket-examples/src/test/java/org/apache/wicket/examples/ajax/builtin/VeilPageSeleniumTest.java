@@ -42,6 +42,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.Interactive;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -98,6 +101,21 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 			});
 		}).observe(document.body, { childList: true, subtree: true, attributes: true,
 			attributeOldValue: true, attributeFilter: ['class'] });
+		""";
+
+	/**
+	 * Logs the class of the element each {@code mouseup} lands on, into {@code window.releases},
+	 * and that of the target of each click reaching the window, into {@code window.clicks}.
+	 */
+	private static final String RECORD_RELEASES = """
+		window.releases = [];
+		window.clicks = [];
+		window.addEventListener('mouseup', function (event) {
+			window.releases.push(event.target.className);
+		}, true);
+		window.addEventListener('click', function (event) {
+			window.clicks.push(event.target.className);
+		});
 		""";
 
 	/**
@@ -272,6 +290,57 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		awaitQuiet();
 		assertEquals("a b", note.getDomProperty("value"), "the space was not typed");
 		assertEquals("1", saves(), "Enter in the field saved again");
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aClickReleasedOnTheVeilOfAFieldUpdateIsNotLost(Engine engine)
+	{
+		open(engine);
+
+		typeCity();
+		new Actions(driver).moveToElement(saveCity()).click().perform();
+
+		assertSavedOnceAfterTheUpdate();
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aTapReleasedOnTheVeilOfAFieldUpdateIsNotLost(Engine engine)
+	{
+		open(engine);
+
+		typeCity();
+		PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+		Sequence tap = new Sequence(finger, 0)
+			.addAction(finger.createPointerMove(Duration.ZERO,
+				PointerInput.Origin.fromElement(saveCity()), 0, 0))
+			.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+			.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+		((Interactive)driver).perform(List.of(tap));
+
+		assertSavedOnceAfterTheUpdate();
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aPressDraggedOffTheButtonClicksOnlyTheForm(Engine engine)
+	{
+		open(engine);
+
+		typeCity();
+		new Actions(driver).clickAndHold(saveCity())
+			.moveToElement(driver.findElement(By.cssSelector(".veil-city")))
+			.release()
+			.perform();
+
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".update-counter"), "1"));
+		awaitNoVeil();
+		awaitQuiet();
+		assertEquals(List.of("wicket-veil"), releases(), "the release did not land on the veil");
+		assertEquals(List.of("veil-panel veil-updating"), clicks(),
+			"the press was not clicked on the common ancestor of Save and the field alone");
+		assertEquals("0", citySaves(), "a press dragged off Save saved");
 	}
 
 	@ParameterizedTest
@@ -508,6 +577,53 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		awaitNoVeil();
 		awaitQuiet();
 		assertEquals("1", saves(), "the key pressed under the veil saved again");
+	}
+
+	/**
+	 * Types into the field that updates on change, leaving the focus in it, and starts recording
+	 * where the mouse is released.
+	 */
+	private void typeCity()
+	{
+		WebElement city = driver.findElement(By.cssSelector(".veil-city"));
+		js().executeScript("arguments[0].scrollIntoView({ block: 'center' });", city);
+		city.click();
+		city.sendKeys("Paris");
+		js().executeScript(RECORD_RELEASES);
+	}
+
+	private void assertSavedOnceAfterTheUpdate()
+	{
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".update-counter"), "1"));
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".city-save-counter"), "1"));
+		awaitNoVeil();
+		awaitQuiet();
+		assertEquals(List.of("wicket-veil"), releases(), "the release did not land on the veil");
+		assertEquals(List.of("veil-save-city"), clicks(),
+			"the press was not clicked on Save alone");
+		assertEquals("1", citySaves(), "Save ran more than once");
+	}
+
+	private WebElement saveCity()
+	{
+		return driver.findElement(By.cssSelector(".veil-save-city"));
+	}
+
+	private String citySaves()
+	{
+		return driver.findElement(By.cssSelector(".city-save-counter")).getText();
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Object> releases()
+	{
+		return (List<Object>)js().executeScript("return window.releases;");
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Object> clicks()
+	{
+		return (List<Object>)js().executeScript("return window.clicks;");
 	}
 
 	private void assertVeiled()

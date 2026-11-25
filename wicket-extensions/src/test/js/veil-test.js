@@ -121,6 +121,50 @@
 			};
 		}
 
+		function onStage(html) {
+			const stage = add('qunit-fixture', '<div></div>');
+			stage.style.cssText = 'position: fixed; top: 0; left: 0; z-index: 1;';
+			stage.innerHTML = html;
+			return stage.firstElementChild;
+		}
+
+		function mouse(element, type, at, init) {
+			let point = at || {};
+			if (at instanceof Element) {
+				const box = at.getBoundingClientRect();
+				point = { clientX: box.left + box.width / 2, clientY: box.top + box.height / 2 };
+			}
+			const event = new MouseEvent(type, Object.assign({
+				bubbles: true,
+				cancelable: true,
+				button: 0,
+				clientX: point.clientX,
+				clientY: point.clientY
+			}, init));
+			element.dispatchEvent(event);
+			return event;
+		}
+
+		function recordClicks(element) {
+			const targets = [];
+			const record = function(event) {
+				targets.push(event.target.id);
+			};
+			element.addEventListener('click', record);
+			targets.stop = function() {
+				element.removeEventListener('click', record);
+			};
+			return targets;
+		}
+
+		function countClicks(element) {
+			const counter = { count: 0 };
+			element.addEventListener('click', function() {
+				counter.count++;
+			});
+			return counter;
+		}
+
 		const PASS = { reached: true, prevented: false };
 		const DROP = { reached: false, prevented: true };
 		const PASSED = { down: PASS, up: PASS };
@@ -721,6 +765,296 @@
 				"Enter sent to the window was dropped");
 
 			done(attrs);
+		});
+
+		test("a click whose release lands on the veil is replayed once the veil is lowered", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage('<button type="button" id="veilTestSave">save</button>');
+			const clicks = countClicks(button);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(document.body), 'mouseup', button);
+			assert.equal(clicks.count, 0, "the click was replayed while the page was veiled");
+
+			done(attrs);
+			clock.tick(0);
+			assert.equal(clicks.count, 1, "the click was not replayed once the veil was lowered");
+			clock.tick(1000);
+			assert.equal(clicks.count, 1, "the click was replayed more than once");
+		});
+
+		test("the click waits for the veil to be lowered after the spinner's minimum time", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage('<button type="button" id="veilTestSave">save</button>');
+			const clicks = countClicks(button);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilTestSave' });
+			clock.tick(350);
+			mouse(veilOf(document.body), 'mouseup', button);
+			done(attrs);
+			clock.tick(449);
+			assert.equal(clicks.count, 0, "the click was replayed while the spinner was shown");
+
+			clock.tick(1);
+			assert.equal(clicks.count, 1, "the click was not replayed once the veil was lowered");
+		});
+
+		test("the click waits while another request veils the element again", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage('<button type="button" id="veilTestSave">save</button>');
+			const clicks = countClicks(button);
+
+			mouse(button, 'mousedown', button);
+			const first = send({ c: 'veilTestSave' });
+			mouse(veilOf(document.body), 'mouseup', button);
+			done(first);
+			const second = send({ c: 'veilPageLink' });
+			clock.tick(0);
+			assert.equal(clicks.count, 0, "the click was replayed under the veil of another request");
+
+			done(second);
+			clock.tick(0);
+			assert.equal(clicks.count, 1, "the click was not replayed once the last veil was lowered");
+		});
+
+		test("a local veil replays the click on an element inside its host", assert => {
+			const host = onStage('<div id="veilTestHost">' +
+				'<button type="button" id="veilTestSave">save</button></div>');
+			Wicket.Veil.local('veilTestHost', OPTIONS);
+			const button = document.getElementById('veilTestSave');
+			const clicks = countClicks(button);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(host), 'mouseup', button);
+			done(attrs);
+			clock.tick(0);
+
+			assert.equal(clicks.count, 1, "the click was not replayed once the local veil was lowered");
+		});
+
+		test("a release away from the pressed element is not replayed on it", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage('<button type="button" id="veilTestSave">save</button>');
+			let clicks = 0;
+			const count = function() {
+				clicks++;
+			};
+			document.addEventListener('click', count);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilTestSave' });
+			const box = button.getBoundingClientRect();
+			mouse(veilOf(document.body), 'mouseup',
+				{ clientX: box.right + 200, clientY: box.bottom + 200 });
+			done(attrs);
+			clock.tick(0);
+			document.removeEventListener('click', count);
+
+			assert.equal(clicks, 0, "a click was replayed for a press dragged off the button");
+		});
+
+		test("a release that is not on a veil is left to the browser", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage('<button type="button" id="veilTestSave">save</button>');
+			const clicks = countClicks(button);
+
+			mouse(button, 'mousedown', button);
+			mouse(button, 'mouseup', button);
+			const attrs = send({ c: 'veilTestSave' });
+			done(attrs);
+			clock.tick(0);
+
+			assert.equal(clicks.count, 0, "a click was replayed for a release on the button");
+		});
+
+		test("a press on the veil leaves the click alone, a press elsewhere drops it", assert => {
+			const host = onStage('<div id="veilTestHost">' +
+				'<button type="button" id="veilTestSave">save</button></div>' +
+				'<button type="button" id="veilTestOther">other</button>');
+			Wicket.Veil.local('veilTestHost', OPTIONS);
+			const button = document.getElementById('veilTestSave');
+			const other = document.getElementById('veilTestOther');
+			const clicks = countClicks(button);
+
+			mouse(button, 'mousedown', button);
+			let attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(host), 'mouseup', button);
+			mouse(veilOf(host), 'mousedown', button);
+			mouse(veilOf(host), 'mouseup', button);
+			done(attrs);
+			clock.tick(0);
+			assert.equal(clicks.count, 1, "a press on the veil dropped the click");
+
+			mouse(button, 'mousedown', button);
+			attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(host), 'mouseup', button);
+			mouse(other, 'mousedown', other);
+			mouse(other, 'mouseup', other);
+			done(attrs);
+			clock.tick(0);
+			assert.equal(clicks.count, 1, "the click was replayed after a new press elsewhere");
+		});
+
+		test("an element replaced while it was veiled gets the click under its id", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage(
+				'<button type="button" id="veilTestSave"><span>save</span></button>');
+
+			mouse(button.firstChild, 'mousedown', button.firstChild);
+			const attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(document.body), 'mouseup', button.firstChild);
+			Wicket.DOM.replace(button,
+				'<button type="button" id="veilTestSave"><span>save</span></button>');
+			const replacement = document.getElementById('veilTestSave');
+			const clicks = countClicks(replacement);
+			done(attrs);
+			clock.tick(0);
+
+			assert.equal(clicks.count, 1, "the element replacing the pressed one was not clicked");
+		});
+
+		test("a release over another element is clicked on their common ancestor", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const form = onStage('<form id="veilTestForm"><input type="text" id="veilTestCity">' +
+				'<button type="button" id="veilTestSave">save</button></form>');
+			const button = document.getElementById('veilTestSave');
+			const clicks = recordClicks(document);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilTestCity' });
+			mouse(veilOf(document.body), 'mouseup', document.getElementById('veilTestCity'));
+			mouse(document.body, 'click');
+			done(attrs);
+			clock.tick(0);
+			clicks.stop();
+
+			assert.deepEqual(clicks, [form.id], "the press was not clicked on the form alone");
+		});
+
+		test("the browser's click on the veiled host gives way to the replayed click", assert => {
+			const host = onStage('<div id="veilTestHost">' +
+				'<button type="button" id="veilTestSave">save</button></div>');
+			Wicket.Veil.local('veilTestHost', OPTIONS);
+			const button = document.getElementById('veilTestSave');
+			const clicks = recordClicks(host);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(host), 'mouseup', button);
+			const browserClick = mouse(host, 'click');
+			assert.deepEqual(clicks, [], "the browser's click reached the veiled host");
+			assert.ok(browserClick.defaultPrevented, "the browser's click was not cancelled");
+
+			done(attrs);
+			clock.tick(0);
+			assert.deepEqual(clicks, [button.id],
+				"the press did not make one click, on the button");
+		});
+
+		test("only the click coming with the release gives way to the replayed click", assert => {
+			const host = onStage('<div id="veilTestHost">' +
+				'<button type="button" id="veilTestSave">save</button></div>');
+			Wicket.Veil.local('veilTestHost', OPTIONS);
+			const button = document.getElementById('veilTestSave');
+			const clicks = recordClicks(host);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(host), 'mouseup', button);
+			clock.tick(0);
+			mouse(host, 'click');
+			assert.deepEqual(clicks, [host.id], "a later click on the veiled host was dropped");
+
+			done(attrs);
+		});
+
+		test("a release with a modifier key held is not clicked", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage('<button type="button" id="veilTestSave">save</button>');
+			const clicks = countClicks(button);
+
+			['ctrlKey', 'metaKey', 'shiftKey', 'altKey'].forEach(function(modifier) {
+				mouse(button, 'mousedown', button);
+				const attrs = send({ c: 'veilTestSave' });
+				const release = {};
+				release[modifier] = true;
+				mouse(veilOf(document.body), 'mouseup', button, release);
+				done(attrs);
+				clock.tick(0);
+				assert.equal(clicks.count, 0, "a release with " + modifier + " was clicked");
+			});
+		});
+
+		test("a press whose release never came is not clicked for a press on the veil", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage('<button type="button" id="veilTestSave">save</button>');
+			const clicks = countClicks(button);
+
+			mouse(button, 'mousedown', button);
+			const attrs = send({ c: 'veilPageLink' });
+			mouse(veilOf(document.body), 'mousedown', button);
+			mouse(veilOf(document.body), 'mouseup', button);
+			done(attrs);
+			clock.tick(0);
+
+			assert.equal(clicks.count, 0, "the earlier press was clicked");
+		});
+
+		test("a dragged element is not clicked for a release on the veil", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const dragged = onStage('<div draggable="true" id="veilTestDragged">drag</div>');
+			const clicks = countClicks(dragged);
+
+			mouse(dragged, 'mousedown', dragged);
+			dragged.dispatchEvent(new Event('dragstart', { bubbles: true }));
+			const attrs = send({ c: 'veilPageLink' });
+			mouse(veilOf(document.body), 'mouseup', dragged);
+			done(attrs);
+			clock.tick(0);
+
+			assert.equal(clicks.count, 0, "the dragged element was clicked");
+		});
+
+		test("mouse events sent to the document or a text node are ignored", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const text = add('qunit-fixture', '<span>text</span>').firstChild;
+
+			const attrs = send({ c: 'veilPageLink' });
+			['mousedown', 'mouseup', 'click'].forEach(function(type) {
+				mouse(document, type);
+				mouse(text, type);
+			});
+			done(attrs);
+			clock.tick(0);
+
+			assert.equal(veils().length, 0, "the veil stayed after the request finished");
+		});
+
+		test("a hidden or disabled element is not clicked", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = onStage(
+				'<button type="button" id="veilTestSave"><span>save</span></button>');
+			const clicks = countClicks(button);
+
+			mouse(button.firstChild, 'mousedown', button.firstChild);
+			let attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(document.body), 'mouseup', button.firstChild);
+			button.disabled = true;
+			done(attrs);
+			clock.tick(0);
+			assert.equal(clicks.count, 0, "the disabled button was clicked");
+
+			button.disabled = false;
+			mouse(button, 'mousedown', button);
+			attrs = send({ c: 'veilTestSave' });
+			mouse(veilOf(document.body), 'mouseup', button);
+			button.style.display = 'none';
+			done(attrs);
+			clock.tick(0);
+			assert.equal(clicks.count, 0, "the hidden button was clicked");
 		});
 	});
 })();
