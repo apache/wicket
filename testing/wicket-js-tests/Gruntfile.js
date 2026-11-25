@@ -51,7 +51,8 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/modal-dialog.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js",
-			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/veil/wicket-veil.js"
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/veil/wicket-veil.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/resumable/ResumableUploadToResourceField.js"
 		],
 		nativeWebSocketJs = [
 			"../../wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
@@ -73,7 +74,8 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/test/js/modal-dialog-test.js",
 			"../../wicket-extensions/src/test/js/palette-test.js",
 			"../../wicket-extensions/src/test/js/trapfocus-test.js",
-			"../../wicket-extensions/src/test/js/veil-test.js"
+			"../../wicket-extensions/src/test/js/veil-test.js",
+			"../../wicket-extensions/src/test/js/resumable-upload-test.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -142,6 +144,7 @@ module.exports = function(grunt) {
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/resumable-upload.html?4.0.0',
 						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?4.0.0',
 						'http://localhost:38888/wicket-core/src/test/js/trusted-types-off.html?4.0.0'
 					],
@@ -164,6 +167,7 @@ module.exports = function(grunt) {
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/resumable-upload.html?vanilla',
 						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?vanilla',
 						'http://localhost:38888/wicket-core/src/test/js/trusted-types-off.html?vanilla'
 					],
