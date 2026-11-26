@@ -17,8 +17,10 @@
 package org.apache.wicket.core.util.string.componentrenderer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.wicket.core.util.string.ComponentRenderer;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +40,13 @@ class ComponentRendererTest extends WicketTestCase
 	void componentsAreInitialized()
 	{
 		ComponentRenderer.renderComponent(new EnclosurePanel("anyId"));
+	}
+
+	@Test
+	void renderPage()
+	{
+		CharSequence data = new ComponentRenderer().renderPage(() -> new TemplatePage());
+		assertFalse(Strings.isEmpty(data));
 	}
 
 	/**
