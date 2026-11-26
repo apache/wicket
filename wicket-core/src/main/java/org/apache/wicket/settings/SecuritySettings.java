@@ -35,6 +35,7 @@ import org.apache.wicket.core.util.crypt.AesGcmCryptScheme;
 import org.apache.wicket.core.util.crypt.ICryptFactory;
 import org.apache.wicket.core.util.crypt.ICryptScheme;
 import org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory;
+import org.apache.wicket.request.resource.ResourceSandboxConfiguration;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -85,6 +86,9 @@ public class SecuritySettings
 	 */
 	private CrossOriginEmbedderPolicyConfiguration crossOriginEmbedderPolicyConfiguration = new CrossOriginEmbedderPolicyConfiguration(
 		CoepMode.REPORTING);
+
+	private ResourceSandboxConfiguration resourceSandboxConfiguration =
+		new ResourceSandboxConfiguration(false);
 
 	/** Authorizer for component instantiations */
 	private static final IUnauthorizedComponentInstantiationListener DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER = new IUnauthorizedComponentInstantiationListener()
@@ -379,6 +383,37 @@ public class SecuritySettings
 	{
 		crossOriginEmbedderPolicyConfiguration = new CrossOriginEmbedderPolicyConfiguration(mode,
 			exemptions);
+		return this;
+	}
+
+	/**
+	 * @return the configuration of the headers that keep content served by a resource out of the
+	 *         origin of the application, disabled by default
+	 * @since 12.0.0
+	 */
+	public ResourceSandboxConfiguration getResourceSandboxConfiguration()
+	{
+		return resourceSandboxConfiguration;
+	}
+
+	/**
+	 * Sets whether resource responses carry <code>Content-Security-Policy: sandbox</code> and
+	 * <code>X-Content-Type-Options: nosniff</code>, and for which paths they do not. This replaces
+	 * the configuration returned so far, including its exemptions. See
+	 * {@link ResourceSandboxConfiguration} for what the headers do and where they are left out.
+	 *
+	 * @param enabled
+	 *            whether resource responses get the headers
+	 * @param exemptedPaths
+	 *            paths whose resources are served without the headers, see
+	 *            {@link ResourceSandboxConfiguration#addExemptedPath(String)}
+	 * @return {@code this} object for chaining
+	 * @since 12.0.0
+	 */
+	public SecuritySettings setResourceSandboxConfiguration(boolean enabled,
+		String... exemptedPaths)
+	{
+		resourceSandboxConfiguration = new ResourceSandboxConfiguration(enabled, exemptedPaths);
 		return this;
 	}
 

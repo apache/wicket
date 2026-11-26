@@ -66,6 +66,7 @@ public abstract class WicketExampleApplication extends WebApplication
 		                .add(CSPDirective.STYLE_SRC,
 						"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
 		                .add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
+		getSecuritySettings().setResourceSandboxConfiguration(true);
 		
 		getRequestCycleListeners().add(new IRequestCycleListener()
 		{

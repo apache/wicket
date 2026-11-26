@@ -126,3 +126,35 @@ When your component relies on inline event handlers, such as _onclick_ or _onsub
        "return confirm('Do you really want to submit?')"));
  }
 ----
+
+=== Sandboxing resource responses
+
+The Content Security Policy described above is written for pages only. A file that the application serves through a resource, such as an upload, is rendered by the browser in the origin of the application: an HTML or SVG document opened from the URL of the resource runs its scripts with access to the cookies and the pages of the application. With the _ResourceSandboxConfiguration_ in _SecuritySettings_ resources mark their responses so that this no longer happens. The option is disabled by default, and without it no response changes.
+
+[source,java]
+----
+  getSecuritySettings().setResourceSandboxConfiguration(true);
+----
+
+With the option enabled every response of a resource that extends _AbstractResource_ carries the header _Content-Security-Policy: sandbox_, whichever way the resource is requested: through a resource reference, a mount, a _ResourceLink_, a _DownloadLink_ or an _AjaxDownloadBehavior_. A document served with this header gets an opaque origin and does not run scripts. A response that has a content type also carries _X-Content-Type-Options: nosniff_, so that the browser uses a file as a script or a stylesheet only if it is declared as one. Scripts, stylesheets and images included by a page and downloads are not affected by _sandbox_, so the resources of Wicket itself need no exemption.
+
+Resources that have to run in the origin of the application are exempted, either by the path they are requested with or by their class:
+
+[source,java]
+----
+  getSecuritySettings()
+      .setResourceSandboxConfiguration(true, "/wicket/resource/com.example.Workers")
+      .getResourceSandboxConfiguration()
+      .addExemptedResource(ReportResource.class);
+----
+
+A path is relative to the Wicket filter, as in _mountResource()_, and exempts everything below it. The file name of a package resource carries a version by default, so exempt the directory of its scope or mount the resource. A resource requested through a component has no path of its own and is exempted by its class. An exempted resource is served as before, so exempt only content your application authored.
+
+The option has the following limits:
+
+* A worker script served with _sandbox_ starts in an opaque origin and cannot fetch from the application, so worker scripts have to be exempted. An HTML resource that has to run its own scripts has to be exempted as well, or set a policy of its own.
+* A resource that sets a _Content-Security-Policy_ header itself via _ResourceResponse.getHeaders()_ keeps exactly that policy, _sandbox_ is not added to it.
+* A response without a content type gets no _nosniff_, because a browser refuses to use such a response as a script or a stylesheet.
+* A response with status 304 and an error response carry neither header. For a 304 the browser keeps applying the headers of the response it has stored.
+* An _IResource_ that does not extend _AbstractResource_ is not covered and has to set the headers itself.
+* A PDF served with _sandbox_ is still displayed by the built-in PDF viewers of Chrome and Firefox.
