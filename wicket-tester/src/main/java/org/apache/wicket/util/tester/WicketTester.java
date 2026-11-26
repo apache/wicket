@@ -30,7 +30,6 @@ import java.util.Locale;
 
 import jakarta.servlet.ServletContext;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -328,7 +327,7 @@ public class WicketTester extends BaseWicketTester
 		List<? extends Behavior> behaviors = component.getBehaviors(expectedBehaviorClass);
 		final String message = String.format("Component '%s' has no behaviors of type '%s'",
 			component.getPageRelativePath(), expectedBehaviorClass);
-		assertResult(new Result(CollectionUtils.isEmpty(behaviors), message));
+		assertResult(new Result(behaviors.isEmpty(), message));
 	}
 
 	/**

@@ -151,6 +151,9 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 			// Re-enable input element (if it's disabled)
 			this.parentNode.parentNode.element.multi_selector.current_element.disabled = false;
 
+			// Hide the caption when the last file was removed
+			this.parentNode.parentNode.element.multi_selector.updateCaptionVisibility();
+
 			// Appease Safari
 			//    without it Safari wants to reload the browser window
 			//    which nixes your already queued uploads
@@ -158,7 +161,7 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		};
 
 		// Set row value
-		contentsColumn.innerHTML = this.getOnlyFileNames(element);
+		contentsColumn.innerHTML = Wicket.TrustedTypes.html(this.getOnlyFileNames(element));
 		new_row.appendChild( contentsColumn );
 
 		// Add button
@@ -168,7 +171,36 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 
 		// Add it to the list
 		this.list_target.appendChild( new_row );
+
+		// Show the caption now that the list is no longer empty
+		this.updateCaptionVisibility();
 		
+	};
+
+	/**
+	 * Show the caption while the list has files, hide it while the list is empty
+	 */
+	this.updateCaptionVisibility = function(){
+
+		// The caption is the div with class 'wicket-mfu-caption' inside the list target
+		var caption = null;
+		var children = this.list_target.childNodes;
+		for (var i = 0; i < children.length; i++)
+		{
+			var child = children[i];
+			if (child.nodeType === 1 && child.className &&
+				child.className.indexOf('wicket-mfu-caption') !== -1)
+			{
+				caption = child;
+				break;
+			}
+		}
+
+		if (caption)
+		{
+			caption.style.display = this.list_target.getElementsByTagName('tr').length > 0 ? '' : 'none';
+		}
+
 	};
 
 	this.getOnlyFileNames = function(inputElement)

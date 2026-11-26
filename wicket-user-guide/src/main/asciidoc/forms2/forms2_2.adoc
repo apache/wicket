@@ -1,5 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 A basic example of a validation rule is to make a field required. In <<modelsforms.adoc#_login_form,paragraph 11.4.2>> we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
 
@@ -14,6 +28,32 @@ email.add(EmailAddressValidator.getInstance());
 ----
 
 Wicket comes with a set of built-in validators that should suit most of our needs. We will see them later in this chapter.
+
+=== Labeling form fields with wicket:for
+
+Use `wicket:for` on an HTML `<label>` to associate it with a Wicket form field.
+Set its value to the field's component ID. In this example, both the label and
+the input refer to the `name` field.
+
+[source,html]
+----
+<label wicket:for="name"><wicket:label>Name</wicket:label>:</label>
+<input wicket:id="name" type="text"/>
+----
+
+Wicket renders an HTML `for` attribute on the label that matches the input's
+HTML `id`. This lets users click the label to focus the input.
+
+The `<wicket:label>` tag displays the field's label text. For example, a label
+model set with `setLabel(Model.of("First Name"))` displays “First Name”. If the
+model provides no text, Wicket looks for a localized label using the field's
+component ID as the resource key. In this example, if neither source provides
+text, Wicket displays “Name” from the body of `<wicket:label>`.
+
+Use a colon-separated component path in `wicket:for` when the field is nested
+in another container. Use `..` to refer to a parent container. Wicket adds
+the CSS classes `required`, `error`, and `disabled` by default when the field
+is required, has failed validation, or is disabled, respectively.
 
 === Feedback messages and localization
 

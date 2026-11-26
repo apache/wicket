@@ -20,3 +20,4 @@ MAVEN.md
 /mvnw
 /mvnw.cmd
 /.mvn/
+*.out

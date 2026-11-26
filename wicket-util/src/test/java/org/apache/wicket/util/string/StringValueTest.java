@@ -162,6 +162,34 @@ public class StringValueTest
 
 	}
 
+	@Test
+	public void beforeLast()
+	{
+		assertEquals("bar:baz", StringValue.valueOf("bar:baz:foo").beforeLast(':'));
+		assertEquals("", StringValue.valueOf("bar").beforeLast(':'));
+	}
+
+	@Test
+	public void beforeFirst()
+	{
+		assertEquals("bar", StringValue.valueOf("bar:baz:foo").beforeFirst(':'));
+		assertEquals("", StringValue.valueOf("bar").beforeFirst(':'));
+	}
+
+	@Test
+	public void afterFirst()
+	{
+		assertEquals("baz:foo", StringValue.valueOf("bar:baz:foo").afterFirst(':'));
+		assertEquals("", StringValue.valueOf("bar").afterFirst(':'));
+	}
+
+	@Test
+	public void afterLast()
+	{
+		assertEquals("foo", StringValue.valueOf("bar:baz:foo").afterLast(':'));
+		assertEquals("", StringValue.valueOf("bar").afterLast(':'));
+	}
+
 	static enum TestEnum {
 		FOO, BAR, BAZ
 	}

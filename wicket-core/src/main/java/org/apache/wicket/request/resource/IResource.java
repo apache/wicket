@@ -33,7 +33,9 @@ public interface IResource extends IClusterable
 {
 	/**
 	 * Attributes that are provided to resource in the {@link IResource#respond(Attributes)} method.
-	 * Attributes are set by the {@link ResourceRequestHandler}.
+	 * Attributes are set by the {@link ResourceRequestHandler}. Constructing them in application
+	 * code in order to call {@link IResource#respond(Attributes)} serves the resource without asking
+	 * whether it may be served - see that method.
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -109,6 +111,12 @@ public interface IResource extends IClusterable
 
 	/**
 	 * Renders this resource to response using the provided attributes.
+	 * <p>
+	 * <b>The resource is written to the response as is, without asking whether it may be served.</b>
+	 * The {@link org.apache.wicket.authorization.IAuthorizationStrategy} is asked in the constructor
+	 * of {@link ResourceRequestHandler} and nowhere else, so application code that serves a resource
+	 * must construct that handler for it and respond or schedule it, rather than call this method.
+	 * </p>
 	 * 
 	 * @param attributes
 	 */

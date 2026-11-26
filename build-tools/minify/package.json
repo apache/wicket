@@ -1,0 +1,13 @@
+{
+  "name": "wicket-minify",
+  "description": "Produces the .min.js and .min.css variants of the resources Apache Wicket ships",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  },
+  "scripts": {
+    "minify": "node minify.mjs"
+  }
+}

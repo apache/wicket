@@ -200,7 +200,7 @@ public interface IWizardModel extends IClusterable
 	}
 
 	/**
-	 * Instructs the wizard to finish succesfully. Typically, implementations check whether this
+	 * Instructs the wizard to finish successfully. Typically, implementations check whether this
 	 * option is available at all. Implementations may clean up and reset the model. Implementations
 	 * should notify the registered {@link IWizardModelListener#onFinish() model listeners}.
 	 */

@@ -31,6 +31,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContentDisposition;
@@ -132,6 +133,11 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 
 	/**
 	 * Download of a {@link IResource}.
+	 * <p>
+	 * The resource is served from the listener URL of the component this behavior is bound to
+	 * rather than from a resource URL of its own, and the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} authorizes it on every
+	 * request, exactly as it does for a {@link ResourceReference}.
 	 *
 	 * @param resource
 	 *            resource to download
@@ -371,16 +377,28 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 			return false;
 		}
 
+		/**
+		 * Responds with the resource, once the
+		 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} has authorized it.
+		 * <p>
+		 * The handler is created before the cookie is added, because it is its constructor that
+		 * asks the strategy. That cookie is what tells wicket-ajaxdownload.js that the download
+		 * finished, it is looked at there before the response body is, and a buffered response
+		 * replays a cookie ahead of the error the strategy causes - so a refused download must not
+		 * leave one behind, or it would be reported as
+		 * {@link AjaxDownloadBehavior#onDownloadSuccess(AjaxRequestTarget)}.
+		 */
 		@Override
 		public void onRequest()
 		{
 			final RequestCycle requestCycle = RequestCycle.get();
 			final Response response = requestCycle.getResponse();
+
+			ResourceRequestHandler handler = new ResourceRequestHandler(resource, null);
+
 			((WebResponse) response).addCookie(cookie(getName(), sameSite));
 
-			Attributes a = new Attributes(requestCycle.getRequest(), response, null);
-
-			resource.respond(a);
+			handler.respond(requestCycle);
 		}
 
 		public CharSequence getUrl()

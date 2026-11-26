@@ -61,8 +61,11 @@
 				<include>*.xml</include>
 				<include>wicket/**</include>
 				<include>wicket-*/**</include>
+				<include>build-tools/**</include>
 			</includes>
 			<excludes>
+				<exclude>build-tools/**/node/**</exclude>
+				<exclude>build-tools/**/node_modules/**</exclude>
 				<exclude>**/wicket/target/**</exclude>
 				<exclude>**/wicket-*/target/**</exclude>
 				<exclude>**/.classpath/**</exclude>

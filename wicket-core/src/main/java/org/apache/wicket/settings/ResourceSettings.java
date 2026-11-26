@@ -621,13 +621,17 @@ public class ResourceSettings implements IPropertiesFactoryContext
 
 	/**
 	 * Placeholder string for '..' within resource urls (which will be crippled by the browser and
-	 * not work anymore). Note that by default the placeholder string is <code>null</code> and thus
-	 * will not allow to access parent folders. That is by purpose and for security reasons (see
-	 * Wicket-1992). In case you really need it, a good value for placeholder would e.g. be "$up$".
-	 * Resources additionally are protected by a
-	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}
-	 * implementation such as {@link org.apache.wicket.markup.html.PackageResourceGuard} which you
-	 * may use or extend based on your needs.
+	 * not work anymore). By default the placeholder string is <code>::</code>, so a package
+	 * resource can be referenced relative to a parent folder of its scope, for example
+	 * {@code new PackageResourceReference(MyPanel.class, "../common/style.css")}.
+	 * Setting it to <code>null</code> disables the placeholder, and such references no longer
+	 * resolve.
+	 * <p>
+	 * The package of the scope class does not confine which resources a request can reach. Which
+	 * resources are served is decided by the
+	 * {@link org.apache.wicket.markup.html.IPackageResourceGuard IPackageResourceGuard}, such as
+	 * the default {@link org.apache.wicket.markup.html.SecurePackageResourceGuard}, which you may
+	 * configure or extend based on your needs.
 	 *
 	 * @see #getParentFolderPlaceholder()
 	 *

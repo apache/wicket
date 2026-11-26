@@ -1,4 +1,20 @@
 /*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * Grunt.js is a task runner for JavaScript development.
  * Grunt and its plugins are installed and managed via npm, the Node.js package manager.
  * http://gruntjs.com/
@@ -33,6 +49,7 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/modal-dialog.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/veil/wicket-veil.js"
 		],
@@ -46,10 +63,15 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/dom.js",
 			"../../wicket-core/src/test/js/channels.js",
 			"../../wicket-core/src/test/js/event.js",
-			"../../wicket-core/src/test/js/timer.js"
+			"../../wicket-core/src/test/js/timer.js",
+			"../../wicket-core/src/test/js/trusted-types.js",
+			"../../wicket-core/src/test/js/trusted-types-off.js",
+			"../../wicket-core/src/test/js/upload-to-resource.js",
+			"../../wicket-core/src/test/js/browser-info.js"
 		],
 		extensionsTestsJs = [
 			"../../wicket-extensions/src/test/js/autocomplete-test.js",
+			"../../wicket-extensions/src/test/js/modal-dialog-test.js",
 			"../../wicket-extensions/src/test/js/palette-test.js",
 			"../../wicket-extensions/src/test/js/trapfocus-test.js",
 			"../../wicket-extensions/src/test/js/veil-test.js"
@@ -118,9 +140,12 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/all.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/autocomplete.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/modal-dialog.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0',
-						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?4.0.0'
+						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?4.0.0',
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?4.0.0',
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types-off.html?4.0.0'
 					],
 					puppeteer: {
 						headless: true,
@@ -138,9 +163,12 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/all.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/autocomplete.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/modal-dialog.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?vanilla',
-						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?vanilla'
+						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?vanilla',
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?vanilla',
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types-off.html?vanilla'
 					],
 					puppeteer: {
 						headless: true,

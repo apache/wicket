@@ -1,8 +1,24 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
 # Apache Wicket
 
-Component-based Java web framework. `master` is the 11.x development line; the maintained
-release lines live on `wicket-10.x`, `wicket-9.x` and `wicket-8.x`. `SECURITY.md` says which of
-them still receive fixes.
+Component-based Java web framework. `master` is the 12.x development line. The current release
+line lives on `wicket-11.x` and the LTS line on `wicket-10.x`. Lines that reached end of life are
+kept under `archive/`. `SECURITY.md` says which lines still receive fixes.
 
 Versions — the Java release, the Servlet level, library and plugin versions — are not repeated
 here, because they go stale and then mislead. Read them from `pom.xml`.
@@ -19,6 +35,11 @@ header — copy it when you add one.
   request, don't tag unless you were told to do so.
 - Fixes go on `master` first and are cherry-picked down the maintenance lines afterwards, as far
   as the fix still applies. Which lines are in scope is a decision, not an inference — ask.
+- Never rewrite a commit that has been pushed: no rebase, no amend, no squash of anything already
+  on a remote branch. The repository rejects force pushes, and a pull request branch is shared
+  with its reviewers. Bring a pushed branch up to date by merging `master` into it, and correct a
+  pushed commit with a new commit on top. Pull requests are merged with a merge commit, so the
+  commits of a branch you stacked on stay in `master` and never need dropping.
 
 ## Commits
 
@@ -87,8 +108,15 @@ header — copy it when you add one.
   the new one, deprecate it rather than remove it.
 - An API change owes users a migration path. Add an OpenRewrite recipe to
   `wicket-migration/src/main/resources/META-INF/rewrite/wicket.yml` where the change is
-  mechanical, and draft the migration-guide wording in the commit message or the pull request
-  description — the guide itself lives on the wiki, where only a human can put it.
+  mechanical. The migration guide, `migration-to-<major>.md` in the root, tells someone upgrading
+  what they have to do, and gets a section in the same change when the upgrade forces an
+  application to change its code, markup or configuration, or when an intended behaviour changes
+  on purpose — a new default, a removed feature, a different contract — so that an application
+  has to decide whether to adapt. A bug fix does not belong there, even though an application
+  that relied on the broken behaviour will notice: if the old behaviour contradicted the
+  documentation, the contract or plain intent, the commit message covers the consequence and the
+  guide stays out of it. The guide is not release notes. On a maintenance branch it goes in the
+  section for the releases after `<major>.0.0`.
 
 ## Javadoc
 

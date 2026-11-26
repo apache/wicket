@@ -190,6 +190,13 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 		return component;
 	}
 
+	@Override
+	public boolean hasComponent()
+	{
+		return component != null ||
+			hasPageInstance() && getPageInstance().get(componentPath) != null;
+	}
+
 	/**
 	 * @see org.apache.wicket.core.request.handler.IPageAndComponentProvider#getComponentPath()
 	 */

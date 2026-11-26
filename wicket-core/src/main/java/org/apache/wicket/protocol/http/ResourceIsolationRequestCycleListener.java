@@ -20,13 +20,22 @@ import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -37,6 +46,7 @@ import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.util.lang.Classes;
@@ -156,6 +166,25 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 	private final List<IResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
 
 	/**
+	 * The key {@link #recordOrigin(HttpServletRequest)} records the request method under. Not a
+	 * valid header name, so it cannot collide with one.
+	 */
+	protected static final String RECORDED_METHOD = ":method";
+
+	/** The headers {@link #recordOrigin(HttpServletRequest)} records by default. */
+	private static final List<String> RECORDED_HEADERS = asList(
+		FetchMetadataResourceIsolationPolicy.SEC_FETCH_SITE_HEADER,
+		FetchMetadataResourceIsolationPolicy.SEC_FETCH_MODE_HEADER,
+		FetchMetadataResourceIsolationPolicy.SEC_FETCH_DEST_HEADER, WebRequest.HEADER_ORIGIN,
+		WebRequest.HEADER_REFERER);
+
+	/** What {@link #recordOrigin(HttpServletRequest)} recorded, carried with a destination. */
+	private static final MetaDataKey<Map<String, String>> ORIGIN = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/**
 	 * Create a new listener with the given policies. If no policies are given,
 	 * {@link FetchMetadataResourceIsolationPolicy} and {@link OriginResourceIsolationPolicy} will
 	 * be used. The policies are checked in order. The first outcome that's not
@@ -244,6 +273,44 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 			.getContainerRequest();
 
 		log.debug("Processing request to: {}", containerRequest.getPathInfo());
+
+		if (isEnabled())
+		{
+			// Record where this request came from while that is still known. Should the application
+			// interrupt this request and remember its destination to be resumed after a sign in,
+			// the request that resumes it will have been redirected from inside this application
+			// and will say so: it carries the origin that resumed it, not the origin that chose the
+			// URL. This record is what lets that request be judged on the latter.
+			RestartResponseAtInterceptPageException.setInterceptMetaData(ORIGIN,
+				recordOrigin(containerRequest));
+		}
+	}
+
+	/**
+	 * Records what the isolation policies need in order to tell where a request came from. Called
+	 * for every request, and remembered with the destination whenever a request is interrupted and
+	 * its destination kept to be resumed later.
+	 * <p>
+	 * Override to record what a custom {@link IResourceIsolationPolicy} reads. Record an entry for
+	 * every header consulted, with a {@code null} value where the header was absent: a name the
+	 * record does not mention at all is answered by the request that resumes the destination, which
+	 * is never what a header deciding provenance should fall back to. Keys are matched ignoring
+	 * case, and the record is held in the session, so its values have to be serializable.
+	 *
+	 * @param request
+	 *            the request being handled
+	 * @return the recorded properties, keyed by header name, with the request method under
+	 *         {@link #RECORDED_METHOD}
+	 */
+	protected Map<String, String> recordOrigin(HttpServletRequest request)
+	{
+		Map<String, String> origin = new HashMap<>();
+		for (String header : RECORDED_HEADERS)
+		{
+			origin.put(header, request.getHeader(header));
+		}
+		origin.put(RECORDED_METHOD, request.getMethod());
+		return origin;
 	}
 
 	/**
@@ -344,23 +411,30 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 
 			RequestType requestType = getRequestType(handler);
 
-			for (IResourceIsolationPolicy policy : resourceIsolationPolicies)
+			ResourceIsolationOutcome outcome = outcomeFor(containerRequest, targetedPage,
+				requestType);
+
+			Map<String, String> origin = RestartResponseAtInterceptPageException
+				.getInterceptMetaData(ORIGIN);
+			if (origin != null)
 			{
-				ResourceIsolationOutcome outcome = policy.isRequestAllowed(containerRequest,
-					targetedPage, requestType);
-				if (ResourceIsolationOutcome.DISALLOWED.equals(outcome))
-				{
-					log.debug("Isolation policy {} has rejected a request to {}",
-						Classes.simpleName(policy.getClass()), pathInfo);
-					disallowedOutcomeAction.apply(this, containerRequest, targetedPage);
-					return;
-				}
-				else if (ResourceIsolationOutcome.ALLOWED.equals(outcome))
-				{
-					return;
-				}
+				// This request resumes a destination that an earlier request chose. It carries the
+				// origin that resumed it - this application's own, because signing in redirects
+				// within it - so its own headers say nothing about where the URL came from. Judge
+				// the request that did choose it as well, and keep the stricter of the two.
+				outcome = stricter(outcome,
+					outcomeFor(new RecordedOriginRequest(containerRequest, origin), targetedPage,
+						requestType));
 			}
-			unknownOutcomeAction.apply(this, containerRequest, targetedPage);
+
+			if (ResourceIsolationOutcome.DISALLOWED.equals(outcome))
+			{
+				disallowedOutcomeAction.apply(this, containerRequest, targetedPage);
+			}
+			else if (ResourceIsolationOutcome.UNKNOWN.equals(outcome))
+			{
+				unknownOutcomeAction.apply(this, containerRequest, targetedPage);
+			}
 		}
 		else
 		{
@@ -437,6 +511,47 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 		throw new AbortWithHttpErrorCodeException(errorCode, errorMessage);
 	}
 
+	/**
+	 * The outcome the policies reach for {@code request}: the first policy that does not answer
+	 * {@link ResourceIsolationOutcome#UNKNOWN} decides.
+	 */
+	private ResourceIsolationOutcome outcomeFor(HttpServletRequest request,
+		IRequestablePage targetedPage, RequestType requestType)
+	{
+		for (IResourceIsolationPolicy policy : resourceIsolationPolicies)
+		{
+			ResourceIsolationOutcome outcome = policy.isRequestAllowed(request, targetedPage,
+				requestType);
+			if (ResourceIsolationOutcome.DISALLOWED.equals(outcome))
+			{
+				log.debug("Isolation policy {} has rejected a request to {}",
+					Classes.simpleName(policy.getClass()), request.getPathInfo());
+				return outcome;
+			}
+			else if (ResourceIsolationOutcome.ALLOWED.equals(outcome))
+			{
+				return outcome;
+			}
+		}
+		return ResourceIsolationOutcome.UNKNOWN;
+	}
+
+	private static ResourceIsolationOutcome stricter(ResourceIsolationOutcome one,
+		ResourceIsolationOutcome other)
+	{
+		if (ResourceIsolationOutcome.DISALLOWED.equals(one) ||
+			ResourceIsolationOutcome.DISALLOWED.equals(other))
+		{
+			return ResourceIsolationOutcome.DISALLOWED;
+		}
+		if (ResourceIsolationOutcome.UNKNOWN.equals(one) ||
+			ResourceIsolationOutcome.UNKNOWN.equals(other))
+		{
+			return ResourceIsolationOutcome.UNKNOWN;
+		}
+		return ResourceIsolationOutcome.ALLOWED;
+	}
+
 	private static IRequestHandler unwrap(IRequestHandler handler)
 	{
 		while (handler instanceof IRequestHandlerDelegate)
@@ -444,5 +559,76 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
 		}
 		return handler;
+	}
+
+	/**
+	 * Presents the request that was interrupted, so that the policies judge the origin that chose a
+	 * resumed URL rather than the origin that resumed it.
+	 * <p>
+	 * Whatever the record mentions is answered from the record alone, its absences included: a
+	 * resumed request always carries this application's own origin, so falling through to it would
+	 * hand back the very answer this class exists to avoid. Everything else is answered by the
+	 * resuming request, whose target scheme, host and port are the same ones the interrupted
+	 * request was compared against.
+	 */
+	private static class RecordedOriginRequest extends HttpServletRequestWrapper
+	{
+		private final Map<String, String> origin;
+
+		private RecordedOriginRequest(HttpServletRequest request, Map<String, String> origin)
+		{
+			super(request);
+
+			// header names are matched ignoring case, whatever recordOrigin() returned
+			this.origin = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+			this.origin.putAll(origin);
+		}
+
+		@Override
+		public String getMethod()
+		{
+			return origin.containsKey(RECORDED_METHOD) ? origin.get(RECORDED_METHOD)
+				: super.getMethod();
+		}
+
+		@Override
+		public String getHeader(String name)
+		{
+			return origin.containsKey(name) ? origin.get(name) : super.getHeader(name);
+		}
+
+		@Override
+		public Enumeration<String> getHeaders(String name)
+		{
+			if (origin.containsKey(name))
+			{
+				String value = origin.get(name);
+				return Collections.enumeration(
+					value == null ? Collections.emptyList() : Collections.singletonList(value));
+			}
+			return super.getHeaders(name);
+		}
+
+		@Override
+		public Enumeration<String> getHeaderNames()
+		{
+			Set<String> names = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+			for (Enumeration<String> live = super.getHeaderNames(); live.hasMoreElements();)
+			{
+				String name = live.nextElement();
+				if (origin.containsKey(name) == false)
+				{
+					names.add(name);
+				}
+			}
+			for (Map.Entry<String, String> recorded : origin.entrySet())
+			{
+				if (recorded.getValue() != null && RECORDED_METHOD.equals(recorded.getKey()) == false)
+				{
+					names.add(recorded.getKey());
+				}
+			}
+			return Collections.enumeration(names);
+		}
 	}
 }

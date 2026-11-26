@@ -20,7 +20,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
-import org.apache.wicket.protocol.ws.api.IWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
@@ -35,7 +34,7 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class WebSocketTester
 {
-	private final IWebSocketProcessor socketProcessor;
+	private final TestWebSocketProcessor socketProcessor;
 
 	/**
 	 * Constructor.
@@ -180,6 +179,34 @@ public class WebSocketTester
 	public void destroy()
 	{
 		socketProcessor.onClose(0, "Closed by WebSocketTester");
+	}
+
+	/**
+	 * @return {@code true} while the connection this tester opened is still open. A connection the
+	 *      application refused - by an {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter}
+	 *      or because the {@link org.apache.wicket.authorization.IAuthorizationStrategy} did not
+	 *      allow the {@link org.apache.wicket.protocol.ws.api.WebSocketResource} it named - is
+	 *      already closed when the constructor returns.
+	 */
+	public boolean isConnectionOpen()
+	{
+		return socketProcessor.getTestConnection().isOpen();
+	}
+
+	/**
+	 * @return the code the connection was closed with, or {@code -1} while it is still open
+	 */
+	public int getCloseCode()
+	{
+		return socketProcessor.getTestConnection().getCloseCode();
+	}
+
+	/**
+	 * @return the reason the connection was closed with, or {@code null} while it is still open
+	 */
+	public String getCloseReason()
+	{
+		return socketProcessor.getTestConnection().getCloseReason();
 	}
 
 	/**

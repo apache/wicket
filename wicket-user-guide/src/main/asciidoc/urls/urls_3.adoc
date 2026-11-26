@@ -1,12 +1,26 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 Bookmarkable pages can be linked directly inside markup files without writing any Java code. Using <wicket:link> tag we ask Wicket to automatically add bookmarkable links for the anchors wrapped inside it. Here is an example of usage of <wicket:link> tag taken from the home page of the project BookmarkablePageAutoLink:
 
 [source,html]
 ----
 <!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 	<head>
 		<meta charset="utf-8" />
 		<title>Apache Wicket Quickstart</title>
@@ -34,7 +48,7 @@ If we take a look also at the markup of SubPackagePage we can see that it contai
 [source,html]
 ----
 <!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 	<head>
 		<meta charset="utf-8" />
 		<title>Apache Wicket Quickstart</title>
@@ -59,5 +73,5 @@ Please note that any link to the current page (aka self link) is disabled. For e
 
 NOTE: In previous versions of Wicket, the markup used to render disabled links could be customized using methods `setDefaultBeforeDisabledLink` and `setDefaultAfterDisabledLink` on the markup settings. This customization is no longer available in Wicket 10.
 
-The purpose of <wicket:link> tag is not limited to just simplifying the usage of bookmarkable pages. As we will see in chapter 13, this tag can also be adopted to manage web resources like pictures, CSS files, JavaScript files and so on.
+The `<wicket:link>` tag can also resolve package resources such as images, CSS files, and JavaScript files. See <<_using_package_resources_with_tag_wicketlink,Using package resources with wicket:link>>.
 

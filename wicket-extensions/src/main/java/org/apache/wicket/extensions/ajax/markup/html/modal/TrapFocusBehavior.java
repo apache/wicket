@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.modal;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.util.string.CssUtils;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -51,7 +52,8 @@ public class TrapFocusBehavior extends Behavior
 		
 		String styleClass = component.getString(CSS_CURRENT_KEY, null, "current-focus-trap");
 		
-		CharSequence script = String.format("Wicket.trapFocus('%s', '%s');", component.getMarkupId(), styleClass);
+		CharSequence script = String.format("Wicket.trapFocus('%s', '%s');", component.getMarkupId(),
+			JavaScriptUtils.escapeQuotes(styleClass));
 		
 		response.render(new PriorityHeaderItem(OnDomReadyHeaderItem.forScript(script)));
 	}

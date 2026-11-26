@@ -41,6 +41,11 @@ public class ListenerLogData extends PageLogData
 
 	/**
 	 * Construct.
+	 * <p>
+	 * The component is only asked for when the provider
+	 * {@link IPageAndComponentProvider#hasComponent() has it}, so collecting the data never creates
+	 * the page or runs its lifecycle callbacks. Otherwise the component class, the behavior class
+	 * and the submitting component are left {@code null}.
 	 *
 	 * @param pageAndComponentProvider
 	 * @param behaviorIndex
@@ -51,14 +56,15 @@ public class ListenerLogData extends PageLogData
 
 		this.behaviorIndex = behaviorIndex;
 
-		componentClass = optional(() -> pageAndComponentProvider.getComponent().getClass());
+		final IRequestableComponent component = optional(
+			() -> pageAndComponentProvider.hasComponent() ? pageAndComponentProvider.getComponent()
+				: null);
+		componentClass = component != null ? component.getClass() : null;
 		componentPath = optional(() -> pageAndComponentProvider.getComponentPath());
 
-		if (behaviorIndex != null)
+		if (behaviorIndex != null && component != null)
 		{
-			behaviorClass = optional(() -> pageAndComponentProvider.getComponent()
-					.getBehaviorById(behaviorIndex)
-					.getClass());
+			behaviorClass = optional(() -> component.getBehaviorById(behaviorIndex).getClass());
 		}
 		else
 		{
@@ -66,7 +72,6 @@ public class ListenerLogData extends PageLogData
 		}
 		
 		final Component formSubmitter = optional(() -> {
-			final IRequestableComponent component = pageAndComponentProvider.getComponent();
 			if (component instanceof Form)
 			{
 				final IFormSubmitter submitter = ((Form<?>)component).findSubmitter();

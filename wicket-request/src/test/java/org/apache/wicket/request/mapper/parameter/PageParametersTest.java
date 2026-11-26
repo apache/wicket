@@ -21,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.util.string.StringValue;
 import org.junit.jupiter.api.Test;
@@ -334,6 +336,48 @@ class PageParametersTest
 		PageParameters p2 = new PageParameters().add("c", "d").add("a", "b");
 
 		assertEquals(p2, p1);
+		assertEquals(p2.hashCode(), p1.hashCode());
+	}
+
+	@Test
+	void hashCodeWithReorderedDuplicateNamedParameters()
+	{
+		PageParameters p1 = new PageParameters().add("a", "1").add("a", "2").add("a", "1");
+		PageParameters p2 = new PageParameters().add("a", "1").add("a", "1").add("a", "2");
+
+		assertEquals(p1, p2);
+		assertEquals(p1.hashCode(), p2.hashCode());
+		assertNotEquals(p1, new PageParameters().add("a", "1").add("a", "2"));
+	}
+
+	@Test
+	void hashMapLookupWithReorderedNamedParameters()
+	{
+		PageParameters p1 = new PageParameters().set(0, "page").add("a", "1").add("b", "2");
+		PageParameters p2 = new PageParameters().set(0, "page").add("b", "2").add("a", "1");
+		p1.setFragment("section");
+		p2.setFragment("section");
+		Map<PageParameters, String> pages = new HashMap<>();
+		pages.put(p1, "value");
+
+		assertEquals("value", pages.get(p2));
+		pages.put(p2, "replacement");
+		assertEquals(1, pages.size());
+		assertEquals("replacement", pages.get(p1));
+	}
+
+	@Test
+	void hashCodeWithNoNamedParameters()
+	{
+		PageParameters p1 = new PageParameters();
+		PageParameters p2 = new PageParameters();
+		assertEquals(p1, p2);
+		assertEquals(p1.hashCode(), p2.hashCode());
+
+		p1.add("a", "1").remove("a");
+		p2.add("b", "2").remove("b");
+		assertEquals(p1, p2);
+		assertEquals(p1.hashCode(), p2.hashCode());
 	}
 
 	/**

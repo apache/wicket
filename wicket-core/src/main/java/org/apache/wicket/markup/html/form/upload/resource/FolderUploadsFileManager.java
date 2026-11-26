@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.UUID;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
@@ -31,7 +32,8 @@ import org.apache.wicket.util.lang.Args;
 /**
  * Implementation of {@link IUploadsFileManager} that stores files in sub-folders of a given folder.
  * Sub-folders are named using the input field ID (and those are unique per application). Thus, there
- * is no possibility that uploads get mixed up.
+ * is no possibility that uploads get mixed up. In its sub-folder, each file gets a random name of its
+ * own, so files of the same client file name do not replace each other.
  */
 public class FolderUploadsFileManager implements IUploadsFileManager
 {
@@ -84,12 +86,12 @@ public class FolderUploadsFileManager implements IUploadsFileManager
     }
 
     /**
-     * Validates {@code uploadFieldId} and {@code clientFileName} against the base folder to
+     * Validates {@code uploadFieldId} and {@code fileName} against the base folder to
      * prevent path traversal, and returns the fully resolved, canonical target file.
      *
      * @throws SecurityException if either component would escape the base folder
      */
-    private java.io.File resolveTargetFile(String uploadFieldId, String clientFileName)
+    private java.io.File resolveTargetFile(String uploadFieldId, String fileName)
             throws IOException
     {
         Path baseFolderPath = getFolder().toPath().toRealPath();
@@ -98,21 +100,40 @@ public class FolderUploadsFileManager implements IUploadsFileManager
         {
             throw new SecurityException("Path traversal detected in uploadFieldId");
         }
-        java.io.File target = new File(uploadFieldFolder, clientFileName).getCanonicalFile();
+        java.io.File target = new File(uploadFieldFolder, fileName).getCanonicalFile();
         Path uploadFieldFolderPath = getPathForComparison(uploadFieldFolder);
         if (!target.toPath().startsWith(uploadFieldFolderPath))
         {
-            throw new SecurityException("Path traversal detected in client filename");
+            throw new SecurityException("Path traversal detected in file name");
         }
         return target;
     }
 
     @Override
+    public String store(FileUpload fileItem, String uploadFieldId)
+    {
+        String fileName = UUID.randomUUID().toString();
+        write(fileItem, uploadFieldId, fileName);
+        return fileName;
+    }
+
+    /**
+     * @deprecated files saved under their client file name replace each other when they share it.
+     *             Use {@link #store(FileUpload, String)} instead.
+     */
+    @Deprecated(since = "11.0.0", forRemoval = true)
+    @SuppressWarnings("removal")
+    @Override
     public void save(FileUpload fileItem, String uploadFieldId)
+    {
+        write(fileItem, uploadFieldId, fileItem.getClientFileName());
+    }
+
+    private void write(FileUpload fileItem, String uploadFieldId, String fileName)
     {
         try
         {
-            java.io.File target = resolveTargetFile(uploadFieldId, fileItem.getClientFileName());
+            java.io.File target = resolveTargetFile(uploadFieldId, fileName);
             Files.createDirectories(target.toPath().getParent());
             try (InputStream in = fileItem.getInputStream();
                  FileOutputStream out = new FileOutputStream(target))
@@ -127,11 +148,11 @@ public class FolderUploadsFileManager implements IUploadsFileManager
     }
 
     @Override
-    public File getFile(String uploadFieldId, String clientFileName)
+    public File getFile(String uploadFieldId, String fileName)
     {
         try
         {
-            return new File(resolveTargetFile(uploadFieldId, clientFileName));
+            return new File(resolveTargetFile(uploadFieldId, fileName));
         }
         catch (IOException e)
         {

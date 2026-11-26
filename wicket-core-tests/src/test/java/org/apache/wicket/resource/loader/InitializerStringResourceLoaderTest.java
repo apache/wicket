@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.resource.StringResourceLoaderTestBase;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
@@ -37,6 +38,7 @@ public class InitializerStringResourceLoaderTest extends StringResourceLoaderTes
 	}
 
 	@Override
+	@Test
 	public void loaderUnknownResources()
 	{
 		assertNull(loader.loadStringResource((Class<?>)null, "fhadfjksd", null, null, null));

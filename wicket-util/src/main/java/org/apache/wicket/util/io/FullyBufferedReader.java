@@ -219,15 +219,19 @@ public final class FullyBufferedReader
 	}
 
 	/**
-	 * Find a char starting at the position provided. The char must not be inside a quoted string
-	 * (single or double)
-	 * 
+	 * Find a char after the position provided that is not inside a quoted string (single or
+	 * double). A quoted string ends at the next occurrence of its opening quote; as in HTML and
+	 * XML, a backslash does not escape a quote.
+	 *
 	 * @param ch
 	 *            The char to search for
 	 * @param startPos
-	 *            The index to start at
+	 *            The index to start at. The char at this index is checked for a quote, but is
+	 *            never returned as a match.
 	 * @return -1 if not found
-	 * @throws ParseException 
+	 * @throws ParseException
+	 *             if a quoted string is opened but not closed. The line and column of the
+	 *             exception message point at the opening quote.
 	 */
 	public int findOutOfQuotes(final char ch, int startPos) throws ParseException
 	{
@@ -235,56 +239,58 @@ public final class FullyBufferedReader
 	}
 
 	/**
-	 * Find a char starting at the position provided. The char must not be inside a quoted string
-	 * (single or double)
-	 * 
+	 * Find a char after the position provided that is not inside a quoted string (single or
+	 * double), starting inside the given quoted string. A quoted string ends at the next
+	 * occurrence of its opening quote; as in HTML and XML, a backslash does not escape a quote.
+	 *
 	 * @param ch
 	 *            The char to search for
 	 * @param startPos
-	 *            The index to start at
+	 *            The index to start at. The char at this index is checked for a quote, but is
+	 *            never returned as a match.
 	 * @param quotationChar
-	 *            The current quotation char. Must be ' or ", otherwise will be ignored.
+	 *            The quote of the quoted string the search starts in. Must be ' or ", otherwise
+	 *            the search starts outside quotes.
 	 * @return -1 if not found
-	 * @throws ParseException 
+	 * @throws ParseException
+	 *             if a quoted string is opened but not closed. The line and column of the
+	 *             exception message point at the opening quote.
 	 */
 	public int findOutOfQuotes(final char ch, int startPos, char quotationChar)
 		throws ParseException
 	{
-		int closeBracketIndex = find(ch, startPos + 1);
-
-		if (closeBracketIndex != -1)
+		if (quotationChar != '\'' && quotationChar != '"')
 		{
-			CharSequence tagCode = getSubstring(startPos, closeBracketIndex + 1);
+			quotationChar = 0;
+		}
 
-			for (int i = 0; i < tagCode.length(); i++)
+		for (int pos = startPos; pos < input.length(); pos++)
+		{
+			char currentChar = input.charAt(pos);
+			if (quotationChar != 0)
 			{
-				char currentChar = tagCode.charAt(i);
-				char previousTag = tagCode.charAt(i > 0 ? i - 1 : 0);
-
-				if (quotationChar == 0 && (currentChar == '\'' || currentChar == '\"'))
-				{// I'm entering inside a quoted string. Set quotationChar
-					quotationChar = currentChar;
-					countLinesTo(startPos + i);
-				}
-				else if (currentChar == quotationChar && previousTag != '\\')
-				{ // I'm out of quotes, reset quotationChar
+				if (currentChar == quotationChar)
+				{
 					quotationChar = 0;
 				}
-				// I've found character but I'm inside quotes
-				if (currentChar == ch && quotationChar != 0)
-				{
-					return findOutOfQuotes(ch, closeBracketIndex + 1, quotationChar);
-				}
+			}
+			else if (currentChar == '\'' || currentChar == '"')
+			{
+				quotationChar = currentChar;
+				countLinesTo(pos);
+			}
+			else if (currentChar == ch && pos > startPos)
+			{
+				return pos;
 			}
 		}
-		else if (quotationChar != 0)
+
+		if (quotationChar != 0)
 		{
-			// quotes not balanced!
 			throw new ParseException("Opening/closing quote not found for quote at " + "(line " +
 				getLineNumber() + ", column " + getColumnNumber() + ")", startPos);
 		}
-
-		return closeBracketIndex;
+		return -1;
 	}
 
 	/**

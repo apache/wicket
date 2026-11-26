@@ -20,14 +20,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import jakarta.servlet.AsyncContext;
@@ -83,7 +85,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 		}
 
 		this.httpSession = (HttpSession) userProperties.get(SESSION);
-		this.headers = (Map<String, List<String>>) userProperties.get(HEADERS);
+		this.headers = copyHeaders((Map<String, List<String>>) userProperties.get(HEADERS));
 		this.queryString = session.getQueryString();
 		this.userPrincipal = session.getUserPrincipal();
 		Object requestURI = session.getRequestURI();
@@ -102,6 +104,26 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 			}
 		}
 		requestId = UUID.randomUUID().toString();
+	}
+
+	private static Map<String, List<String>> copyHeaders(Map<String, List<String>> headers)
+	{
+		Map<String, List<String>> copy = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+		if (headers != null)
+		{
+			for (Map.Entry<String, List<String>> header : headers.entrySet())
+			{
+				copy.computeIfAbsent(header.getKey(), name -> new ArrayList<>())
+					.addAll(header.getValue());
+			}
+		}
+		return copy;
+	}
+
+	private List<String> getHeaderValues(String name)
+	{
+		return name != null ? headers.getOrDefault(name, Collections.emptyList())
+			: Collections.emptyList();
 	}
 
 	@Override
@@ -126,74 +148,20 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	@Override
 	public String getHeader(String name)
 	{
-		String value = null;
-		if (headers != null)
-		{
-			List<String> headerValues = headers.get(name);
-			if (headerValues != null && !headerValues.isEmpty())
-			{
-				value = headerValues.get(0);
-			}
-		}
-		return value;
+		List<String> values = getHeaderValues(name);
+		return values.isEmpty() ? null : values.get(0);
 	}
 
 	@Override
 	public Enumeration<String> getHeaders(String name)
 	{
-		Enumeration<String> values = null;
-		if (headers != null)
-		{
-			List<String> headerValues = headers.get(name);
-			if (headerValues != null && !headerValues.isEmpty())
-			{
-				final Iterator<String> iterator = headerValues.iterator();
-				values = new Enumeration<String>()
-				{
-					@Override
-					public boolean hasMoreElements()
-					{
-						return iterator.hasNext();
-					}
-
-					@Override
-					public String nextElement()
-					{
-						return iterator.next();
-					}
-				};
-			}
-		}
-		return values;
+		return Collections.enumeration(getHeaderValues(name));
 	}
 
 	@Override
 	public Enumeration<String> getHeaderNames()
 	{
-		Enumeration<String> names = null;
-		if (headers != null)
-		{
-			Set<String> headerNames = headers.keySet();
-			if (!headerNames.isEmpty())
-			{
-				final Iterator<String> iterator = headerNames.iterator();
-				names = new Enumeration<String>()
-				{
-					@Override
-					public boolean hasMoreElements()
-					{
-						return iterator.hasNext();
-					}
-
-					@Override
-					public String nextElement()
-					{
-						return iterator.next();
-					}
-				};
-			}
-		}
-		return names;
+		return Collections.enumeration(headers.keySet());
 	}
 
 	@Override

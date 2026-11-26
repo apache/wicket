@@ -1,3 +1,19 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
 # Security Policy
 
 Apache Wicket follows the [Apache Software Foundation security process](https://www.apache.org/security/).
@@ -47,21 +63,20 @@ needs fixing.
 
 ## Supported Versions
 
-Security fixes are applied to the actively maintained release lines. Refer to
-the [download page](https://wicket.apache.org/start/download.html) for the
-current status and the latest release of each line.
+Security fixes are applied to two release lines:
 
-| Version | Status                                          |
-| ------- | ----------------------------------------------- |
-| 11.x    | In development (`master`) — not yet released     |
-| 10.x    | Current, supported                              |
-| 9.x     | Supported                                       |
-| 8.x     | Security fixes only — upgrade to 9.x or 10.x    |
-| ≤ 7.x   | Discontinued — no security fixes                |
+- the **current** line, the most recent major release, maintained on its
+  `wicket-<major>.x` branch. It is supported until the next major release.
+- the **long-term support (LTS)** line, maintained on its `wicket-<major>.x`
+  branch. It is supported until the next LTS release.
 
-If you are running a discontinued version, the fix is to upgrade. See the
-[Migration to Wicket 10.0](https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0)
-guide on our wiki, which links the guides for the earlier lines.
+When an LTS release is also the most recent major release, the two are the same
+line. Every other line is discontinued and receives no security fixes. The
+[releases page](https://wicket.apache.org/versions/) says which line is current
+and which is LTS, the latest release of each, and when support for each ends.
+
+If you are running a discontinued version, the fix is to upgrade. The releases
+page links the migration guides.
 
 ## Scope
 
@@ -81,8 +96,8 @@ code is not fixed.
 Two limits on that, both of which cut in the reporter's favour:
 
 - **Deprecation is per release line.** A member deprecated on `master` may still
-  be current in 10.x or 9.x. A report is judged against the line it targets, not
-  against `master`.
+  be current on the LTS line. A report is judged against the line it targets,
+  not against `master`.
 - **Deprecating a member does not deprecate the behaviour behind it.** Where a
   deprecated accessor merely fronts a feature that is still current and still
   reachable without the application opting in, the feature is in scope and the
@@ -155,18 +170,6 @@ report showing that a request *with* `Sec-Fetch-Site` present is nonetheless
 decided by the origin policy is in scope, as is anything else in
 `ResourceIsolationRequestCycleListener` itself.
 
-**8.x has no supported resource isolation implementation.** The
-`IResourceIsolationPolicy` mechanism arrived in 9.1.0. On 8.x the only
-cross-origin check Wicket offers is `CsrfPreventionRequestCycleListener`, which
-reads the same two headers with the same limits; 9.x deprecates it in favour of
-the resource isolation listener and it is therefore already out of scope there
-under [Deprecated code is out of scope](#deprecated-code-is-out-of-scope), while
-on 8.x it is not deprecated only because that line has nothing to migrate to. An
-8.x application that needs anything stronger has to upgrade or implement the check
-itself: we will not backport the fetch-metadata policy, and reports against
-`CsrfPreventionRequestCycleListener` are out of scope on the same footing as the
-origin policy.
-
 ### `wicket-examples` is sample code, not production code
 
 `wicket-examples` exists to demonstrate framework features in as few lines as
@@ -216,19 +219,19 @@ that can, and neither is a judgement on whether the concern behind it is real.
 ### A finding must be verified against a supported branch tip
 
 Verify the issue against the current tip of the line you are reporting against:
-`wicket-8.x`, `wicket-9.x`, `wicket-10.x`, or `master`. One of them is enough —
-say which, and name the commit you tested. A failing test against that commit is
-ideal. Reporting only the release you happen to be running is not sufficient: a
-released artifact is always behind its branch, and what you found may already be
-fixed there.
+the `wicket-<major>.x` branch of the current line or of the LTS line.
+One of them is enough — say which, and name the commit you tested. A failing
+test against that commit is ideal. Reporting only the release you happen to be
+running is not sufficient: a released artifact is always behind its branch, and
+what you found may already be fixed there.
 
 We do not assess a report verified only against an older version. A release that
 is not its branch tip may be missing fixes that are already public, and the
-discontinued lines — 7.x and earlier — receive no security fixes at all, so the
-remedy there is to upgrade whether or not the behaviour you found is a
-vulnerability. Note also that git branches exist for every line Wicket has ever
-shipped; a branch existing is not a statement that the line is supported. The
-table above is.
+discontinued lines receive no security fixes at all, so the remedy there is to
+upgrade whether or not the behaviour you found is a vulnerability. Note also
+that git branches exist for every line Wicket has ever shipped; a branch
+existing is not a statement that the line is supported. The
+[Supported Versions](#supported-versions) section is.
 
 Before reporting, check the advisories already published for the line you tested,
 at [security.apache.org/projects/wicket/](https://security.apache.org/projects/wicket/).
@@ -380,7 +383,7 @@ serialized Wicket data, remains trusted storage. And a custom `ICryptScheme`
 inherits the guarantee only if it honours the contract: `decrypt` must return
 `null` on authentication failure rather than returning unverified plaintext.
 
-### Model data is escaped; markup and message bundles are trusted
+### Model data and bundle values are escaped; markup is trusted
 
 Wicket escapes the text a component renders from its model. `Component`'s
 `escapeModelStrings` flag is **on by default**, and a component renders
@@ -398,18 +401,27 @@ attribute, which is escaped when the tag is written and would otherwise be
 encoded twice; that is an implementation detail of the component and not an
 invitation to render untrusted markup through it.
 
-Two inputs on the other side of the boundary are trusted, because both are
-authored by the developer and neither is data the application received at
-runtime:
+**Markup files are trusted.** They sit on the other side of the boundary because
+they are authored by the developer and are not data the application received at
+runtime. A `.html` file on the classpath is a template, exactly like a JSP or a
+Thymeleaf template, and Wicket renders it as markup. An application that serves
+markup from somewhere an untrusted party can write — through a custom
+`IMarkupResourceStreamProvider`, for instance — has taken that trust on itself.
 
-- **Markup files are trusted.** A `.html` file on the classpath is a template,
-  exactly like a JSP or a Thymeleaf template, and Wicket renders it as markup. An
-  application that serves markup from somewhere an untrusted party can write —
-  through a custom `IMarkupResourceStreamProvider`, for instance — has taken
-  that trust on itself.
-- **Message bundles are trusted.** `<wicket:message key="…"/>` renders its
-  property value as markup by default, and `escape="true"` opts in to escaping.
-  Markup in a bundle is therefore a supported way to format a message.
+**Message bundles are values, not markup.** A bundle is authored by the developer
+too, but a property file says nothing about where its value will be written: the
+same key can end up in element text, in an attribute, or in a string literal in
+the JavaScript Wicket generates, and an application that overrides one of
+Wicket's own keys — the css class of a form's hidden fields, the starting text of
+an upload progress bar — does not get to choose the context. So the code that
+writes a bundle value escapes it for the context it writes it into,
+`Strings#escapeMarkup` for markup and `JavaScriptUtils#escapeQuotes` for a
+JavaScript literal, and a framework component that writes one as it stands is a
+bug in the framework. The one place Wicket itself renders a bundle value as markup
+is `<wicket:message key="…"/>`, and there it is the markup author's choice: the tag
+renders its property value as markup by default, and `escape="true"` opts in to
+escaping. Markup in a bundle is therefore a supported way to format a message
+there, and only there.
 
 The value a bundle string interpolates is a different matter. `${name}` in a
 message resolves first to a child component with `wicket:id="name"`, whose

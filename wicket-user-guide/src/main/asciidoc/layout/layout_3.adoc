@@ -1,3 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 Let's go back to our layout example. In <<layout.adoc#_header_footer_left_menu_content_etc,chapter 5.1>> we have divided our layout in common areas that must be part of every page. Now we will build a reusable template page for our web application combining pages and panels. The code examples are from project MarkupInheritanceExample.
 
@@ -65,25 +81,33 @@ Now we can build a generic template page using our brand new panels. Its markup 
 
 [source,html]
 ----
-<html>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-...
+<meta charset="utf-8">
+<title wicket:id="pageTitle">Jug4Tenda</title>
 <!--Include CSS-->
 ...
 </head>
 <body>
-<div id="header" wicket:id="headerPanel">header</div>
+<a class="skip-link" href="#content">Skip to main content</a>
+<header id="header" wicket:id="headerPanel">header</header>
 <div id="body">
-	<div id="menu" wicket:id="menuPanel">menu</div>
-	<div id="content" wicket:id="contentComponent">content</div>
+	<nav id="menu" wicket:id="menuPanel">menu</nav>
+	<main id="content" tabindex="-1" wicket:id="contentComponent">content</main>
 </div>
-<div id="footer" wicket:id="footerPanel">footer</div>
+<footer id="footer" wicket:id="footerPanel">footer</footer>
 </body>
 </html>
 ----
 
-The HTML code for this page implements the generic left-menu layout of our site. You can note the 4 _<div>_ tags used as containers for the corresponding areas.
+The HTML code for this page implements the generic left-menu layout of our site. Each layout area gets the HTML element that names its role: _<header>_, _<nav>_ for the menu, _<main>_ for the content and _<footer>_. Browsers and screen readers expose these elements as landmarks, so users can jump between the areas. Two more details make the template usable by everyone:
+
+* the _<title>_ is bound to a _Label_, so that every page can give itself its own title;
+* the first link of the page, _Skip to main content_, lets keyboard users jump past the header and the menu straight to the content area.
+
+The _<html>_ tag has no _lang_ attribute, because Wicket renders one from the locale of the page. It tells browsers and screen readers which language the page is written in. The title, the skip link and the language are discussed in <<_accessibility,chapter 25>>.
+
 The page class contains the code to physically assemble the page and panels:
 
 [source,java]
@@ -102,16 +126,23 @@ public class JugTemplate extends WebPage {
 	private Component footerPanel;
 
     public JugTemplate(){
+		add(new Label("pageTitle", this::getPageTitle));
 		add(headerPanel = new HeaderPanel("headerPanel"));
 		add(menuPanel = new MenuPanel("menuPanel"));
 		add(footerPanel = new FooterPanel("footerPanel"));
 		add(new Label(CONTENT_ID, "Put your content here"));
 	}
 
+	protected String getPageTitle() {
+		return "Jug4Tenda";
+	}
+
     //getters for layout areas
     //...
 }
 ----
+
+The title label reads its text from method _getPageTitle_ each time the page is rendered, so subclasses override this method to give themselves a title of their own.
 
 Done! Our template page is ready to be used. Now all the pages of our site will be subclasses of this parent page and they will inherit the layout and the HTML markup. They will only substitute the _Label_ inserted as content area with their custom content.
 
@@ -158,6 +189,11 @@ public class SimpleLoginPage extends JugTemplate {
 		super();
 		replace(new LoginPanel(CONTENT_ID));
 		getMenuPanel().setVisible(false);
+	}
+
+	@Override
+	protected String getPageTitle() {
+		return "Login - Jug4Tenda";
 	}
 }
 ----

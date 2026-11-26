@@ -32,7 +32,8 @@ import org.apache.wicket.model.Model;
  * is the email address that was detected.
  * <p>
  * Web URLs will be wrapped with a &lt;a href="xxx"&gt;xxx&lt;/a&gt; tag, where "xxx" is the URL
- * that was detected (it can be any valid URL type, http://, https://, ftp://, etc...)
+ * that was detected. Only URLs with an http://, https:// or ftp:// scheme are detected, a URL with
+ * any other scheme is displayed as plain text.
  * 
  * @author Juergen Donnerstag
  */

@@ -17,7 +17,9 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -50,8 +52,12 @@ import org.slf4j.LoggerFactory;
  * should prefix it appropriately so that it resolves correctly for the current request, even if
  * that's for something that's not at the context root. This is done for ServletWebRequests by
  * prepending with "../" tokens, for example.
- * 
- * 
+ *
+ * The "srcset" attribute holds a comma-separated list of URLs, each optionally followed by a
+ * descriptor like "480w" or "2x". Each relative URL in it is prefixed the same way, and the
+ * descriptors are kept as they are.
+ *
+ *
  * @author Al Maw
  */
 public final class RelativePathPrefixHandler extends AbstractMarkupFilter
@@ -71,10 +77,12 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src", "background",
-			"action" };
+			"action", "srcset" };
+
+	private static final String SRCSET = "srcset";
 
 	/**
-	 * Behavior that adds a prefix to src, href and background attributes to make them
+	 * Behavior that adds a prefix to src, href, background and srcset attributes to make them
 	 * context-relative
 	 */
 	public static final Behavior RELATIVE_PATH_BEHAVIOR = new Behavior()
@@ -89,8 +97,17 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				String attrValue = tag.getAttributes().getString(attrName);
 
-				if ((attrValue != null) && (attrValue.startsWith("/") == false)
-					&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+				
+				if (!needsPrefix(attrName, attrValue))
+				{
+					continue;
+				}
+				
+				if (SRCSET.equals(attrName))
+				{
+					tag.getAttributes().put(attrName, rewriteSrcset(attrValue));
+				}
+				else
 				{
 					tag.getAttributes().put(attrName,
 						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
@@ -149,8 +166,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		for (String attrName : attributeNames)
 		{
 			String attrValue = tag.getAttributes().getString(attrName);
-			if ((attrValue != null) && (attrValue.startsWith("/") == false)
-				&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+			if (needsPrefix(attrName, attrValue))
 			{
 				if (tag.getId() == null)
 				{
@@ -216,5 +232,84 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	private String getWicketRelativePathPrefix(final MarkupStream markupStream)
 	{
 		return getWicketNamespace(markupStream) + WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID;
+	}
+
+	private static boolean isRelative(final String url)
+	{
+		return (url != null) && !url.startsWith("/") && !url.contains(":") && !url.startsWith("#");
+	}
+
+	private static boolean needsPrefix(final String attrName, final String attrValue)
+	{
+		if (SRCSET.equals(attrName))
+		{
+			return (attrValue != null) && findSrcsetUrls(attrValue).stream()
+				.anyMatch(bounds -> isRelative(attrValue.substring(bounds[0], bounds[1])));
+		}
+		return isRelative(attrValue);
+	}
+
+	private static String rewriteSrcset(final String srcset)
+	{
+		StringBuilder result = new StringBuilder(srcset.length() + 16);
+		int copied = 0;
+		for (int[] bounds : findSrcsetUrls(srcset))
+		{
+			String url = srcset.substring(bounds[0], bounds[1]);
+			result.append(srcset, copied, bounds[0]);
+			result.append(isRelative(url) ? UrlUtils.rewriteToContextRelative(url,
+				RequestCycle.get()) : url);
+			copied = bounds[1];
+		}
+		result.append(srcset, copied, srcset.length());
+		return result.toString();
+	}
+
+	/**
+	 * Finds the URLs of the image candidates in a srcset value, following the parsing rules of the
+	 * HTML specification: a URL is a run of non-whitespace characters, trailing commas end the
+	 * candidate, and otherwise its descriptors run up to the next comma.
+	 *
+	 * @param srcset
+	 *            the srcset attribute value
+	 * @return the start (inclusive) and end (exclusive) index of each URL
+	 */
+	private static List<int[]> findSrcsetUrls(final String srcset)
+	{
+		List<int[]> urls = new ArrayList<>();
+		int length = srcset.length();
+		int position = 0;
+		while (position < length)
+		{
+			char c = srcset.charAt(position);
+			if (Character.isWhitespace(c) || (c == ','))
+			{
+				position++;
+				continue;
+			}
+
+			int urlEnd = position;
+			while ((urlEnd < length) && !Character.isWhitespace(srcset.charAt(urlEnd)))
+			{
+				urlEnd++;
+			}
+			int trimmedEnd = urlEnd;
+			while (srcset.charAt(trimmedEnd - 1) == ',')
+			{
+				trimmedEnd--;
+			}
+			urls.add(new int[] { position, trimmedEnd });
+
+			if (trimmedEnd < urlEnd)
+			{
+				position = urlEnd;
+			}
+			else
+			{
+				int nextComma = srcset.indexOf(',', urlEnd);
+				position = (nextComma == -1) ? length : nextComma + 1;
+			}
+		}
+		return urls;
 	}
 }

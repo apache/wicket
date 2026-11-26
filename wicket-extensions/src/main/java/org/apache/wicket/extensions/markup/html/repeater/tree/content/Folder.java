@@ -86,7 +86,7 @@ public class Folder<T> extends StyledLinkLabel<T>
 	}
 
 	/**
-	 * Delegates to others methods depending wether the given model is a folder, expanded, collapsed
+	 * Delegates to others methods depending whether the given model is a folder, expanded, collapsed
 	 * or selected.
 	 * 
 	 * @see ITreeProvider#hasChildren(Object)

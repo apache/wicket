@@ -101,7 +101,7 @@ public class FilterForm<T> extends Form<T>
 
 		return String.format(
 				"<div hidden='' class='%s'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
-				cssClass, id, id, Strings.escapeMarkup(value));
+				Strings.escapeMarkup(cssClass), id, id, Strings.escapeMarkup(value));
 	}
 
 	/**

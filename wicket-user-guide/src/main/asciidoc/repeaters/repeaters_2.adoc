@@ -1,5 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 As its name suggests, component _org.apache.wicket.markup.html.list.ListView_ is designed to display a given list of objects which can be provided as a standard Java List or as a model containing the concrete List. ListView iterates over the list and creates a child component of type _org.apache.wicket.markup.html.list.ListItem_ for every encountered item.
 
@@ -43,6 +57,26 @@ public HomePage(final PageParameters parameters) {
 image::./img/simple-listview-screenshot.png[]
 
 In this example we have displayed the full name of two Person's instances. The most interesting part of the code is the implementation of method populateItem where parameter item is the current child component created by ListView and its model contains the corresponding element of the list. Please note that inside populateItem we must add nested components to the _item_ object and not directly to the _ListView_.
+
+=== Repeating multiple table rows with wicket:container
+
+Use `<wicket:container>` to bind a single `ListView` to a group of rows. A `<tbody>` can contain `<tr>` elements directly, so the template uses a Wicket tag to group the rows without introducing an HTML wrapper such as `<span>`.
+
+[source,html]
+----
+<table wicket:id="results">
+    <tbody>
+        <wicket:container wicket:id="entries">
+            <tr><td>Summary</td></tr>
+            <tr><td>Details</td></tr>
+        </wicket:container>
+    </tbody>
+</table>
+----
+
+Bind the `ListView` with ID `entries` inside a `WebMarkupContainer` with ID `results`. Wicket renders the two rows for each list item. With the default deployment configuration, Wicket strips the `<wicket:container>` tags and leaves the rows directly inside `<tbody>`.
+
+Ajax needs a rendered HTML element to replace, so a stripped `<wicket:container>` cannot serve as the replacement target. Wicket does not support adding a `ListView` directly to the Ajax request target. To refresh the rows with Ajax, call `setOutputMarkupId(true)` on the `results` component and add it to the `AjaxRequestTarget` to replace the whole table.
 
 === ListView and Form
 

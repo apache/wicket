@@ -52,8 +52,7 @@ public class WebSocketTesterResourceTest
 	@BeforeEach
 	public void before()
 	{
-		TestWebSocketResource.ON_CONNECT_CALLED.set(false);
-		TestWebSocketResource.ON_CLOSE_CALLED.set(false);
+		TestWebSocketResource.resetCallbacks();
 		ON_OUT_BINARY_CALLED.set(false);
 		ON_OUT_TEXT_CALLED.set(false);
 

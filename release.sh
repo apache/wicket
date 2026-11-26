@@ -18,11 +18,7 @@
 # set -x
 
 function fail {
-    >&2 echo "\033[31m
-FATAL ERROR
------------
-$1
-\033[0m"
+    >&2 printf '\033[31m\nFATAL ERROR\n-----------\n%s\n\033[0m\n' "$1"
     exit 1
 }
 
@@ -40,14 +36,22 @@ xpath /pom:project/pom:version/text()
 EOF
 }
 
+function list_wicket_staging_repositories {
+    local output
+    output=$(mvn --batch-mode org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https) \
+        || { >&2 echo "$output"; return 1; }
+    echo "$output" | awk '$1 == "[INFO]" && $2 ~ /^orgapachewicket-[0-9]+$/ { print $2 }' | sort
+}
+
 function getJdkToolchain {
     xmllint ~/.m2/toolchains.xml --xpath "/toolchains/toolchain[provides/version/text() = '$JAVA_VERSION']/configuration/jdkHome/text()"
 }
 
 function generate_promotion_script {
     echo "Generating release promotion script 'promote-$version.sh'"
-read -d '' script <<- EOF
+read -r -d '' script <<- EOF
 #!/bin/bash
+set -e
 echo "Promoting release $version
 
 Actions about to be performed:
@@ -84,7 +88,7 @@ Check the new versions and commit and push them to origin:
 
 Remove the previous version of Wicket using this command:
 
-  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
+  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
 
 "  
 EOF
@@ -96,14 +100,15 @@ echo "$script" > promote-$version.sh
 
 function generate_rollback_script {
 	echo "Generating release rollback script 'revert-$version.sh'"
-read -d '' script <<- EOF
+read -r -d '' script <<- EOF
 #!/bin/bash
+set -e
 echo -n "Reverting release $version
 
 Actions about to be performed:
 ------------------------------
 
-\$(cat \$0 | tail -n +14)
+\$(cat \$0 | tail -n +15)
 
 ------------------------------------------
 Press enter to continue or CTRL-C to abort"
@@ -126,8 +131,8 @@ svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m "Release vote h
 mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has failed"
 
 # clean up remaining release files
-find . -name "*.releaseBackup" -exec rm {} \\;
-[ -f release.properties ] && rm release.properties
+find . -name "*.releaseBackup" -exec rm {} +
+rm -f release.properties
 
 EOF
 echo "$script" > revert-$version.sh
@@ -138,15 +143,18 @@ echo "$script" > revert-$version.sh
 
 function generate_signatures_from_release {
 
+    sigs=$(mktemp "${TMPDIR:-/tmp}/release-$version-sigs.XXXXXX") \
+        || fail "Unable to create a temporary file for the changelog of $version"
+
     echo "========================================================================
 
     CHANGELOG for $version:
-    " >> /tmp/release-$version-sigs.txt
+    " > "$sigs"
 
     if [ -f "/tmp/release-notes-$version.txt" ] ; then
-        tail -n +4 /tmp/release-notes-$version.txt >> /tmp/release-$version-sigs.txt
+        tail -n +4 /tmp/release-notes-$version.txt >> "$sigs"
     else
-        awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> /tmp/release-$version-sigs.txt
+        awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> "$sigs"
     fi
 }
 
@@ -187,7 +195,7 @@ Staging git repository data:
 
 " | tail -n+2 > release-vote.txt
 
-    cat /tmp/release-$version-sigs.txt >> release-vote.txt
+    cat "$sigs" >> release-vote.txt
 	git add release-vote.txt
 }
 
@@ -239,7 +247,7 @@ Have fun!
 
 " | tail -n+2 > release-announce.txt
 
-    cat /tmp/release-$version-sigs.txt >> release-announce.txt
+    cat "$sigs" >> release-announce.txt
 	git add release-announce.txt
 }
 
@@ -323,6 +331,12 @@ Java used to compile (from toolchain) is: $(getJdkToolchain)
 "
 
 agentcount=`ps aux|grep gpg-agent|wc -l`
+
+echo "Checking that gpg can sign"
+echo "test" | gpg --clearsign > /dev/null || fail "gpg is unable to sign, check gpg-agent and pinentry"
+
+# the version to release comes from $GIT_BRANCH, not from a build branch left by a failed run
+git checkout $GIT_BRANCH || fail "Unable to check out $GIT_BRANCH"
 
 current_version=$(getProjectVersionFromPom)
 major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
@@ -446,60 +460,71 @@ git push staging --delete $tag >> release.out
 echo "Creating release branch"
 git checkout -b $branch >> release.out
 
-# Clear the current NOTICE.txt file
-echo "Creating notice file."
+echo "Updating the copyright year in NOTICE"
+sed -i -e "s/^Copyright 2006-[0-9]\{4\} /Copyright 2006-$(date +%Y) /" NOTICE
 
-NOTICE=NOTICE
-
-echo "Apache Wicket
-Copyright 2006-$(date +%Y) The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-This is an aggregated NOTICE file for the Apache Wicket projects included
-in this distribution.
-
-NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
-    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL
-    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
-" > $NOTICE
-
-# next concatenate all NOTICE files from sub projects to the root file
-for i in `find . -name "NOTICE" -not -regex ".*/target/.*" -not -regex "./NOTICE"`
-do
-    echo "---------------------------------------------------------------------------" >> $NOTICE
-    echo "src/"$i | sed -e "s/\/src.*//g" >> $NOTICE
-    echo "---------------------------------------------------------------------------" >> $NOTICE
-    cat $i >> $NOTICE
-    echo >> $NOTICE
-done
-
-echo "Committing changes"
-git commit -am "Changes to notice files"
+if ! git diff --quiet NOTICE ; then
+    echo "Committing changes"
+    git commit -am "Update the copyright year in NOTICE"
+fi
 
 # clean all projects
 echo "Clean all projects"
 mvn -q clean -Pall
 
+echo "Listing the Wicket staging repositories that exist before the deploy"
+staging_repos_before=$(list_wicket_staging_repositories) \
+    || fail "Unable to list the staging repositories at https://repository.apache.org"
+
 # package and assemble the release
 echo "Prepare the release"
-mvn --batch-mode release:prepare -X -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release
+mvn --batch-mode release:prepare -X -l $log -DpreparationGoals="clean" -Dtag=$tag -Daether.connector.basic.parallelPut=false -Papache-release,release
 if [ $? -ne 0 ] ; then
     fail "ERROR: mvn release:prepare was not successful"
 fi
 
 echo "Performing the release using Maven"
-mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag -Papache-release,release
+mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag -Daether.connector.basic.parallelPut=false -Papache-release,release
 if [ $? -ne 0 ] ; then
     fail "ERROR: mvn release:perform was not successful"
 fi
 
-# Determine the staging repository and close it after deploying the release to the staging area
-stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https | grep -v "CLOSED" | grep -Eo "orgapachewicket-[0-9]+" | sed 's/orgapachewicket-//';)
+# Nexus creates the staging repository implicitly, and the deploy output doesn't name it
+staging_repos_after=$(list_wicket_staging_repositories) \
+    || fail "Unable to list the staging repositories at https://repository.apache.org"
+stagingrepoid=$(comm -13 <(echo "$staging_repos_before") <(echo "$staging_repos_after") | grep .)
+
+case $(echo "$stagingrepoid" | grep -c .) in
+    1)
+        ;;
+    0)
+        fail "The deploy did not create a new Wicket staging repository at https://repository.apache.org
+
+Wicket staging repositories before the deploy:
+${staging_repos_before:-  (none)}
+
+Wicket staging repositories after the deploy:
+${staging_repos_after:-  (none)}
+
+When a Wicket staging repository is still open from an earlier attempt, Nexus can
+deploy into it instead of creating a new one. Drop the repository that holds the
+$version artifacts at https://repository.apache.org/#stagingRepositories and run
+release.sh again."
+        ;;
+    *)
+        fail "The deploy created more than one Wicket staging repository at https://repository.apache.org:
+
+$stagingrepoid
+
+Either the artifacts of $version are split over them, or another Wicket release was
+staged at the same time. Drop the repositories of $version at
+https://repository.apache.org/#stagingRepositories and run release.sh again."
+        ;;
+esac
 
 echo "Closing staging repository with id $stagingrepoid"
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote" \
+    || fail "Unable to close staging repository $stagingrepoid"
 
 generate_promotion_script
 generate_rollback_script
@@ -523,7 +548,7 @@ mkdir target/apache-wicket-$version-bin
 pushd target/apache-wicket-$version-bin
 find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[j]ar" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
 find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[j]ar\.asc" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
-cp ../../LICENSE .
+cp ../../LICENSE-binary LICENSE
 cp ../../README .
 cp ../../NOTICE .
 cp ../../CHANGELOG* .
@@ -621,7 +646,8 @@ git commit -m "Added post-release scripts and vote/release email templates"
 
 echo "Signing the release tag"
 git checkout $tag
-git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
+git tag --sign --force --message "Signed release tag for Apache Wicket $version" $tag >> $log \
+    || fail "Unable to sign the release tag $tag"
 git checkout $branch
 
 echo "Pushing build artifacts to the staging repository"

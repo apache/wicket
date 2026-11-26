@@ -82,15 +82,15 @@ class BookmarkablePageLinkTest extends WicketTestCase
 
 		tester.startComponentInPage(link, null);
 		String expected =
-				"<html><head><script type=\"text/javascript\" src=\"./resource/org.apache.wicket.resource.JQueryResourceReference/" + JQueryResourceReference.VERSION_4
+				"<html lang=\"en-US\" dir=\"ltr\"><head><script type=\"text/javascript\" src=\"./resource/org.apache.wicket.resource.JQueryResourceReference/" + JQueryResourceReference.VERSION_4
 				+ "\"></script>\n"
 				+ "<script type=\"text/javascript\" src=\"./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js\"></script>\n"
 				+ "<script type=\"text/javascript\">\n" + "/*<![CDATA[*/\n"
 				+ "Wicket.Event.add(window, \"domready\", function(event) { \n"
-				+ "Wicket.Event.add('link1', 'click', function(event) { var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; if (win == window) { window.location.href='./bookmarkable/org.apache.wicket.MockPageWithLink?urlEscapeNeeded=someone%27s+%5Eb%25a%26d+pa%22rameter'; } ;return false;});;\n"
+				+ "Wicket.Event.add('link_1', 'click', function(event) { var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; if (win == window) { window.location.href='./bookmarkable/org.apache.wicket.MockPageWithLink?urlEscapeNeeded=someone%27s+%5Eb%25a%26d+pa%22rameter'; } ;return false;});;\n"
 				+ "Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);\n" + ";});\n"
 				+ "/*]]>*/\n" + "</script>\n"
-				+ "</head><body><span wicket:id=\"link\" id=\"link1\"></span></body></html>";
+				+ "</head><body><span wicket:id=\"link\" id=\"link_1\"></span></body></html>";
 
 		String response = tester.getLastResponse().getDocument();
 		assertEquals(expected, response);

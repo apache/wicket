@@ -1,0 +1,11 @@
+<html xmlns:wicket="" lang="en-US" dir="ltr">
+<body>
+  <img src="../../small.jpg" srcset="../../small.jpg 480w, ../../large.jpg 1080w">
+  <img srcset="/small.jpg 1x, ../../large.jpg 2x">
+  <img srcset="data:image/png;base64,AAAA 1x, ../../large.jpg 2x">
+  <img srcset="/small.jpg 1x, https://example.com/large.jpg 2x">
+  <picture>
+    <source srcset="../../wide.jpg" media="(min-width: 800px)">
+  </picture>
+</body>
+</html>

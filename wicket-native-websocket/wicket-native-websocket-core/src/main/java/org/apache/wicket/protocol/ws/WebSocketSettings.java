@@ -270,6 +270,15 @@ public class WebSocketSettings
 
 	/**
 	 * Sets the filter for checking the incoming connections
+	 * <p>
+	 * This is the policy of the application over the handshake itself - the origin it came from, the
+	 * headers it carries - and there is room for one filter, so a second call replaces the first;
+	 * use a {@link WebSocketConnectionFilterCollection} to keep both.
+	 * <p>
+	 * It is additional to the authorization of a shared
+	 * {@link org.apache.wicket.protocol.ws.api.WebSocketResource}, which the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} decides and which installing a
+	 * filter here neither replaces nor switches off.
 	 *
 	 * @param connectionFilter
 	 *              the filter for checking the incoming connections

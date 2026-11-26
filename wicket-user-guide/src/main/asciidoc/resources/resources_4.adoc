@@ -1,5 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 Wicket comes with interface _org.apache.wicket.markup.html.IHeaderContributor_ which allows components and behaviors (which will be introduced later in <<_enriching_components_with_behaviors,paragraph 18.1>>) to contribute to the header section of their page. The only method defined in this interface is _renderHead(IHeaderResponse response)_ where _IHeaderResponse_ is an interface which defines method _render(HeaderItem item)_ to write static resources or free-form text into the header section of the page. 
 

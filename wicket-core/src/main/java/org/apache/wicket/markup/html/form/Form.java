@@ -48,6 +48,7 @@ import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestParameters;
@@ -435,6 +436,12 @@ public class Form<T> extends WebMarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * <p>
 	 * Gets the IFormSubmittingComponent which submitted this form.
+	 * <p>
+	 * The component is resolved from the request parameters alone: no visibility, enablement or
+	 * authorization check is performed here, so the component returned may well be one the client
+	 * should not be able to submit. Callers that act on the result must verify
+	 * {@link Component#isVisibleInHierarchy()} and {@link Component#isEnabledInHierarchy()} first,
+	 * as {@link #onFormSubmitted(IFormSubmitter)} does.
 	 *
 	 * @return The component which submitted this form, or null if the processing was not triggered
 	 *         by a registered IFormSubmittingComponent
@@ -526,9 +533,18 @@ public class Form<T> extends WebMarkupContainer
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
 	 *
+	 * <strong>Note</strong>: the url is written into the generated script as it stands, inside the
+	 * single-quoted string literal the form action is assigned from. A url Wicket rendered is safe
+	 * there, because {@link org.apache.wicket.util.encoding.UrlEncoder} percent-encodes the quote
+	 * and the backslash; a url the caller builds itself stays the caller's to encode, for example
+	 * with {@link org.apache.wicket.core.util.string.JavaScriptUtils#escapeQuotes(CharSequence)}.
+	 * When the application requires Trusted Types, the hidden fields are passed through
+	 * {@code Wicket.TrustedTypes.html()} before they are assigned to {@code innerHTML}.
+	 *
 	 * @param url
 	 *            The listener url to be submitted to
 	 * @return the javascript code that submits the form.
+	 * @see org.apache.wicket.csp.CSPHeaderConfiguration#requireTrustedTypes()
 	 */
 	public final CharSequence getJsForListenerUrl(CharSequence url)
 	{
@@ -538,7 +554,10 @@ public class Form<T> extends WebMarkupContainer
 
 		String action = url.toString();
 		if (root.encodeUrlInHiddenFields()) {
-			buffer.append(String.format("document.getElementById('%s').innerHTML = '",
+			boolean trustedTypes = isTrustedTypesEnabled();
+			buffer.append(String.format(
+				trustedTypes ? "document.getElementById('%s').innerHTML = Wicket.TrustedTypes.html('"
+					: "document.getElementById('%s').innerHTML = '",
 				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
 
 			// parameter must be sent as hidden field, as it would be ignored in the action URL
@@ -550,7 +569,7 @@ public class Form<T> extends WebMarkupContainer
 				action = action.substring(0, i);
 			}
 
-			buffer.append("';");
+			buffer.append(trustedTypes ? "');" : "';");
 		}
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		buffer.append(String.format("f.action='%s';", action));
@@ -559,9 +578,17 @@ public class Form<T> extends WebMarkupContainer
 		return buffer;
 	}
 
+	private boolean isTrustedTypesEnabled()
+	{
+		return getApplication() instanceof WebApplication application
+			&& application.getCspSettings().isTrustedTypesEnabled();
+	}
+
 	/**
 	 * Generate a piece of JavaScript that submits the form with the given
-	 * {@link IFormSubmittingComponent}.
+	 * {@link IFormSubmittingComponent}. When the application requires Trusted Types, the hidden
+	 * field of the submitter is passed through {@code Wicket.TrustedTypes.html()} before it is
+	 * assigned to {@code innerHTML}.
 	 *
 	 * @param submitter
 	 *            the submitter
@@ -572,6 +599,7 @@ public class Form<T> extends WebMarkupContainer
 	 * @return the javascript code that submits the form.
 	 *
 	 * @see #findSubmitter()
+	 * @see org.apache.wicket.csp.CSPHeaderConfiguration#requireTrustedTypes()
 	 */
 	public final CharSequence getJsForSubmitter(IFormSubmittingComponent submitter, boolean triggerEvent)
 	{
@@ -581,10 +609,15 @@ public class Form<T> extends WebMarkupContainer
 
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
-		buffer.append(String.format("document.getElementById('%s').innerHTML += '",
+		boolean trustedTypes = isTrustedTypesEnabled();
+		buffer.append(String.format(
+			trustedTypes
+				? "var h = document.getElementById('%s');"
+					+ "h.innerHTML = Wicket.TrustedTypes.html(h.innerHTML + '"
+				: "document.getElementById('%s').innerHTML += '",
 			root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
 		writeParamsAsHiddenFields(new String[] {param}, buffer);
-		buffer.append("';");
+		buffer.append(trustedTypes ? "');" : "';");
 
 		if (triggerEvent)
 		{
@@ -738,6 +771,9 @@ public class Form<T> extends WebMarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
 	 * <p>
 	 * Handles form submissions.
+	 * <p>
+	 * The submitting component is named by the client, so it is
+	 * {@link #onFormSubmitted(IFormSubmitter) onFormSubmitted} that verifies it may be invoked.
 	 *
 	 * @see #onFormSubmitted(IFormSubmitter)
 	 */
@@ -768,6 +804,10 @@ public class Form<T> extends WebMarkupContainer
 	 * @param submitter
 	 *            listener that will receive form processing events, if {@code null} the form will
 	 *            attempt to locate one
+	 * @throws WicketRuntimeException
+	 *             if the submitter is an {@link IFormSubmittingComponent} that is not visible or
+	 *             not enabled in its hierarchy. This holds for a submitter passed in as well as
+	 *             for one located by {@link #findSubmitter()}
 	 *
 	 * @see Form#validate()
 	 */
@@ -794,6 +834,8 @@ public class Form<T> extends WebMarkupContainer
 			}
 		}
 
+		checkSubmittingComponent(submitter);
+
 		markFormsSubmitted(submitter);
 
 		if (handleMultiPart())
@@ -801,30 +843,14 @@ public class Form<T> extends WebMarkupContainer
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			// First, see if the processing was triggered by a IFormSubmittingComponent
+			// First, see if the processing was triggered by a IFormSubmittingComponent.
+			// A multipart request only exposes its parameters once the body has been parsed,
+			// so for such a request this is where the submitter becomes known.
 			if (submitter == null)
 			{
 				submitter = findSubmitter();
 
-				if (submitter instanceof IFormSubmittingComponent)
-				{
-					IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
-					Component component = (Component)submitter;
-
-					if (!component.isVisibleInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not visible");
-					}
-
-					if (!component.isEnabledInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not enabled");
-					}
-				}
+				checkSubmittingComponent(submitter);
 			}
 
 			// When processing was triggered by a Wicket IFormSubmittingComponent and that
@@ -864,6 +890,51 @@ public class Form<T> extends WebMarkupContainer
 				}
 			});
 		});
+	}
+
+	/**
+	 * Checks that a component which submitted this form may be invoked at all, that is, that it is
+	 * visible and enabled in its hierarchy.
+	 * <p>
+	 * This is the only place where the {@link Component#RENDER} and {@link Component#ENABLE}
+	 * decisions of the {@link org.apache.wicket.authorization.IAuthorizationStrategy} are enforced
+	 * for the component that submitted a form: {@link #findSubmitter()} resolves that component
+	 * from the request parameters alone, and the request handler has only authorized the form
+	 * itself. A browser never submits a control it did not render, or rendered as disabled, so a
+	 * request naming one is not a submission the application offered.
+	 * <p>
+	 * An {@link IFormSubmitter} that is not a {@link Component} is not checked here. Such a
+	 * submitter is not named by the client but supplied by a {@link Behavior} - see
+	 * {@link org.apache.wicket.ajax.form.AjaxFormSubmitBehavior} and
+	 * {@link FormComponentUpdatingBehavior} - and the invocation of a behavior is already
+	 * authorized against the component it is attached to.
+	 *
+	 * @param submitter
+	 *            the submitter to check, may be {@code null}
+	 * @throws WicketRuntimeException
+	 *             if the submitter is a component that is not visible or not enabled in hierarchy
+	 */
+	private void checkSubmittingComponent(IFormSubmitter submitter)
+	{
+		if (submitter instanceof IFormSubmittingComponent && submitter instanceof Component)
+		{
+			IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
+			Component component = (Component)submitter;
+
+			if (!component.isVisibleInHierarchy())
+			{
+				throw new WicketRuntimeException("Submit Button " +
+					submittingComponent.getInputName() + " (path=" +
+					component.getPageRelativePath() + ") is not visible");
+			}
+
+			if (!component.isEnabledInHierarchy())
+			{
+				throw new WicketRuntimeException("Submit Button " +
+					submittingComponent.getInputName() + " (path=" +
+					component.getPageRelativePath() + ") is not enabled");
+			}
+		}
 	}
 
 	/**
@@ -1801,7 +1872,7 @@ public class Form<T> extends WebMarkupContainer
 	{
 		getResponse().write(String.format("<div id=\"%s\" hidden=\"\" class=\"%s\">",
 			getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
-			getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
+			Strings.escapeMarkup(getString(HIDDEN_FIELDS_CSS_CLASS_KEY))));
 		// if the parameters are not in the action attribute, they have to be written as hidden fields
 		if (encodeUrlInHiddenFields())
 		{

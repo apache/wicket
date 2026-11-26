@@ -16,10 +16,15 @@
  */
 package org.apache.wicket.extensions.markup.html.basic;
 
+import java.util.regex.Pattern;
+
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * This implementation adds link render strategies for email addresses and urls.
+ * <p>
+ * Only URLs with an <code>http</code>, <code>https</code> or <code>ftp</code> scheme are turned
+ * into links. Text with any other scheme is left untouched.
  * 
  * @see SmartLinkLabel
  * @see SmartLinkMultiLineLabel
@@ -31,8 +36,18 @@ public class DefaultLinkParser extends LinkParser
 	/** Email address pattern */
 	private static final String emailPattern = "[\\w\\.\\-\\\\+]+@[\\w\\.\\-]+";
 
-	/** URL pattern */
-	private static final String urlPattern = "([a-zA-Z]+://[\\w\\.\\-\\:\\/~]+)[\\w\\.:\\-/?&=%]*";
+	/**
+	 * URL pattern. The scheme is restricted to those <code>ALLOWED_URL_SCHEME</code> accepts and
+	 * must not be preceded by a letter, so that <code>sftp://</code> is not read as
+	 * <code>ftp://</code>.
+	 */
+	private static final String urlPattern = "(?<![a-zA-Z])((?i:https?|ftp)://[\\w\\.\\-\\:\\/~]+)[\\w\\.:\\-/?&=%]*";
+
+	/**
+	 * The URL schemes <code>URL_RENDER_STRATEGY</code> renders into a link. Schemes are
+	 * case-insensitive, so <code>HTTP://</code> is accepted like <code>http://</code>.
+	 */
+	private static final Pattern ALLOWED_URL_SCHEME = Pattern.compile("^(?i:https?|ftp)://");
 
 	/**
 	 * Email address render strategy.<br/>
@@ -78,12 +93,21 @@ public class DefaultLinkParser extends LinkParser
 	/**
 	 * Url render strategy.<br/>
 	 * Renders &lt;a href="{URL}"&gt;{URL}&lt;/a&gt;
+	 * <p>
+	 * A link target whose scheme is not <code>http</code>, <code>https</code> or <code>ftp</code>
+	 * is returned as it is, without an anchor. The default URL pattern of this parser never matches
+	 * such a target, so this only matters to a parser pairing this strategy with a wider pattern.
 	 */
 	public static final ILinkRenderStrategy URL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
 		@Override
 		public String buildLink(final String linkTarget)
 		{
+			if (!ALLOWED_URL_SCHEME.matcher(linkTarget).find())
+			{
+				return linkTarget;
+			}
+
 			int indexOfQuestion = linkTarget.indexOf('?');
 			return "<a href=\"" + linkTarget + "\">" +
 				(indexOfQuestion == -1 ? linkTarget : linkTarget.substring(0, indexOfQuestion)) +

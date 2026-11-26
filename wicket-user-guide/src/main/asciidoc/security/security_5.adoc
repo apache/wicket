@@ -1,4 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 _CryptoMapper_ helps preventing CSRF attacks by making the urls impossible to be guessed by an attacker but still there is some theoretical chance this to happen.
 
@@ -64,6 +79,8 @@ The policy allows _same-origin_ requests, and browser-initiated ones (_none_, su
 Because a _same-site_ request is cross-origin, it is treated as one: by default a sibling origin such as _other.example.com_ cannot execute _Link.onClick()_ or submit a form on _app.example.com_, even though the browser does send our session cookie along with such a request.
 
 Note that this decision rests entirely with the Fetch Metadata policy: __OriginResourceIsolationPolicy__ is only consulted for requests that carry no Fetch Metadata headers at all, which no current browser does.
+
+A request that is interrupted and resumed later is judged on where it originally came from. An application that refuses an unauthenticated visitor by throwing _RestartResponseAtInterceptPageException_ has the url that visitor asked for remembered, and _continueToOriginalDestination()_ returns them to it once they have signed in. That second request is a redirect from inside our own application, so it says _same-origin_ no matter which origin chose the url in the first place. The listener therefore records where every request came from, and when a remembered destination is resumed it asks the policies about both: the resume is allowed only where the request that chose the url would have been allowed as well. A client that sent no origin headers at all is settled by _setUnknownOutcomeAction()_, exactly as it is when it invokes a listener directly. If a policy of our own reads something else, _recordOrigin()_ decides what is recorded.
 
 If every origin on our site is trusted - for instance when all of our subdomains are part of the same application - we can allow sibling origins to invoke listeners as well with _setSameSiteAllowed(true)_:
 

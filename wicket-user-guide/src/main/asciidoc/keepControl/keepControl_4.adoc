@@ -1,3 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 Creating custom panels is a great way to handle complex user interfaces. However, sometimes we may need to create a panel that is used only by a specific page and only for a specific task.
 
@@ -29,3 +45,36 @@ informationBox.setVisible(false);
 As you can see in the snippet above we can handle our information box from Java code as we do with any other Wicket component.
 
 Note also that we may later choose to make information box visible by calling _setVisible(true)_, upon for example an AJAX request (we will be covering such an example in <<_working_with_hidden_components, chapter 19.2.8>>).
+
+=== Containers that leave their components to the parent
+
+Sometimes a tag needs to be a component only so that we can change it from Java code, while the tags inside it belong to components that are already added somewhere else. The _<body>_ tag of a page is a typical example: to add a CSS class to it we need a component, but if that component were a _WebMarkupContainer_ we would have to move every component of the page into it, changing their paths and our code.
+
+_org.apache.wicket.markup.html.TransparentWebMarkupContainer_ solves this. When its markup contains a tag whose _wicket:id_ is not one of its own children, it looks for the component in its parent. With this page markup:
+
+[source,html]
+----
+<body wicket:id="body">
+    <h1 wicket:id="title"></h1>
+</body>
+----
+
+the page adds both components to itself:
+
+[source,java]
+----
+add(new TransparentWebMarkupContainer("body")
+    .add(AttributeModifier.append("class", "dark")));
+add(new Label("title", "Hello"));
+----
+
+The label renders inside _<body class="dark">_, but it is still a child of the page: its path is _title_, not _body:title_. With a plain _WebMarkupContainer_ the page would fail to render because the container has no child with id _title_.
+
+The same works with markup inheritance. A base page can add a _TransparentWebMarkupContainer_ for its _<body>_ tag and put _<wicket:child/>_ inside it; the components that a subclass adds to the page and places in its _<wicket:extend>_ then render inside the container.
+
+A few things to keep in mind:
+
+* A child added to the container itself is used before a component of the parent with the same id.
+* Hiding the container hides everything in its markup, including the parent's components.
+* During an AJAX request we can add a component inside the container's markup to _AjaxRequestTarget_ on its own. Adding the container re-renders all the components in its markup, together with their header contributions.
+* The container looks only in its parent. Inside the body of a _Border_ (see <<_surrounding_existing_markup_with_border,Surrounding existing markup with Border>>) its parent is the border, so the components must be added to the border and not to the page.
