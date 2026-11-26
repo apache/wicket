@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.dbsc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The small part of RFC 9651 structured fields the DBSC headers need: writing and reading a
- * string item.
+ * string item, and finding a token in a list by one of its parameters.
  */
 final class StructuredFields
 {
@@ -110,5 +113,69 @@ final class StructuredFields
 			parsed.append(c);
 		}
 		return null;
+	}
+
+	/**
+	 * Finds the member of a list of tokens that carries a parameter with a given string value, as
+	 * {@code Secure-Session-Skipped} names the DBSC session it reports on.
+	 *
+	 * @param lists
+	 *            the field lines of the list
+	 * @param parameter
+	 *            the name of the parameter
+	 * @param value
+	 *            the value the parameter has to have
+	 * @return the token of the first such member, or {@code null}
+	 */
+	static String tokenFor(List<String> lists, String parameter, String value)
+	{
+		for (String list : lists)
+		{
+			for (String member : splitOutsideStrings(list, ','))
+			{
+				List<String> parts = splitOutsideStrings(member, ';');
+				String token = parts.get(0).trim();
+				if (token.isEmpty() || token.charAt(0) == '"')
+				{
+					continue;
+				}
+				for (String part : parts.subList(1, parts.size()))
+				{
+					int separator = part.indexOf('=');
+					if (separator > 0 && part.substring(0, separator).trim().equals(parameter) &&
+						value.equals(parseString(part.substring(separator + 1))))
+					{
+						return token;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private static List<String> splitOutsideStrings(String value, char separator)
+	{
+		List<String> parts = new ArrayList<>();
+		boolean inString = false;
+		int start = 0;
+		for (int i = 0; i < value.length(); i++)
+		{
+			char c = value.charAt(i);
+			if (inString && c == '\\')
+			{
+				i++;
+			}
+			else if (c == '"')
+			{
+				inString = !inString;
+			}
+			else if (!inString && c == separator)
+			{
+				parts.add(value.substring(start, i));
+				start = i + 1;
+			}
+		}
+		parts.add(value.substring(start));
+		return parts;
 	}
 }

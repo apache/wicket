@@ -39,8 +39,9 @@ import com.github.openjson.JSONObject;
  * A DBSC proof: the JWT a browser signs with its session key, sent in the
  * {@code Secure-Session-Response} header.
  * <p>
- * Only {@code ES256} on P-256 and {@code RS256} with at least 2048 bits are accepted. A proof
- * signed with {@code none} is refused, since it proves nothing.
+ * Only {@code ES256} on P-256 and {@code RS256} with 2048 to 4096 bits are accepted. A proof
+ * signed with {@code none} is refused, since it proves nothing, and so is one that lists critical
+ * header extensions, none of which this class understands.
  */
 final class DbscProof
 {
@@ -51,6 +52,10 @@ final class DbscProof
 	private static final String TYPE = "dbsc+jwt";
 
 	private static final int MIN_RSA_BITS = 2048;
+
+	private static final int MAX_RSA_BITS = 4096;
+
+	private static final int MAX_RSA_EXPONENT_BITS = 32;
 
 	private final JSONObject header;
 
@@ -75,8 +80,8 @@ final class DbscProof
 	 *            the JWT in compact serialization
 	 * @return the proof
 	 * @throws InvalidProofException
-	 *             if the JWT is malformed, not of type {@code dbsc+jwt} or signed with an algorithm
-	 *             other than {@code ES256} or {@code RS256}
+	 *             if the JWT is malformed, not of type {@code dbsc+jwt}, signed with an algorithm
+	 *             other than {@code ES256} or {@code RS256}, or has a {@code crit} header
 	 */
 	static DbscProof parse(String jwt) throws InvalidProofException
 	{
@@ -106,6 +111,10 @@ final class DbscProof
 		if (!ES256.equals(algorithm) && !RS256.equals(algorithm))
 		{
 			throw new InvalidProofException("Unsupported algorithm '" + algorithm + "'");
+		}
+		if (header.has("crit"))
+		{
+			throw new InvalidProofException("A DBSC proof has no critical header extensions");
 		}
 		byte[] signingInput = (parts[0] + '.' + parts[1]).getBytes(StandardCharsets.US_ASCII);
 		return new DbscProof(header, payload, signingInput, signature);
@@ -195,13 +204,19 @@ final class DbscProof
 			if (RS256.equals(algorithm) && "RSA".equals(type))
 			{
 				BigInteger modulus = unsigned(jwk.getString("n"));
-				if (modulus.bitLength() < MIN_RSA_BITS)
+				if (modulus.bitLength() < MIN_RSA_BITS || modulus.bitLength() > MAX_RSA_BITS)
+				{
+					throw new InvalidProofException("An RSA key needs " + MIN_RSA_BITS + " to " +
+						MAX_RSA_BITS + " bits");
+				}
+				BigInteger exponent = unsigned(jwk.getString("e"));
+				if (exponent.bitLength() > MAX_RSA_EXPONENT_BITS)
 				{
 					throw new InvalidProofException(
-						"An RSA key needs at least " + MIN_RSA_BITS + " bits");
+						"An RSA exponent has at most " + MAX_RSA_EXPONENT_BITS + " bits");
 				}
 				return KeyFactory.getInstance("RSA")
-					.generatePublic(new RSAPublicKeySpec(modulus, unsigned(jwk.getString("e"))));
+					.generatePublic(new RSAPublicKeySpec(modulus, exponent));
 			}
 		}
 		catch (GeneralSecurityException | IllegalArgumentException | JSONException e)

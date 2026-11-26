@@ -29,6 +29,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Registers the key a browser has created for a session, in answer to the
  * {@code Secure-Session-Registration} header {@link DeviceBoundSessions#start()} sent.
+ * <p>
+ * The proof's challenge is checked before its key is built and its signature verified, so a
+ * client the session did not ask to register cannot make the server do that work.
  */
 final class RegistrationEndpoint extends Endpoint
 {
@@ -52,19 +55,11 @@ final class RegistrationEndpoint extends Endpoint
 			return;
 		}
 		Instant now = deviceBoundSessions.now();
-		DeviceBinding binding;
-		String challenge;
+		Session session = Session.get();
+		DbscProof proof;
 		try
 		{
-			DbscProof proof = DbscProof.parse(jwt);
-			binding = deviceBoundSessions.newBinding(proof, now);
-			if (!proof.isSignedBy(binding.getPublicKey()))
-			{
-				log.debug("Registration proof with a signature that does not match its key");
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				return;
-			}
-			challenge = proof.challenge();
+			proof = DbscProof.parse(jwt);
 		}
 		catch (DbscProof.InvalidProofException e)
 		{
@@ -72,14 +67,34 @@ final class RegistrationEndpoint extends Endpoint
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
+		String challenge = proof.challenge();
+		if (!isAwaited(session, challenge, now))
+		{
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
 
-		Session session = Session.get();
+		DeviceBinding binding;
+		try
+		{
+			binding = deviceBoundSessions.newBinding(proof, now);
+		}
+		catch (DbscProof.InvalidProofException e)
+		{
+			log.debug("Unusable key in a registration proof", e);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+		if (!proof.isSignedBy(binding.getPublicKey()))
+		{
+			log.debug("Registration proof with a signature that does not match its key");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
 		synchronized (session)
 		{
-			DeviceBinding.Expiring pending = session
-				.getMetaData(DeviceBoundSessions.PENDING_REGISTRATION);
-			if (pending == null || !pending.matches(challenge, now) ||
-				session.getMetaData(DeviceBoundSessions.BINDING) != null)
+			if (!isAwaited(session, challenge, now))
 			{
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				return;
@@ -89,5 +104,20 @@ final class RegistrationEndpoint extends Endpoint
 			session.setMetaData(DeviceBoundSessions.BINDING, binding);
 		}
 		writeJson(response, deviceBoundSessions.instructions(binding));
+	}
+
+	/**
+	 * @return whether the session is unbound and waits for a registration that answers the
+	 *         challenge
+	 */
+	private static boolean isAwaited(Session session, String challenge, Instant now)
+	{
+		synchronized (session)
+		{
+			DeviceBinding.Expiring pending = session
+				.getMetaData(DeviceBoundSessions.PENDING_REGISTRATION);
+			return pending != null && pending.matches(challenge, now) &&
+				session.getMetaData(DeviceBoundSessions.BINDING) == null;
+		}
 	}
 }

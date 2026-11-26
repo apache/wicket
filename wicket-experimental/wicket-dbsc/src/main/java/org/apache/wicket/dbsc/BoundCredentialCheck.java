@@ -18,13 +18,15 @@ package org.apache.wicket.dbsc;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 
 /**
- * Checks the bound cookie once per request, before the first request handler runs. The refresh
- * endpoint is left out: the browser calls it precisely because the cookie has expired.
+ * Checks the bound cookie once per request, before the first request handler runs. The two
+ * endpoints are left out: a registration comes before there is any bound cookie, and the browser
+ * calls the refresh endpoint precisely because the cookie has expired.
  */
 final class BoundCredentialCheck implements IRequestCycleListener
 {
@@ -48,11 +50,20 @@ final class BoundCredentialCheck implements IRequestCycleListener
 			return;
 		}
 		cycle.setMetaData(CHECKED, Boolean.TRUE);
-		if (handler instanceof ResourceReferenceRequestHandler resource &&
+		if (unwrap(handler) instanceof ResourceReferenceRequestHandler resource &&
 			resource.getResourceReference() instanceof EndpointReference)
 		{
 			return;
 		}
 		deviceBoundSessions.checkCredential(cycle);
+	}
+
+	private static IRequestHandler unwrap(IRequestHandler handler)
+	{
+		while (handler instanceof IRequestHandlerDelegate delegate)
+		{
+			handler = delegate.getDelegateHandler();
+		}
+		return handler;
 	}
 }

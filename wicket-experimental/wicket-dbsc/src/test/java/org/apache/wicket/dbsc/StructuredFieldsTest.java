@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 class StructuredFieldsTest
@@ -56,5 +58,18 @@ class StructuredFieldsTest
 		assertNull(StructuredFields.parseString(" "));
 		assertNull(StructuredFields.parseString("\"unterminated"));
 		assertNull(StructuredFields.parseString("\"bad \\n escape\""));
+	}
+
+	@Test
+	void tokenForFindsTheMemberWithTheParameter()
+	{
+		List<String> lists = List.of("unreachable;session_identifier=\"a,b\"",
+			"server_error;x=1;session_identifier=\"c\", quota_exceeded;session_identifier=\"d\"");
+
+		assertEquals("unreachable", StructuredFields.tokenFor(lists, "session_identifier", "a,b"));
+		assertEquals("server_error", StructuredFields.tokenFor(lists, "session_identifier", "c"));
+		assertEquals("quota_exceeded", StructuredFields.tokenFor(lists, "session_identifier", "d"));
+		assertNull(StructuredFields.tokenFor(lists, "session_identifier", "e"));
+		assertNull(StructuredFields.tokenFor(List.of(), "session_identifier", "a"));
 	}
 }

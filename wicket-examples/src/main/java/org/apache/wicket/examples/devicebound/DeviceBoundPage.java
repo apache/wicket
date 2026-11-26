@@ -21,7 +21,6 @@ import java.time.temporal.ChronoUnit;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.dbsc.DeviceBoundSessions;
@@ -74,7 +73,7 @@ public class DeviceBoundPage extends WicketExamplePage
 			@Override
 			public void onClick()
 			{
-				AuthenticatedWebSession.get().signOut();
+				getSession().invalidate();
 				setResponsePage(getApplication().getHomePage());
 			}
 		});

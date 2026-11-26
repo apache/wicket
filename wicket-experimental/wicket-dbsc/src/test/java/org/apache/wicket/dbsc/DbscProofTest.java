@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPublicKey;
@@ -28,6 +29,7 @@ import java.util.Base64;
 
 import org.junit.jupiter.api.Test;
 
+import com.github.openjson.JSONArray;
 import com.github.openjson.JSONObject;
 
 class DbscProofTest
@@ -98,6 +100,44 @@ class DbscProofTest
 		DbscProof proof = DbscProof.parse(unsigned("RS256", jwk));
 
 		assertThrows(DbscProof.InvalidProofException.class, proof::embeddedKey);
+	}
+
+	@Test
+	void rejectsALongRsaKey() throws Exception
+	{
+		JSONObject jwk = new JSONObject().put("kty", "RSA")
+			.put("n", encode(BigInteger.ONE.shiftLeft(4096).setBit(0).toByteArray()))
+			.put("e", "AQAB");
+
+		DbscProof proof = DbscProof.parse(unsigned("RS256", jwk));
+
+		assertThrows(DbscProof.InvalidProofException.class, proof::embeddedKey);
+	}
+
+	@Test
+	void rejectsALongRsaExponent() throws Exception
+	{
+		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+		generator.initialize(2048);
+		RSAPublicKey key = (RSAPublicKey)generator.generateKeyPair().getPublic();
+		JSONObject jwk = new JSONObject().put("kty", "RSA")
+			.put("n", encode(key.getModulus().toByteArray()))
+			.put("e", encode(BigInteger.ONE.shiftLeft(32).setBit(0).toByteArray()));
+
+		DbscProof proof = DbscProof.parse(unsigned("RS256", jwk));
+
+		assertThrows(DbscProof.InvalidProofException.class, proof::embeddedKey);
+	}
+
+	@Test
+	void rejectsCriticalHeaderExtensions()
+	{
+		String jwt = encode(new JSONObject().put("alg", "ES256")
+			.put("typ", "dbsc+jwt")
+			.put("crit", new JSONArray().put("exp"))
+			.toString()) + "." + encode("{}") + ".AA";
+
+		assertThrows(DbscProof.InvalidProofException.class, () -> DbscProof.parse(jwt));
 	}
 
 	@Test

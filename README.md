@@ -102,6 +102,7 @@ You will find the source code here:
 	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
 	    |-- wicket-experimental
+	    |   |-- wicket-dbsc
 	    |   `-- wicket-metrics
 	    |-- wicket-extensions
 	    |-- wicket-extensions-tester
@@ -157,6 +158,8 @@ Here is a list of projects in the distribution and what they do.
    Most notably the formatting rules;
  - wicket-user-guide: the user guide of wicket;
  - wicket-metrics: collects data of a running wicket application;
+ - wicket-dbsc: binds sessions to the device they were signed in on (Device Bound Session
+   Credentials, experimental);
  - wicket-migration: OpenRewrite recipes that migrate an application to a newer
    Wicket version;
  - wicket-benchmarks: performance benchmarks, not published;

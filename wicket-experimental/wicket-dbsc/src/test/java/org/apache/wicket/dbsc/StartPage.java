@@ -16,15 +16,23 @@
  */
 package org.apache.wicket.dbsc;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.wicket.Session;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 
 /**
- * Starts the binding from a link, the way an application would after sign-in.
+ * Starts the binding from a link, the way an application would after sign-in, and offers the other
+ * requests the tests send on a bound session.
  */
 public class StartPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+
+	static final AtomicInteger AJAX_CLICKS = new AtomicInteger();
 
 	/**
 	 * Constructor.
@@ -39,6 +47,47 @@ public class StartPage extends WebPage
 			public void onClick()
 			{
 				DeviceBoundSessions.get().start();
+			}
+		});
+		add(new Link<Void>("replaceAndStart")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				Session.get().replaceSession();
+				DeviceBoundSessions.get().start();
+			}
+		});
+		add(new Link<Void>("replace")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				Session.get().replaceSession();
+			}
+		});
+		add(new Link<Void>("invalidate")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				Session.get().invalidate();
+			}
+		});
+		add(new AjaxLink<Void>("ajax")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				AJAX_CLICKS.incrementAndGet();
 			}
 		});
 	}
