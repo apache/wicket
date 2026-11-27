@@ -195,7 +195,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	@Override
 	public boolean isHeaderSupported()
 	{
-		return originalResponse.isHeaderSupported();
+		return originalResponse != null && originalResponse.isHeaderSupported();
 	}
 
 	@Override
@@ -423,6 +423,6 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	@Override
 	public Object getContainerResponse()
 	{
-		return originalResponse.getContainerResponse();
+		return originalResponse == null ? null : originalResponse.getContainerResponse();
 	}
 }
