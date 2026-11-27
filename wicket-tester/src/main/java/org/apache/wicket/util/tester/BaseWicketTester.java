@@ -1577,6 +1577,49 @@ public class BaseWicketTester
 		return getComponentFromLastRenderedPage(path, true);
 	}
 
+	List<Component> getComponentsFromLastRenderedPage(String path)
+	{
+		if (componentInPage != null && componentInPage.isInstantiated)
+		{
+			String componentIdPageId = componentInPage.component.getId() + ':';
+			if (path.startsWith(componentIdPageId) == false)
+			{
+				path = componentIdPageId + path;
+			}
+		}
+
+		String[] pathSegments = path.split(":");
+		StringBuilder pathRegex = new StringBuilder("^");
+		for (int i = 0; i < pathSegments.length; i++)
+		{
+			if (i > 0)
+			{
+				pathRegex.append(':');
+			}
+
+			if ("*".equals(pathSegments[i]))
+			{
+				pathRegex.append("[0-9]+");
+			}
+			else
+			{
+				pathRegex.append(Pattern.quote(pathSegments[i]));
+			}
+		}
+		pathRegex.append('$');
+
+		Pattern pattern = Pattern.compile(pathRegex.toString());
+		List<Component> components = new ArrayList<>();
+		getLastRenderedPage().visitChildren(Component.class, (component, visit) -> {
+			if (component.isVisibleInHierarchy()
+				&& pattern.matcher(component.getPageRelativePath()).matches())
+			{
+				components.add(component);
+			}
+		});
+		return components;
+	}
+
 	/**
 	 * Returns the first {@link Component} (breadth-first search) matching the given Wicket-ID. If
 	 * no such {@link Component} exists it returns {@link Optional#empty()}

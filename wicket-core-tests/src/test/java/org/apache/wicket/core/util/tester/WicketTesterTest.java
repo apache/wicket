@@ -77,6 +77,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.tester.DemoPanel;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.FormTester;
@@ -94,6 +95,14 @@ import jakarta.servlet.http.HttpServletResponse;
 class WicketTesterTest extends WicketTestCase
 {
 	private boolean eventExecuted;
+
+	@Test
+	void assertLabelWithWildcardPathMatchesAnyListItem()
+	{
+		tester.startComponentInPage(new DemoPanel("panel"));
+
+		tester.assertLabel("repeater:*:content", "CCC");
+	}
 
 	/**
 	 * @throws Exception
