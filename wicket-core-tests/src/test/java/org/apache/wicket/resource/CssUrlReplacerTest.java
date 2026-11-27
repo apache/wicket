@@ -189,6 +189,34 @@ class CssUrlReplacerTest extends WicketTestCase
 	}
 
 	@Test
+	void keepFragment()
+	{
+		String input = ".class {background-image: url('some.svg#arrow');}";
+		Class<?> scope = CssUrlReplacerTest.class;
+		String cssRelativePath = "res/css/some.css";
+		CssUrlReplacer replacer = new CssUrlReplacer();
+
+		String processed = replacer.process(input, scope, cssRelativePath);
+		assertThat(
+			processed,
+			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/some.svg" +
+				DECORATION_SUFFIX + "#arrow');}"));
+	}
+
+	@Test
+	void base64EncodedImageWithFragment()
+	{
+		String input = ".class {background-image: url('Beer.gif?embedBase64#arrow');}";
+		Class<?> scope = ImageTest.class;
+		String cssRelativePath = "some.css";
+		CssUrlReplacer replacer = new CssUrlReplacer();
+		String processed = replacer.process(input, scope, cssRelativePath);
+		assertThat(
+			processed,
+			containsString(".class {background-image: url(data:image/gif;base64,R0lGODlh1wATAXAAACH5BAEAAP8ALAAAAADXA"));
+	}
+
+	@Test
 	void severalUrls()
 	{
 		String input = ".class {\n" + "a: url('../images/a.img');\n" + "b: url('./b.img');\n" + "}";

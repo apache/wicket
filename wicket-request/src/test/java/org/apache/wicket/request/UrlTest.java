@@ -613,6 +613,21 @@ class UrlTest
 	}
 
 	/**
+	 * The resolved url takes the fragment of the relative url, as RFC 3986 section 5.2.2 says.
+	 */
+	@Test
+	void resolveRelativeTakesFragmentOfRelative()
+	{
+		Url baseUrl = Url.parse("c/d#top");
+		baseUrl.resolveRelative(Url.parse("a#section"));
+		assertEquals("c/a#section", baseUrl.toString());
+
+		baseUrl = Url.parse("c/d#top");
+		baseUrl.resolveRelative(Url.parse("a"));
+		assertEquals("c/a", baseUrl.toString());
+	}
+
+	/**
 	 * Tests that the default charset is UTF-8
 	 */
 	@Test

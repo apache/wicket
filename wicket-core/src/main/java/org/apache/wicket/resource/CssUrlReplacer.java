@@ -28,6 +28,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.image.ImageUtil;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * This compressor is used to replace URLs within CSS files with URLs created from
@@ -118,6 +119,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 				// relativize against the url for the containing CSS file
 				Url cssUrlCopy = new Url(cssUrl);
 				cssUrlCopy.resolveRelative(imageCandidateUrl);
+				String fragment = cssUrlCopy.getFragment();
+				cssUrlCopy.setFragment(null);
 
 				// if the image should be processed as URL or base64 embedded
 				if (cssUrlCopy.getQueryString() != null
@@ -141,6 +144,10 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 					PackageResourceReference imageReference = new PackageResourceReference(scope,
 						cssUrlCopy.toString());
 					processedUrl = cycle.urlFor(imageReference, null);
+					if (Strings.isEmpty(fragment) == false)
+					{
+						processedUrl = processedUrl + "#" + fragment;
+					}
 				}
 
 			}
