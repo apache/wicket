@@ -83,6 +83,12 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 
 	private RequestCycle newRequestCycle(final Consumer<IRequestCycle> cycleConsumer)
 	{
+		return newRequestCycle(() -> {}, cycleConsumer);
+	}
+
+	private RequestCycle newRequestCycle(final Runnable mapping,
+		final Consumer<IRequestCycle> cycleConsumer)
+	{
 		final Response originalResponse = newResponse();
 		Request request = new MockWebRequest(Url.parse("http://wicket.apache.org"));
 		handler = new IRequestHandler()
@@ -106,6 +112,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 			@Override
 			public IRequestHandler mapRequest(Request request)
 			{
+				mapping.run();
 				return handler;
 			}
 
@@ -240,6 +247,86 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		incrementingListener.assertValues(1, 1, 3, 2, 0, 1);
 		// 0 exception mapped, 2 responded, 3 detached
 		assertValues(0, 2, 3);
+	}
+
+	/** */
+	@Test
+	void replaceExceptionDuringMapping()
+	{
+		IncrementingListener incrementingListener = new IncrementingListener();
+		Application.get().getRequestCycleListeners().add(incrementingListener);
+
+		IRequestHandler replacement = new IRequestHandler()
+		{
+			@Override
+			public void respond(IRequestCycle requestCycle)
+			{
+				responses++;
+			}
+
+			@Override
+			public void detach(IRequestCycle requestCycle)
+			{
+				detaches++;
+			}
+		};
+
+		RequestCycle cycle = newRequestCycle(() -> {
+			throw new ReplaceHandlerException(replacement, true);
+		}, rc -> {});
+		cycle.scheduleRequestHandlerAfterCurrent(new IRequestHandler()
+		{
+			@Override
+			public void respond(IRequestCycle requestCycle)
+			{
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public void detach(IRequestCycle requestCycle)
+			{
+				throw new UnsupportedOperationException();
+			}
+		});
+		assertTrue(cycle.processRequestAndDetach());
+		incrementingListener.assertValues(1, 1, 1, 1, 0, 1);
+		assertValues(0, 1, 1);
+
+		cycle = newRequestCycle(() -> {
+			throw new ReplaceHandlerException(replacement, false);
+		}, rc -> {});
+		cycle.scheduleRequestHandlerAfterCurrent(new IRequestHandler()
+		{
+			@Override
+			public void respond(IRequestCycle requestCycle)
+			{
+				responses++;
+			}
+
+			@Override
+			public void detach(IRequestCycle requestCycle)
+			{
+				detaches++;
+			}
+		});
+		assertTrue(cycle.processRequestAndDetach());
+		incrementingListener.assertValues(1, 1, 2, 2, 0, 1);
+		assertValues(0, 2, 2);
+	}
+
+	/** */
+	@Test
+	void exceptionDuringMappingIsMapped()
+	{
+		IncrementingListener incrementingListener = new IncrementingListener();
+		Application.get().getRequestCycleListeners().add(incrementingListener);
+
+		RequestCycle cycle = newRequestCycle(() -> {
+			throw new RuntimeException("testing purposes only");
+		}, rc -> {});
+		assertFalse(cycle.processRequestAndDetach());
+		incrementingListener.assertValues(1, 1, 0, 0, 1, 1);
+		assertValues(1, 0, 0);
 	}
 
 	/** */
