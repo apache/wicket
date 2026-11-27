@@ -19,6 +19,11 @@ package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -32,6 +37,256 @@ import org.mockito.Mockito;
  */
 class AnnotationsRoleAuthorizationStrategyTest
 {
+	@Test
+	void checksInstantiationMetaAnnotationAlongsideDirectRule()
+	{
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role2"))
+			.isInstantiationAuthorized(ComposedComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1"))
+			.isInstantiationAuthorized(ComposedComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role2"))
+			.isInstantiationAuthorized(ComposedComponent.class));
+	}
+
+	@Test
+	void checksComposedActionOnlyForTheNamedAction()
+	{
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role2"))
+			.isActionAuthorized(ComposedComponent.class, Component.RENDER));
+		final AnnotationsRoleAuthorizationStrategy strategy =
+			new AnnotationsRoleAuthorizationStrategy(roles("role1"));
+		assertFalse(strategy.isActionAuthorized(ComposedComponent.class, Component.RENDER));
+		assertTrue(strategy.isActionAuthorized(ComposedComponent.class, Component.ENABLE));
+	}
+
+	@Test
+	void checksInstantiationRuleThroughTwoCustomAnnotations()
+	{
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role2"))
+			.isInstantiationAuthorized(NestedComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1"))
+			.isInstantiationAuthorized(NestedComponent.class));
+	}
+
+	@Test
+	void checksInstantiationRulesAtBothMetaAnnotationLevels()
+	{
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role2"))
+			.isInstantiationAuthorized(TwoLevelComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1"))
+			.isInstantiationAuthorized(TwoLevelComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role2"))
+			.isInstantiationAuthorized(TwoLevelComponent.class));
+	}
+
+	@Test
+	void checksDeepInstantiationRulesDespiteAnOuterRuleAndAnAnnotationCycle()
+	{
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role2", "role3"))
+			.isInstantiationAuthorized(DeeplyComposedComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role3"))
+			.isInstantiationAuthorized(DeeplyComposedComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role2"))
+			.isInstantiationAuthorized(DeeplyComposedComponent.class));
+	}
+
+	@Test
+	void checksInstantiationRulesAtTheFirstAndEighthMetaAnnotationLevels()
+	{
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role2"))
+			.isInstantiationAuthorized(EightLevelComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1"))
+			.isInstantiationAuthorized(EightLevelComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role2"))
+			.isInstantiationAuthorized(EightLevelComponent.class));
+	}
+
+	@Test
+	void checksDirectInstantiationRuleAlongsideFirstAndEighthLevelRules()
+	{
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role2", "role3"))
+			.isInstantiationAuthorized(DirectAndEightLevelComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role2"))
+			.isInstantiationAuthorized(DirectAndEightLevelComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1", "role3"))
+			.isInstantiationAuthorized(DirectAndEightLevelComponent.class));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role2", "role3"))
+			.isInstantiationAuthorized(DirectAndEightLevelComponent.class));
+	}
+
+	@Test
+	void checksResourceMetaAnnotation()
+	{
+		IResource resource = new ComposedResource();
+		assertTrue(new AnnotationsRoleAuthorizationStrategy(roles("role2"))
+			.isResourceAuthorized(resource, null));
+		assertFalse(new AnnotationsRoleAuthorizationStrategy(roles("role1"))
+			.isResourceAuthorized(resource, null));
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@AuthorizeInstantiations(ruleset = { @AuthorizeInstantiation("role2") })
+	@AuthorizeActions(actions = { @AuthorizeAction(action = "RENDER", roles = "role2") })
+	@AuthorizeResource("role2")
+	private @interface ComposedRule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@ComposedRule
+	private @interface NestedRule
+	{
+	}
+
+	@NestedRule
+	private static class NestedComponent extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+
+		private NestedComponent()
+		{
+			super("notUsed");
+		}
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@AuthorizeInstantiation("role1")
+	@ComposedRule
+	private @interface TwoLevelRule
+	{
+	}
+
+	@TwoLevelRule
+	private static class TwoLevelComponent extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+
+		private TwoLevelComponent()
+		{
+			super("notUsed");
+		}
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@AuthorizeInstantiation("role3")
+	@TwoLevelRule
+	@CyclicRule
+	private @interface DeepRule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@DeepRule
+	private @interface CyclicRule
+	{
+	}
+
+	@DeepRule
+	private static class DeeplyComposedComponent extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+
+		private DeeplyComposedComponent()
+		{
+			super("notUsed");
+		}
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@AuthorizeInstantiation("role1")
+	@Level2Rule
+	private @interface Level1Rule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Level3Rule
+	private @interface Level2Rule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Level4Rule
+	private @interface Level3Rule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Level5Rule
+	private @interface Level4Rule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Level6Rule
+	private @interface Level5Rule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Level7Rule
+	private @interface Level6Rule
+	{
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@ComposedRule
+	private @interface Level7Rule
+	{
+	}
+
+	@Level1Rule
+	private static class EightLevelComponent extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+
+		private EightLevelComponent()
+		{
+			super("notUsed");
+		}
+	}
+
+	@AuthorizeInstantiation("role3")
+	@Level1Rule
+	private static class DirectAndEightLevelComponent extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+
+		private DirectAndEightLevelComponent()
+		{
+			super("notUsed");
+		}
+	}
+
+	@AuthorizeInstantiation("role1")
+	@ComposedRule
+	private static class ComposedComponent extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+
+		private ComposedComponent()
+		{
+			super("notUsed");
+		}
+	}
+
+	@ComposedRule
+	private static class ComposedResource extends UnrestrictedResource
+	{
+	}
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3974
 	 */
