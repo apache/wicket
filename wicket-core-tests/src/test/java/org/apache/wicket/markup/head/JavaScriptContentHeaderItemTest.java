@@ -19,8 +19,13 @@ package org.apache.wicket.markup.head;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.stream.Stream;
+
 import org.apache.wicket.mock.MockWebResponse;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class JavaScriptContentHeaderItemTest
 {
@@ -59,6 +64,7 @@ class JavaScriptContentHeaderItemTest
                 """, response.getTextResponse().toString());
     }
 
+
     @Test
     void itemsWithSameJavascriptAndDifferentTypesAreInequal()
     {
@@ -79,5 +85,26 @@ class JavaScriptContentHeaderItemTest
                 .setType(JavaScriptBrowserProcessedContentType.MODULE);
 
         assertNotEquals(item1.hashCode(), item2.hashCode());
+    }
+
+    @ParameterizedTest
+    @MethodSource("contentTypes")
+    void outputsContentTypeThatIsSet(final JavaScriptContentType contentType)
+    {
+        final JavaScriptHeaderItem item = new JavaScriptContentHeaderItem("", "the id").setContentType(contentType);
+        final MockWebResponse response = new MockWebResponse();
+        item.render(response);
+
+        assertEquals("<script type=\"" + contentType.getType() + "\" id=\"the id\">\n" + """
+            /*<![CDATA[*/
+  
+            /*]]>*/
+            </script>
+            """, response.getTextResponse().toString());
+    }
+
+    private static Stream<JavaScriptContentType> contentTypes()
+    {
+        return Stream.of(JavaScriptContentType.TEXT_JAVASCRIPT, JavaScriptContentType.MODULE, JavaScriptContentType.IMPORT_MAP, JavaScriptContentType.SPECULATION_RULES, (JavaScriptContentType) () -> "custom-type");
     }
 }

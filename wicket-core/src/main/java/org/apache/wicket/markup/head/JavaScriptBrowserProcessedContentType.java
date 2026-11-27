@@ -20,6 +20,7 @@ package org.apache.wicket.markup.head;
  * A <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type#value">browser-
  * processed</a> type for {@link JavaScriptContentHeaderItem}. That is, the content is not a data block.
  */
+@Deprecated // Use Constants defined by JavascriptContentType
 public enum JavaScriptBrowserProcessedContentType implements JavaScriptContentType
 {
 	IMPORT_MAP("importmap"),
