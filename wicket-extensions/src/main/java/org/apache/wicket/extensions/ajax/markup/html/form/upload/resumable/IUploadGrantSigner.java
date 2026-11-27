@@ -53,4 +53,16 @@ public interface IUploadGrantSigner extends IClusterable
 	 * @return whether the signature is that of the text, made with this signer's key
 	 */
 	boolean verify(String text, String signature);
+
+	/**
+	 * Tells whether the key ends with the HTTP session: then a grant holds as long as the session
+	 * that rendered it, and does not expire by default, see
+	 * {@link ResumableUploadResourceReference#getGrantExpiry()}.
+	 *
+	 * @return whether the key ends with the session, {@code false} by default
+	 */
+	default boolean isBoundToSession()
+	{
+		return false;
+	}
 }

@@ -26,12 +26,15 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -70,9 +73,11 @@ import org.slf4j.LoggerFactory;
  * a folder, {@link #getFolder()}, until the file is whole. What the server knows of the uploads is
  * kept in memory.
  * <p>
- * Every request carries the id of the upload field and the limits of its uploads, its grant,
- * signed by the field with the {@link #setGrantSigner(IUploadGrantSigner) signer of the grants},
- * so the browser cannot raise them. An upload belongs to an owner, {@link #getCurrentOwner()}: by
+ * Every request carries the id of the upload field, the context of its uploads and the size of
+ * each of its files at most, its grant, signed by the field with the
+ * {@link #setGrantSigner(IUploadGrantSigner) signer of the grants}, so the browser cannot change
+ * them. Each request for an upload is held to the grant it carries: the upload has to be one of
+ * its context, and its file no larger than the grant allows. An upload belongs to an owner, {@link #getCurrentOwner()}: by
  * default the HTTP session that created it, so that the requests of another session are told there
  * is no such upload, and a request without a session creates none. The grant is made for the owner
  * of the page that rendered it, and refused to any other. An application whose users sign in can
@@ -93,23 +98,28 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li>a file larger than the field allows, or larger than {@link #setMaxFileSize(Bytes)}, is
  * refused as the browser creates its upload, before a byte is sent;</li>
- * <li>an owner, a session by default, has at most {@link #setMaxUploadsPerSession(int)} uploads
- * running at once, at most {@link #setMaxBytesPerSession(Bytes)} together, all owners together at
- * most {@link #setMaxTotalBytes(Bytes)}, while at least {@link #setMinFreeSpace(Bytes)} stays free
- * on the disk;</li>
+ * <li>an owner, a session by default, has at most {@link #setMaxUploadsPerOwner(int)} uploads
+ * running at once, their files at most {@link #setMaxBytesPerOwner(Bytes)} together;</li>
+ * <li>the bytes received of the uploads of all owners together are at most
+ * {@link #setMaxTotalBytes(Bytes)}, and leave at least {@link #setMinFreeSpace(Bytes)} free on the
+ * disk: they are counted as they arrive, so that uploads created and never sent take no room from
+ * the others;</li>
  * <li>a request carries at most {@link #setMaxChunkSize(Bytes)}, which has to be less than a proxy
  * in front of the server lets through;</li>
  * <li>an upload the browser sent nothing to for {@link #setExpiry(Duration)} is deleted, one that
- * belongs to an owner other than its session for {@link #setOwnerExpiry(Duration)}, and so are the
- * uploads a session owns when it ends, and all of them when the application stops; the requests
- * look for those at most every {@link #setExpiryCheckInterval(Duration)};</li>
+ * belongs to an owner other than its session for {@link #setOwnerExpiry(Duration)}, one that holds
+ * no bytes for {@link #setEmptyExpiry(Duration)}, and so are the uploads a session owns when it
+ * ends, and all of them when the application stops; the requests look for those at most every
+ * {@link #setExpiryCheckInterval(Duration)};</li>
  * <li>the header {@code Upload-Metadata} has at most {@link #setMaxMetadataLength(int)}
  * characters.</li>
  * </ul>
  * <p>
  * Wicket's filter answers {@code OPTIONS} itself, so the server does not announce its version and
- * extensions that way; tus clients do not need to ask. A proxy refusing {@code PATCH} is passed by
- * a {@code POST} with {@code X-HTTP-Method-Override: PATCH}.
+ * extensions that way; tus clients do not need to ask. A proxy refusing {@code PATCH} or
+ * {@code DELETE} is passed by a {@code POST} naming the method in {@code X-HTTP-Method-Override},
+ * which the field sends when it is
+ * {@link ResumableUploadToResourceField#setOverridingMethod(boolean) overriding the method}.
  *
  * @see ResumableUploadToResourceField
  * @since 12.0.0
@@ -142,8 +152,11 @@ public class ResumableUploadResourceReference extends ResourceReference
 	/** How long an upload is kept without news of the browser, by default. */
 	public static final Duration DEFAULT_EXPIRY = Duration.ofMinutes(30);
 
-	/** The number of uploads a session has running at once at most, by default. */
-	public static final int DEFAULT_MAX_UPLOADS_PER_SESSION = 10;
+	/** How long an upload that holds no bytes is kept without news of the browser, by default. */
+	public static final Duration DEFAULT_EMPTY_EXPIRY = Duration.ofMinutes(5);
+
+	/** The number of uploads an owner has running at once at most, by default. */
+	public static final int DEFAULT_MAX_UPLOADS_PER_OWNER = 10;
 
 	/** The space left free on the disk, by default. */
 	public static final Bytes DEFAULT_MIN_FREE_SPACE = Bytes.megabytes(512);
@@ -170,15 +183,23 @@ public class ResumableUploadResourceReference extends ResourceReference
 
 	private final transient Map<String, ResumableUpload> uploads = new ConcurrentHashMap<>();
 
+	private final transient Map<String, Set<ResumableUpload>> uploadsByOwner =
+		new ConcurrentHashMap<>();
+
+	/** The bytes the uploads not stored hold, and those reserved for the chunks arriving. */
+	private final AtomicLong heldBytes = new AtomicLong();
+
 	private final AtomicBoolean listening = new AtomicBoolean();
+
+	private volatile boolean destroyed;
 
 	private Bytes maxFileSize = DEFAULT_MAX_FILE_SIZE;
 
 	private Bytes maxChunkSize = DEFAULT_MAX_CHUNK_SIZE;
 
-	private int maxUploadsPerSession = DEFAULT_MAX_UPLOADS_PER_SESSION;
+	private int maxUploadsPerOwner = DEFAULT_MAX_UPLOADS_PER_OWNER;
 
-	private Bytes maxBytesPerSession;
+	private Bytes maxBytesPerOwner;
 
 	private Bytes maxTotalBytes;
 
@@ -187,6 +208,8 @@ public class ResumableUploadResourceReference extends ResourceReference
 	private Duration expiry = DEFAULT_EXPIRY;
 
 	private Duration ownerExpiry;
+
+	private Duration emptyExpiry = DEFAULT_EMPTY_EXPIRY;
 
 	private Duration expiryCheckInterval = DEFAULT_EXPIRY_CHECK_INTERVAL;
 
@@ -281,12 +304,12 @@ public class ResumableUploadResourceReference extends ResourceReference
 
 	/**
 	 * Creates the query that a client other than {@link ResumableUploadToResourceField}, any tus
-	 * client, adds to the URL of each of its requests: the id its files are stored under and their
-	 * limits, signed with the {@link #setGrantSigner(IUploadGrantSigner) signer of the grants} for
-	 * the {@link #getCurrentOwner() current owner}, so the client cannot change them, nor hand them
-	 * to another owner, and valid for {@link #getGrantExpiry()}. Once a file is whole, the answer
-	 * tells the name it was stored under in the header {@value #FILE_NAME_HEADER}, which the
-	 * client hands back to the application, for it to find the file with
+	 * client, adds to the URL of each of its requests: the id its files are stored under and the
+	 * size of each file at most, signed with the {@link #setGrantSigner(IUploadGrantSigner) signer
+	 * of the grants} for the {@link #getCurrentOwner() current owner}, so the client cannot change
+	 * them, nor hand them to another owner, and valid for {@link #getGrantExpiry()}. Once a file is
+	 * whole, the answer tells the name it was stored under in the header {@value #FILE_NAME_HEADER},
+	 * which the client hands back to the application, for it to find the file with
 	 * {@code getFileManager().getFile(uploadFieldId, name)}. Create the query in a request of the
 	 * owner, as for a page.
 	 * <p>
@@ -296,44 +319,32 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 *
 	 * @param uploadFieldId
 	 *            the id the files are stored under
-	 * @param maxSize
-	 *            the size of the files sent at once, and of each file, at most
 	 * @param fileMaxSize
-	 *            the size of each file at most, {@code null} for {@code maxSize}
-	 * @param fileCountMax
-	 *            the number of files sent at once at most, -1 for any
+	 *            the size of each file at most; {@link #getMaxFileSize()} holds too
 	 * @return the query, without its {@code ?}
 	 */
-	public String newQuery(String uploadFieldId, Bytes maxSize, Bytes fileMaxSize,
-		long fileCountMax)
+	public String newQuery(String uploadFieldId, Bytes fileMaxSize)
 	{
-		Args.notEmpty(uploadFieldId, "uploadFieldId");
-		Args.notNull(maxSize, "maxSize");
-		return newQuery(uploadFieldId, null, maxSize, fileMaxSize, fileCountMax);
+		return newQuery(uploadFieldId, null, fileMaxSize);
 	}
 
 	/**
-	 * Creates the query of {@link #newQuery(String, Bytes, Bytes, long)}, for the uploads of a
-	 * context, see {@link ResumableUploadToResourceField#setUploadContext(String)}.
+	 * Creates the query of {@link #newQuery(String, Bytes)}, for the uploads of a context, see
+	 * {@link ResumableUploadToResourceField#setUploadContext(String)}.
 	 *
 	 * @param uploadFieldId
 	 *            the id the files are stored under
 	 * @param context
 	 *            the part of the application the uploads belong to, {@code null} for none
-	 * @param maxSize
-	 *            the size of the files sent at once, and of each file, at most
 	 * @param fileMaxSize
-	 *            the size of each file at most, {@code null} for {@code maxSize}
-	 * @param fileCountMax
-	 *            the number of files sent at once at most, -1 for any
+	 *            the size of each file at most; {@link #getMaxFileSize()} holds too
 	 * @return the query, without its {@code ?}
 	 */
-	public String newQuery(String uploadFieldId, String context, Bytes maxSize, Bytes fileMaxSize,
-		long fileCountMax)
+	public String newQuery(String uploadFieldId, String context, Bytes fileMaxSize)
 	{
 		Args.notEmpty(uploadFieldId, "uploadFieldId");
-		Args.notNull(maxSize, "maxSize");
-		return newGrant(uploadFieldId, context, maxSize, fileMaxSize, fileCountMax).query(getGrantSigner(),
+		Args.notNull(fileMaxSize, "fileMaxSize");
+		return newGrant(uploadFieldId, context, fileMaxSize).query(getGrantSigner(),
 			getCurrentOwner());
 	}
 
@@ -399,22 +410,24 @@ public class ResumableUploadResourceReference extends ResourceReference
 	/**
 	 * @return the number of uploads an owner, a session by default, has running at once at most
 	 */
-	public int getMaxUploadsPerSession()
+	public int getMaxUploadsPerOwner()
 	{
-		return maxUploadsPerSession;
+		return maxUploadsPerOwner;
 	}
 
 	/**
-	 * @param maxUploadsPerSession
-	 *            the number of unfinished uploads an owner, a session by default, has at once at
-	 *            most,
-	 *            {@link #DEFAULT_MAX_UPLOADS_PER_SESSION} by default
+	 * Sets the number of unfinished uploads an owner, a session by default, has at once at most.
+	 * The reference remembers as many uploads of the owner whose file went to the file manager, for
+	 * a browser asking how they ended, and forgets the oldest of them beyond.
+	 *
+	 * @param maxUploadsPerOwner
+	 *            the number, {@link #DEFAULT_MAX_UPLOADS_PER_OWNER} by default
 	 * @return {@code this}
 	 */
-	public ResumableUploadResourceReference setMaxUploadsPerSession(int maxUploadsPerSession)
+	public ResumableUploadResourceReference setMaxUploadsPerOwner(int maxUploadsPerOwner)
 	{
-		Args.isTrue(maxUploadsPerSession > 0, "maxUploadsPerSession must be positive");
-		this.maxUploadsPerSession = maxUploadsPerSession;
+		Args.isTrue(maxUploadsPerOwner > 0, "maxUploadsPerOwner must be positive");
+		this.maxUploadsPerOwner = maxUploadsPerOwner;
 		return this;
 	}
 
@@ -422,41 +435,44 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 * @return the size of the unfinished uploads of an owner, a session by default, together at
 	 *         most
 	 */
-	public Bytes getMaxBytesPerSession()
+	public Bytes getMaxBytesPerOwner()
 	{
-		return maxBytesPerSession != null ? maxBytesPerSession
+		return maxBytesPerOwner != null ? maxBytesPerOwner
 			: Bytes.bytes(Math.min(Long.MAX_VALUE / 4, maxFileSize.bytes()) * 4);
 	}
 
 	/**
-	 * @param maxBytesPerSession
+	 * @param maxBytesPerOwner
 	 *            the size of the unfinished uploads of an owner, a session by default, together
 	 *            at most; four times
 	 *            {@link #getMaxFileSize()} by default, which {@code null} restores
 	 * @return {@code this}
 	 */
-	public ResumableUploadResourceReference setMaxBytesPerSession(Bytes maxBytesPerSession)
+	public ResumableUploadResourceReference setMaxBytesPerOwner(Bytes maxBytesPerOwner)
 	{
-		this.maxBytesPerSession = maxBytesPerSession;
+		this.maxBytesPerOwner = maxBytesPerOwner;
 		return this;
 	}
 
 	/**
-	 * @return the size of the unfinished uploads of all owners together at most
+	 * @return the bytes received of the unfinished uploads of all owners together at most
 	 */
 	public Bytes getMaxTotalBytes()
 	{
 		return maxTotalBytes != null ? maxTotalBytes
-			: Bytes.bytes(Math.min(Long.MAX_VALUE / 10, getMaxBytesPerSession().bytes()) * 10);
+			: Bytes.bytes(Math.min(Long.MAX_VALUE / 10, getMaxBytesPerOwner().bytes()) * 10);
 	}
 
 	/**
-	 * Sets the size of the unfinished uploads of all owners together at most, so that many
-	 * sessions together cannot take all the disk, short of {@link #getMinFreeSpace()}, from the
-	 * uploads of the others. {@link Bytes#MAX} sets no limit.
+	 * Sets the bytes received of the unfinished uploads of all owners together at most, so that
+	 * many sessions together cannot take all the disk, short of {@link #getMinFreeSpace()}, from the
+	 * uploads of the others. The bytes are counted as they arrive, not as an upload is created: an
+	 * upload created and never sent takes no room. A file is refused at once when it would not fit
+	 * now, and a chunk that does not fit is refused: the upload keeps what arrived, and the user
+	 * resumes it later. {@link Bytes#MAX} sets no limit.
 	 *
 	 * @param maxTotalBytes
-	 *            the size; ten times {@link #getMaxBytesPerSession()} by default, which
+	 *            the size; ten times {@link #getMaxBytesPerOwner()} by default, which
 	 *            {@code null} restores
 	 * @return {@code this}
 	 */
@@ -467,7 +483,8 @@ public class ResumableUploadResourceReference extends ResourceReference
 	}
 
 	/**
-	 * @return the space the uploads leave free on the disk of the folder
+	 * @return the space the uploads leave free on the disk of the folder, checked as each chunk
+	 *         arrives
 	 */
 	public Bytes getMinFreeSpace()
 	{
@@ -536,6 +553,34 @@ public class ResumableUploadResourceReference extends ResourceReference
 	}
 
 	/**
+	 * @return how long an upload that holds no bytes is kept without news of the browser
+	 */
+	public Duration getEmptyExpiry()
+	{
+		return emptyExpiry;
+	}
+
+	/**
+	 * Sets how long an upload that holds no bytes is kept without news of the browser, when that is
+	 * shorter than its {@link #setExpiry(Duration) expiry}: one that received none yet, so that
+	 * uploads created and never sent do not count against the limits of their owner for long, and
+	 * one whose file went to the file manager, which is kept only for a browser that lost the answer
+	 * completing it and asks how it ended.
+	 *
+	 * @param emptyExpiry
+	 *            the expiry, {@link #DEFAULT_EMPTY_EXPIRY} by default
+	 * @return {@code this}
+	 */
+	public ResumableUploadResourceReference setEmptyExpiry(Duration emptyExpiry)
+	{
+		Args.notNull(emptyExpiry, "emptyExpiry");
+		Args.isTrue(!emptyExpiry.isNegative() && !emptyExpiry.isZero(),
+			"emptyExpiry must be positive");
+		this.emptyExpiry = emptyExpiry;
+		return this;
+	}
+
+	/**
 	 * @return what signs the grants of the fields and checks those the browser sends
 	 */
 	public IUploadGrantSigner getGrantSigner()
@@ -567,11 +612,16 @@ public class ResumableUploadResourceReference extends ResourceReference
 	}
 
 	/**
-	 * @return how long after a page rendered the grant of its field lets the browser start uploads
+	 * @return how long after a page rendered the grant of its field lets the browser start uploads,
+	 *         {@code null} when the grants do not expire
 	 */
 	public Duration getGrantExpiry()
 	{
-		return grantExpiry != null ? grantExpiry : getOwnerExpiry();
+		if (grantExpiry != null)
+		{
+			return grantExpiry;
+		}
+		return grantSigner.isBoundToSession() ? null : getOwnerExpiry();
 	}
 
 	/**
@@ -580,9 +630,14 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 * server keeps it, see {@link #setExpiry(Duration)}, however long ago its page rendered: a
 	 * long upload does not end with the grant. Once the grant has expired, the page has to be
 	 * loaded again for new uploads. The expiry is sent along with the grant and signed with it.
+	 * <p>
+	 * By default a grant whose signer's key ends with the session, see
+	 * {@link IUploadGrantSigner#isBoundToSession()}, does not expire: it holds as long as the
+	 * session that rendered it. Any other expires after {@link #getOwnerExpiry()}, so that a page
+	 * of an earlier session does not start uploads for its owner for ever.
 	 *
 	 * @param grantExpiry
-	 *            the expiry, {@code null} by default for {@link #getOwnerExpiry()}
+	 *            the expiry, {@code null} by default
 	 * @return {@code this}
 	 */
 	public ResumableUploadResourceReference setGrantExpiry(Duration grantExpiry)
@@ -606,7 +661,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 * created, of the bytes of each request, of each file stored and of each upload the server no
 	 * longer has, each with its context, and lists the uploads of an owner in a context, for a field
 	 * to offer to go on with them, see {@link ResumableUploadToResourceField#getRecalledUploads()}.
-	 * By default it keeps nothing and lists the uploads the reference holds,
+	 * By default it keeps nothing and lists the unfinished uploads the reference holds,
 	 * {@link #getUploads(String, String)}. One that keeps them, in a database for example, lets an
 	 * application list them beyond the uploads, and the files they stored, for the user to choose
 	 * one in a later session. Its {@link IUploadsTracker#destroy()} is called once the application
@@ -633,17 +688,17 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 *            {@code null} for every context
 	 * @param owner
 	 *            an owner, see {@link #getCurrentOwner()}
-	 * @return the uploads of the owner in the context the reference holds, finished or not, the
-	 *         oldest first
+	 * @return the unfinished uploads of the owner in the context the reference holds, the oldest
+	 *         first: it keeps one whose file went to the file manager only briefly, see
+	 *         {@link #setEmptyExpiry(Duration)}, and is no record of the files stored
 	 */
 	public List<TrackedUpload> getUploads(String context, String owner)
 	{
 		Args.notNull(owner, "owner");
-		return uploads.values()
-			.stream()
-			.filter(upload -> upload.getOwner().equals(owner) &&
+		return uploadsOf(owner).stream()
+			.filter(upload -> !upload.isStored() &&
 				(context == null || context.equals(upload.getContext())))
-			.sorted((one, other) -> one.getCreated().compareTo(other.getCreated()))
+			.sorted(Comparator.comparing(ResumableUpload::getCreated))
 			.map(TrackedUpload::of)
 			.toList();
 	}
@@ -680,6 +735,10 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 */
 	void track(ResumableUpload upload, UploadEvent event)
 	{
+		if (destroyed)
+		{
+			return;
+		}
 		try
 		{
 			event.tell(uploadsTracker, upload.getContext(), TrackedUpload.of(upload));
@@ -792,7 +851,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 
 	/**
 	 * Names who the uploads of the current request belong to. Only the requests of the same owner
-	 * find an upload, and the limits per session count the uploads of an owner together.
+	 * find an upload, and the limits per owner count its uploads together.
 	 * <p>
 	 * By default the owner is the HTTP session: an upload ends with its session, and a request
 	 * without a session creates none. An application whose users sign in may return the id of the
@@ -839,13 +898,13 @@ public class ResumableUploadResourceReference extends ResourceReference
 	/**
 	 * @return the grant of a field, which expires after {@link #getGrantExpiry()}
 	 */
-	UploadGrant newGrant(String uploadFieldId, String context, Bytes maxSize, Bytes fileMaxSize,
-		long fileCountMax)
+	UploadGrant newGrant(String uploadFieldId, String context, Bytes fileMaxSize)
 	{
 		Args.isTrue(UploadGrant.isLine(uploadFieldId), "uploadFieldId must be a single line");
 		Args.isTrue(UploadGrant.isLine(context), "context must be a single line");
-		return UploadGrant.of(uploadFieldId, context, maxSize, fileMaxSize, fileCountMax,
-			now().plus(getGrantExpiry()));
+		Duration expiry = getGrantExpiry();
+		return UploadGrant.of(uploadFieldId, context, fileMaxSize,
+			expiry != null ? now().plus(expiry) : null);
 	}
 
 	/**
@@ -862,14 +921,12 @@ public class ResumableUploadResourceReference extends ResourceReference
 	}
 
 	/**
-	 * @return the unfinished uploads of an owner
+	 * @return the uploads of an owner, finished or not
 	 */
-	private List<ResumableUpload> unfinishedUploadsOf(String owner)
+	private List<ResumableUpload> uploadsOf(String owner)
 	{
-		return uploads.values()
-			.stream()
-			.filter(upload -> upload.getOwner().equals(owner) && !upload.isStored())
-			.toList();
+		Set<ResumableUpload> own = uploadsByOwner.get(owner);
+		return own != null ? List.copyOf(own) : List.of();
 	}
 
 	/**
@@ -883,26 +940,23 @@ public class ResumableUploadResourceReference extends ResourceReference
 		Map<String, String> metadata) throws Refusal
 	{
 		listen();
-		if (length > Math.min(maxFileSize.bytes(), grant.maxFileSize()))
+		if (length > Math.min(maxFileSize.bytes(), grant.fileMaxSize()))
 		{
 			throw new Refusal(413, ResumableUploadToResourceField.UPLOAD_TOO_LARGE_RESOURCE_KEY);
 		}
-		List<ResumableUpload> own = unfinishedUploadsOf(owner);
-		if (own.size() >= maxUploadsPerSession)
+		List<ResumableUpload> own = uploadsOf(owner).stream()
+			.filter(upload -> !upload.isStored())
+			.toList();
+		if (own.size() >= maxUploadsPerOwner)
 		{
 			throw new Refusal(403, ResumableUploadToResourceField.TOO_MANY_UPLOADS_RESOURCE_KEY);
 		}
 		long ownBytes = own.stream().mapToLong(ResumableUpload::getLength).sum();
-		if (ownBytes + length > getMaxBytesPerSession().bytes())
+		if (ownBytes + length > getMaxBytesPerOwner().bytes())
 		{
 			throw new Refusal(413, ResumableUploadToResourceField.TOO_MUCH_RESOURCE_KEY);
 		}
-		long allBytes = uploads.values()
-			.stream()
-			.filter(upload -> !upload.isStored())
-			.mapToLong(ResumableUpload::getLength)
-			.sum();
-		if (allBytes + length > getMaxTotalBytes().bytes() || !hasRoom(length))
+		if (heldBytes.get() + length > getMaxTotalBytes().bytes() || !hasRoom(length))
 		{
 			throw new Refusal(507, ResumableUploadToResourceField.NO_ROOM_RESOURCE_KEY);
 		}
@@ -916,6 +970,11 @@ public class ResumableUploadResourceReference extends ResourceReference
 				owner.equals(currentSessionId()), grant.uploadFieldId(), length, metadata, file,
 				now());
 			uploads.put(id, upload);
+			uploadsByOwner.compute(owner, (key, known) -> {
+				Set<ResumableUpload> all = known != null ? known : ConcurrentHashMap.newKeySet();
+				all.add(upload);
+				return all;
+			});
 			return upload;
 		}
 		catch (IOException e)
@@ -929,23 +988,55 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 * @return whether the disk of the folder has room for more bytes, leaving free the space it
 	 *         has to
 	 */
-	private boolean hasRoom(long length)
+	private boolean hasRoom(long bytes)
 	{
 		try
 		{
 			Files.createDirectories(folder.toPath());
 			long usable = Files.getFileStore(folder.toPath()).getUsableSpace();
-			long pending = uploads.values()
-				.stream()
-				.filter(upload -> !upload.isStored())
-				.mapToLong(upload -> upload.getLength() - upload.getOffset())
-				.sum();
-			return usable - pending - length >= minFreeSpace.bytes();
+			return usable - bytes >= minFreeSpace.bytes();
 		}
 		catch (IOException e)
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * Reserves room for bytes of an upload about to arrive, unless they would break the limit of
+	 * all owners together or leave too little space on the disk.
+	 *
+	 * @param bytes
+	 *            the number of bytes
+	 * @return whether there is room for them
+	 */
+	boolean reserve(long bytes)
+	{
+		if (heldBytes.addAndGet(bytes) > getMaxTotalBytes().bytes() || !hasRoom(bytes))
+		{
+			heldBytes.addAndGet(-bytes);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Gives back room reserved for bytes that did not arrive.
+	 *
+	 * @param bytes
+	 *            the number of bytes
+	 */
+	void release(long bytes)
+	{
+		heldBytes.addAndGet(-bytes);
+	}
+
+	/**
+	 * @return the bytes held by the uploads not stored, and reserved for the chunks arriving
+	 */
+	long heldBytes()
+	{
+		return heldBytes.get();
 	}
 
 	/**
@@ -962,7 +1053,25 @@ public class ResumableUploadResourceReference extends ResourceReference
 		String name = fileManager.store(file, uploadFieldId);
 		upload.deleteFile();
 		upload.stored(uploadFieldId, name, now());
+		heldBytes.addAndGet(-upload.getOffset());
 		track(upload, IUploadsTracker::onStored);
+		forgetOldStored(upload.getOwner());
+	}
+
+	/**
+	 * Forgets the oldest uploads of an owner whose file went to the file manager, beyond as many as
+	 * the owner has unfinished ones at most.
+	 */
+	private void forgetOldStored(String owner)
+	{
+		List<ResumableUpload> stored = uploadsOf(owner).stream()
+			.filter(ResumableUpload::isStored)
+			.sorted(Comparator.comparing(ResumableUpload::getTouched))
+			.toList();
+		for (int index = 0; index < stored.size() - maxUploadsPerOwner; index++)
+		{
+			forgetUnlessWritten(stored.get(index));
+		}
 	}
 
 	/**
@@ -996,18 +1105,76 @@ public class ResumableUploadResourceReference extends ResourceReference
 		}
 	}
 
+	/**
+	 * Forgets an upload and deletes its bytes.
+	 *
+	 * @param upload
+	 *            the upload, whose lock the current thread holds
+	 */
 	private void forget(ResumableUpload upload)
 	{
 		if (uploads.remove(upload.getId(), upload))
 		{
+			upload.forget();
+			uploadsByOwner.computeIfPresent(upload.getOwner(), (key, own) -> {
+				own.remove(upload);
+				return own.isEmpty() ? null : own;
+			});
+			if (!upload.isStored())
+			{
+				heldBytes.addAndGet(-upload.getOffset());
+			}
 			track(upload, IUploadsTracker::onDeleted);
 		}
 		upload.deleteFile();
 	}
 
 	/**
-	 * Deletes the uploads the browser sent nothing to for longer than the expiry, at most once a
-	 * minute unless forced, but not those a request is writing.
+	 * Forgets an upload unless a request writes it.
+	 */
+	private void forgetUnlessWritten(ResumableUpload upload)
+	{
+		if (upload.lock.tryLock())
+		{
+			try
+			{
+				forget(upload);
+			}
+			finally
+			{
+				upload.lock.unlock();
+			}
+		}
+	}
+
+	/**
+	 * Deletes an upload whose owner ended, or all of them as the application stops: at once, or
+	 * once the request writing it is done, see {@link #endIfEnding(ResumableUpload)}.
+	 */
+	private void end(ResumableUpload upload)
+	{
+		upload.end();
+		forgetUnlessWritten(upload);
+	}
+
+	/**
+	 * Deletes an upload that ended while a request wrote it, once that request let go of it.
+	 *
+	 * @param upload
+	 *            the upload, whose lock the current thread no longer holds
+	 */
+	void endIfEnding(ResumableUpload upload)
+	{
+		if (upload.isEnding())
+		{
+			forgetUnlessWritten(upload);
+		}
+	}
+
+	/**
+	 * Deletes the uploads the browser sent nothing to for longer than the expiry, and those that
+	 * ended while a request wrote them, at most once a minute unless forced, but not those a
+	 * request is writing.
 	 *
 	 * @param force
 	 *            whether to look now, however recently it looked
@@ -1022,16 +1189,9 @@ public class ResumableUploadResourceReference extends ResourceReference
 		swept = now;
 		for (ResumableUpload upload : new ArrayList<>(uploads.values()))
 		{
-			if (!expiresAt(upload).isAfter(now) && upload.lock.tryLock())
+			if (upload.isEnding() || !expiresAt(upload).isAfter(now))
 			{
-				try
-				{
-					forget(upload);
-				}
-				finally
-				{
-					upload.lock.unlock();
-				}
+				forgetUnlessWritten(upload);
 			}
 		}
 	}
@@ -1041,7 +1201,12 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 */
 	Instant expiresAt(ResumableUpload upload)
 	{
-		return upload.getTouched().plus(upload.isEndingWithSession() ? expiry : getOwnerExpiry());
+		Duration kept = upload.isEndingWithSession() ? expiry : getOwnerExpiry();
+		if (upload.holdsNoBytes() && emptyExpiry.compareTo(kept) < 0)
+		{
+			kept = emptyExpiry;
+		}
+		return upload.getTouched().plus(kept);
 	}
 
 	/**
@@ -1063,20 +1228,20 @@ public class ResumableUploadResourceReference extends ResourceReference
 		}
 		Application application = Application.get();
 		application.getSessionStore().registerUnboundListener(sessionId -> {
-			for (ResumableUpload upload : new ArrayList<>(uploads.values()))
+			for (ResumableUpload upload : uploadsOf(sessionId))
 			{
-				if (upload.isEndingWithSession() && upload.getOwner().equals(sessionId))
+				if (upload.isEndingWithSession())
 				{
-					forget(upload);
+					end(upload);
 				}
 			}
 		});
 		application.getApplicationListeners().add(new IApplicationListener()
 		{
 			@Override
-			public void onBeforeDestroyed(Application destroyed)
+			public void onBeforeDestroyed(Application stopping)
 			{
-				new ArrayList<>(uploads.values()).forEach(upload -> forget(upload));
+				new ArrayList<>(uploads.values()).forEach(upload -> end(upload));
 				deleteFiles();
 				if (ownFolder && !folder.delete())
 				{
@@ -1090,12 +1255,14 @@ public class ResumableUploadResourceReference extends ResourceReference
 				{
 					LOG.warn("The tracker of the uploads failed as the application stopped", e);
 				}
+				destroyed = true;
 			}
 		});
 	}
 
 	/**
-	 * Deletes the files of uploads in the folder.
+	 * Deletes the files of uploads in the folder, but not those of the uploads a request still
+	 * writes: the request deletes them once it is done.
 	 */
 	private void deleteFiles()
 	{
@@ -1105,8 +1272,10 @@ public class ResumableUploadResourceReference extends ResourceReference
 		}
 		try (Stream<Path> files = Files.list(folder.toPath()))
 		{
-			for (Path file : files.filter(
-				path -> NAME_PATTERN.matcher(path.getFileName().toString()).matches()).toList())
+			for (Path file : files.filter(path -> {
+				String name = path.getFileName().toString();
+				return NAME_PATTERN.matcher(name).matches() && !uploads.containsKey(name);
+			}).toList())
 			{
 				Files.deleteIfExists(file);
 			}
@@ -1118,8 +1287,8 @@ public class ResumableUploadResourceReference extends ResourceReference
 	}
 
 	/**
-	 * The tracker by default: it keeps nothing, and lists and deletes the uploads the reference
-	 * holds.
+	 * The tracker by default: it keeps nothing, and lists the unfinished uploads the reference holds
+	 * and deletes them.
 	 */
 	private final class HeldUploads implements IUploadsTracker
 	{

@@ -129,6 +129,15 @@ public class HmacGrantSigner implements IUploadGrantSigner
 		return MessageDigest.isEqual(mac(key, text), given);
 	}
 
+	/**
+	 * @return whether the key is one of the HTTP session, {@link #inSession()}
+	 */
+	@Override
+	public boolean isBoundToSession()
+	{
+		return keys instanceof SessionKeys;
+	}
+
 	private static byte[] mac(byte[] key, String text)
 	{
 		if (key == null || key.length < MIN_KEY_LENGTH)

@@ -92,6 +92,11 @@
 			return FakeXhr.instances.filter(xhr => xhr.running);
 		}
 
+		// a URL made absolute, as the field keeps the address of an upload
+		function abs(url) {
+			return new window.URL(url, document.baseURI).href;
+		}
+
 		function newFile(name, size) {
 			return new File([new Uint8Array(size)], name, {type: 'text/plain', lastModified: 1000});
 		}
@@ -149,13 +154,20 @@
 			return Array.from(document.getElementById(field.inputName + '-list').children);
 		}
 
-		// what an earlier page of a field remembered of an upload in the local storage
-		function rememberUpload(fieldId, url, name, size, alive) {
-			const key = 'wicket-resumable-upload::' + new window.URL('/uploads', document.baseURI).href + '::' +
+		// what an earlier page of a field remembered of an upload in the local storage, for the
+		// place of the field or for a context
+		function rememberUpload(fieldId, url, name, size, alive, context) {
+			const key = 'wicket-resumable-upload::' + abs('/uploads/') + '::' +
+				(context ? 'context:' + context : 'place:' + fieldId) + '::' +
 				[name, size, 1000, 'text/plain'].join('::');
-			window.localStorage.setItem(key, JSON.stringify({'url': url, 'field': fieldId, 'name': name,
-				'size': size, 'lastModified': 1000, 'type': 'text/plain', 'alive': alive || 0}));
+			window.localStorage.setItem(key, JSON.stringify({'url': url, 'field': fieldId,
+				'context': context || null, 'name': name, 'size': size, 'lastModified': 1000,
+				'type': 'text/plain', 'alive': alive || 0}));
 			return key;
+		}
+
+		function remembered() {
+			return Object.keys(window.localStorage).filter(key => key.indexOf('wicket-resumable-upload::') === 0);
 		}
 
 		// creates the upload of the next file, answering its POST
@@ -213,7 +225,8 @@
 
 			const create = last();
 			assert.equal(create.method, 'POST');
-			assert.equal(create.url, '/uploads?uploadId=' + field.inputName + '&maxSize=100&fileMaxSize=50&fileCountMax=-1&uploadToken=token&grantExpires=1767225600000');
+			assert.equal(create.url, '/uploads?uploadId=' + field.inputName + '&fileMaxSize=50&uploadToken=token&grantExpires=1767225600000',
+				'the grant of the field, its only limit the server holds a request to');
 			assert.equal(create.headers['Tus-Resumable'], '1.0.0');
 			assert.equal(create.headers['Upload-Length'], '10');
 			assert.equal(create.headers['Upload-Metadata'], 'filename YSDDvC50eHQ=,filetype dGV4dC9wbGFpbg==' +
@@ -223,7 +236,7 @@
 			return created('/uploads/u1').then(function () {
 				const first = last();
 				assert.equal(first.method, 'PATCH');
-				assert.equal(first.url, '/uploads/u1?uploadId=' + field.inputName + '&maxSize=100&fileMaxSize=50&fileCountMax=-1&uploadToken=token&grantExpires=1767225600000');
+				assert.equal(first.url, abs('/uploads/u1') + '?uploadId=' + field.inputName + '&fileMaxSize=50&uploadToken=token&grantExpires=1767225600000');
 				assert.equal(first.headers['Upload-Offset'], '0');
 				assert.equal(first.headers['Content-Type'], 'application/offset+octet-stream');
 				assert.equal(first.body.size, 4);
@@ -267,7 +280,7 @@
 
 				item.querySelector('.wicket-resumable-upload-resume').click();
 				assert.equal(last().method, 'HEAD');
-				assert.equal(last().url.split('?')[0], '/uploads/u1');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'));
 				last().respond(200, {'Upload-Offset': '3', 'Upload-Length': '10'});
 				return settle();
 			}).then(function () {
@@ -317,18 +330,18 @@
 		});
 
 		test('resumes an upload remembered from an earlier page', assert => {
-			const field = newField({remembering: true});
+			const field = newField({remembering: true, rememberedAs: 'files'});
 			const file = newFile('a.txt', 10);
 			choose(field, [file]);
 			field.upload();
 			return created('/uploads/u1').then(function () {
 				field.pause();
 
-				const again = newField({remembering: true});
+				const again = newField({remembering: true, rememberedAs: 'files'});
 				choose(again, [newFile('a.txt', 10)]);
 				again.upload();
 				assert.equal(last().method, 'HEAD');
-				assert.equal(last().url.split('?')[0], '/uploads/u1');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'));
 				last().respond(200, {'Upload-Offset': '8'});
 				return settle();
 			}).then(function () {
@@ -337,18 +350,17 @@
 				last().respond(204, {'Upload-Offset': '10', 'Wicket-Upload-File-Name': 'stored'});
 				return settle();
 			}).then(function () {
-				assert.equal(Object.keys(window.localStorage).filter(key => key.indexOf('wicket-resumable-upload::') === 0).length, 0,
-					'forgotten once stored');
+				assert.equal(remembered().length, 0, 'forgotten once stored');
 			});
 		});
 
 		test('starts anew when the server lost a remembered upload', assert => {
-			const field = newField({remembering: true});
+			const field = newField({remembering: true, rememberedAs: 'files'});
 			choose(field, [newFile('a.txt', 10)]);
 			field.upload();
 			return created('/uploads/u1').then(function () {
 				field.pause();
-				const again = newField({remembering: true});
+				const again = newField({remembering: true, rememberedAs: 'files'});
 				choose(again, [newFile('a.txt', 10)]);
 				again.upload();
 				last().respond(404);
@@ -376,14 +388,14 @@
 		});
 
 		test('fails a remembered upload whose grant the server refuses, and keeps it for a page loaded again', assert => {
-			const field = newField({remembering: true});
+			const field = newField({remembering: true, rememberedAs: 'files'});
 			choose(field, [newFile('a.txt', 10)]);
 			field.upload();
 			let again;
 			return created('/uploads/u1').then(function () {
 				field.pause();
 
-				again = newField({remembering: true});
+				again = newField({remembering: true, rememberedAs: 'files'});
 				choose(again, [newFile('a.txt', 10)]);
 				again.upload();
 				assert.equal(last().method, 'HEAD');
@@ -396,9 +408,8 @@
 				const item = items(again)[0];
 				assert.equal(item.getAttribute('data-state'), 'failed');
 				assert.equal(item.querySelector('.wicket-resumable-upload-status').textContent, 'Failed');
-				const remembered = Object.keys(window.localStorage).filter(key => key.indexOf('wicket-resumable-upload::') === 0);
-				assert.equal(remembered.length, 1, 'still remembered');
-				assert.equal(JSON.parse(window.localStorage.getItem(remembered[0])).url, '/uploads/u1');
+				assert.equal(remembered().length, 1, 'still remembered');
+				assert.equal(JSON.parse(window.localStorage.getItem(remembered()[0])).url, abs('/uploads/u1'));
 			});
 		});
 
@@ -423,10 +434,11 @@
 				items(field)[0].querySelector('.wicket-resumable-upload-cancel').click();
 				assert.true(chunk.aborted);
 				assert.equal(last().method, 'DELETE');
-				assert.equal(last().url.split('?')[0], '/uploads/u1');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'));
 				assert.deepEqual(calls, ['cancel']);
 				assert.deepEqual(reports.map(report => report.ep), [{'error': true, 'errorMessage': 'upload.canceled'}]);
 				assert.equal(items(field).length, 0);
+				last().respond(204);
 			});
 		});
 
@@ -505,7 +517,7 @@
 				last().fail();
 				return until(() => last().method === 'HEAD' && last().running);
 			}).then(function () {
-				assert.equal(last().url.split('?')[0], '/uploads/u1', 'tries once more');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'), 'tries once more');
 				last().fail();
 				return until(() => last().running);
 			}).then(function () {
@@ -528,7 +540,7 @@
 
 				question.querySelector('.wicket-resumable-upload-resume').click();
 				assert.equal(last().method, 'HEAD');
-				assert.equal(last().url.split('?')[0], '/uploads/u1');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'));
 				last().respond(200, {'Upload-Offset': '4'});
 				return settle();
 			}).then(function () {
@@ -545,9 +557,10 @@
 			return loseConnection().then(function () {
 				items(field)[0].querySelector('.wicket-resumable-upload-cancel').click();
 				assert.equal(last().method, 'DELETE');
-				assert.equal(last().url.split('?')[0], '/uploads/u1');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'));
 				assert.deepEqual(reports.map(report => report.ep), [{'error': true, 'errorMessage': 'upload.canceled'}]);
 				assert.equal(items(field).length, 0);
+				last().respond(204);
 			});
 		});
 
@@ -650,7 +663,7 @@
 				{id: 'u1', name: 'a.txt', size: 10, lastModified: 1000, type: 'text/plain', sent: 4},
 				{id: 'u2', name: 'b.txt', size: 10, lastModified: 0, type: 'text/plain', sent: 2}]}, id);
 			assert.deepEqual(FakeXhr.instances.map(xhr => xhr.url.split('?')[0]),
-				['/uploads/u1', new window.URL('/uploads/u2', document.baseURI).href], 'one question for each upload');
+				['/uploads/u1', abs('/uploads/u2')], 'one question for each upload');
 			FakeXhr.instances[0].respond(200, {'Upload-Offset': '4'});
 			FakeXhr.instances[1].respond(200, {'Upload-Offset': '2'});
 			return until(() => items(field).length === 3).then(function () {
@@ -660,12 +673,133 @@
 			});
 		});
 
-		test('sends the context of the field, and leaves the id of the session out of the address of an upload the server offers', assert => {
+		test('sends the context of the field, and the id of the session along with an upload the server offers', assert => {
 			newField({remembering: true, uploadContext: 'videos', resourceUrl: '/uploads;jsessionid=abc', recalled: [
 				{id: 'u7', name: 'a.txt', size: 10, lastModified: 1000, type: 'text/plain', sent: 4}]});
 			assert.equal(last().method, 'HEAD');
-			assert.equal(last().url.split('?')[0], new window.URL('/uploads/u7', document.baseURI).href);
+			assert.equal(last().url.split('?')[0], abs('/uploads/u7') + ';jsessionid=abc');
 			assert.true(last().url.endsWith('&grantExpires=1767225600000&uploadContext=videos'), last().url);
+		});
+
+		test('keeps the address of an upload without the id of the session, and adds it as it sends a request', assert => {
+			const field = newField({remembering: true, resourceUrl: '/uploads;jsessionid=abc'});
+			choose(field, [newFile('a.txt', 10)]);
+			field.upload();
+			assert.equal(last().url.split('?')[0], '/uploads;jsessionid=abc');
+			last().respond(201, {'Location': 'uploads/u1;jsessionid=abc', 'Upload-Offset': '0'});
+			return settle().then(function () {
+				assert.equal(last().method, 'PATCH');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1') + ';jsessionid=abc',
+					'the address of the endpoint, whatever path the server sees');
+				assert.equal(JSON.parse(window.localStorage.getItem(remembered()[0])).url, abs('/uploads/u1'),
+					'no session remembered');
+			});
+		});
+
+		test('takes a refusal naming its error as final, though its status is one tried again', assert => {
+			const field = newField();
+			choose(field, [newFile('a.txt', 10)]);
+			field.upload();
+			return created('/uploads/u1').then(function () {
+				last().respond(500, {'Wicket-Upload-Error': 'uploadFailed'});
+				return settle();
+			}).then(function () {
+				const requests = FakeXhr.instances.length;
+				assert.deepEqual(calls, ['error:uploadFailed']);
+				assert.equal(items(field)[0].getAttribute('data-state'), 'failed');
+				return settle().then(function () {
+					assert.equal(FakeXhr.instances.length, requests, 'not sent again');
+				});
+			});
+		});
+
+		test('starts an upload over at most twice after the server lost it, until the user resumes it', assert => {
+			const field = newField({retryDelays: [0, 0, 0, 0, 0, 0, 0, 0, 0]});
+			choose(field, [newFile('a.txt', 10)]);
+			field.upload();
+			let posts = 1;
+			const loseAgain = function () {
+				// the chunk gets no answer, and the server no longer has the upload
+				last().fail();
+				return until(() => last().method === 'HEAD' && last().running).then(function () {
+					last().respond(404);
+					return settle();
+				});
+			};
+			return created('/uploads/u1').then(loseAgain).then(function () {
+				assert.equal(last().method, 'POST', 'started over');
+				posts++;
+				return created('/uploads/u2');
+			}).then(loseAgain).then(function () {
+				assert.equal(last().method, 'POST', 'started over again');
+				posts++;
+				return created('/uploads/u3');
+			}).then(loseAgain).then(function () {
+				assert.equal(posts, 3);
+				assert.equal(last().method, 'HEAD', 'not started over a third time');
+				assert.deepEqual(calls, ['error:resumableUploadLost']);
+				assert.equal(items(field)[0].getAttribute('data-state'), 'failed');
+
+				items(field)[0].querySelector('.wicket-resumable-upload-resume').click();
+				assert.equal(last().method, 'POST', 'the user resumed it');
+			});
+		});
+
+		test('deletes a canceled upload again while the server is busy with it', assert => {
+			const field = newField();
+			choose(field, [newFile('a.txt', 10)]);
+			field.upload();
+			return created('/uploads/u1').then(function () {
+				field.cancel();
+				assert.equal(last().method, 'DELETE');
+				last().respond(423);
+				return until(() => last().running);
+			}).then(function () {
+				assert.equal(last().method, 'DELETE', 'tried again');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'));
+				const requests = FakeXhr.instances.length;
+				last().respond(204);
+				return settle().then(function () {
+					assert.equal(FakeXhr.instances.length, requests, 'done');
+				});
+			});
+		});
+
+		test('goes on with an upload remembered for its context, and not with that of another context or place', assert => {
+			rememberUpload('another-place', '/uploads/u1', 'a.txt', 10, 0, 'videos');
+			rememberUpload('another-place', '/uploads/u2', 'b.txt', 10);
+			const videos = newField({remembering: true, recalling: false, uploadContext: 'videos'});
+			choose(videos, [newFile('a.txt', 10)]);
+			videos.upload();
+			assert.equal(last().method, 'HEAD', 'of its context, from another place');
+			assert.equal(last().url.split('?')[0], '/uploads/u1');
+
+			const attachments = newField({remembering: true, recalling: false, uploadContext: 'attachments'});
+			choose(attachments, [newFile('a.txt', 10)]);
+			attachments.upload();
+			assert.equal(last().method, 'POST', 'of another context');
+
+			const plain = newField({remembering: true, recalling: false});
+			choose(plain, [newFile('b.txt', 10)]);
+			plain.upload();
+			assert.equal(last().method, 'POST', 'of another place');
+		});
+
+		test('overrides the method of its chunks and deletions when told to', assert => {
+			const field = newField({overridingMethod: true});
+			choose(field, [newFile('a.txt', 10)]);
+			field.upload();
+			assert.equal(last().method, 'POST');
+			assert.equal(last().headers['X-HTTP-Method-Override'], undefined, 'a creation is a POST');
+			return created('/uploads/u1').then(function () {
+				assert.equal(last().method, 'POST');
+				assert.equal(last().headers['X-HTTP-Method-Override'], 'PATCH');
+				assert.equal(last().headers['Upload-Offset'], '0');
+				field.cancel();
+				assert.equal(last().method, 'POST');
+				assert.equal(last().headers['X-HTTP-Method-Override'], 'DELETE');
+				last().respond(204);
+			});
 		});
 
 		test('forgets an upload the server offered once it no longer has it', assert => {
@@ -688,6 +822,7 @@
 				assert.equal(last().url.split('?')[0], '/uploads/u1');
 				assert.equal(window.localStorage.getItem(key), null);
 				assert.equal(items(field).length, 0);
+				last().respond(204);
 			});
 		});
 
