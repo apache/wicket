@@ -439,7 +439,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 	public Bytes getMaxBytesPerOwner()
 	{
 		return maxBytesPerOwner != null ? maxBytesPerOwner
-			: Bytes.bytes(Math.min(Long.MAX_VALUE / 4, maxFileSize.bytes()) * 4);
+			: Bytes.bytes(Math.min(Long.MAX_VALUE / 4, getMaxFileSize().bytes()) * 4);
 	}
 
 	/**
@@ -532,7 +532,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 */
 	public Duration getOwnerExpiry()
 	{
-		return ownerExpiry != null ? ownerExpiry : expiry;
+		return ownerExpiry != null ? ownerExpiry : getExpiry();
 	}
 
 	/**
@@ -621,7 +621,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 		{
 			return grantExpiry;
 		}
-		return grantSigner.isBoundToSession() ? null : getOwnerExpiry();
+		return getGrantSigner().isBoundToSession() ? null : getOwnerExpiry();
 	}
 
 	/**
@@ -741,7 +741,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 		}
 		try
 		{
-			event.tell(uploadsTracker, upload.getContext(), TrackedUpload.of(upload));
+			event.tell(getUploadsTracker(), upload.getContext(), TrackedUpload.of(upload));
 		}
 		catch (RuntimeException e)
 		{
@@ -940,14 +940,14 @@ public class ResumableUploadResourceReference extends ResourceReference
 		Map<String, String> metadata) throws Refusal
 	{
 		listen();
-		if (length > Math.min(maxFileSize.bytes(), grant.fileMaxSize()))
+		if (length > Math.min(getMaxFileSize().bytes(), grant.fileMaxSize()))
 		{
 			throw new Refusal(413, ResumableUploadToResourceField.UPLOAD_TOO_LARGE_RESOURCE_KEY);
 		}
 		List<ResumableUpload> own = uploadsOf(owner).stream()
 			.filter(upload -> !upload.isStored())
 			.toList();
-		if (own.size() >= maxUploadsPerOwner)
+		if (own.size() >= getMaxUploadsPerOwner())
 		{
 			throw new Refusal(403, ResumableUploadToResourceField.TOO_MANY_UPLOADS_RESOURCE_KEY);
 		}
@@ -994,7 +994,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 		{
 			Files.createDirectories(folder.toPath());
 			long usable = Files.getFileStore(folder.toPath()).getUsableSpace();
-			return usable - bytes >= minFreeSpace.bytes();
+			return usable - bytes >= getMinFreeSpace().bytes();
 		}
 		catch (IOException e)
 		{
@@ -1069,7 +1069,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 			.filter(ResumableUpload::isStored)
 			.sorted(Comparator.comparing(ResumableUpload::getTouched))
 			.toList();
-		for (int index = 0; index < stored.size() - maxUploadsPerOwner; index++)
+		for (int index = 0; index < stored.size() - getMaxUploadsPerOwner(); index++)
 		{
 			forgetUnlessWritten(stored.get(index));
 		}
@@ -1084,7 +1084,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 	{
 		try
 		{
-			if (!upload.lock.tryLock(lockTimeout.toMillis(),
+			if (!upload.lock.tryLock(getLockTimeout().toMillis(),
 				TimeUnit.MILLISECONDS))
 			{
 				return false;
@@ -1183,7 +1183,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 	void deleteExpired(boolean force)
 	{
 		Instant now = now();
-		if (!force && swept.plus(expiryCheckInterval).isAfter(now))
+		if (!force && swept.plus(getExpiryCheckInterval()).isAfter(now))
 		{
 			return;
 		}
@@ -1202,10 +1202,11 @@ public class ResumableUploadResourceReference extends ResourceReference
 	 */
 	Instant expiresAt(ResumableUpload upload)
 	{
-		Duration kept = upload.isEndingWithSession() ? expiry : getOwnerExpiry();
-		if (upload.holdsNoBytes() && emptyExpiry.compareTo(kept) < 0)
+		Duration kept = upload.isEndingWithSession() ? getExpiry() : getOwnerExpiry();
+		Duration empty = getEmptyExpiry();
+		if (upload.holdsNoBytes() && empty.compareTo(kept) < 0)
 		{
-			kept = emptyExpiry;
+			kept = empty;
 		}
 		return upload.getTouched().plus(kept);
 	}
@@ -1250,7 +1251,7 @@ public class ResumableUploadResourceReference extends ResourceReference
 				}
 				try
 				{
-					uploadsTracker.destroy();
+					getUploadsTracker().destroy();
 				}
 				catch (RuntimeException e)
 				{

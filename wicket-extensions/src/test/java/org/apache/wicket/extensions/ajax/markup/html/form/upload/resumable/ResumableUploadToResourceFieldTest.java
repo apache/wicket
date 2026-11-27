@@ -98,6 +98,11 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 	/** Whether the file manager fails to store a file. */
 	private static boolean failingToStore;
 
+	/** What the reference's getters return instead of its settings; theirs when null. */
+	private static Bytes overriddenMaxFileSize;
+
+	private static Integer overriddenMaxUploadsPerOwner;
+
 	@TempDir
 	static Path folder;
 
@@ -146,6 +151,20 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 					{
 						return owner != null ? owner : super.getCurrentOwner();
 					}
+
+					@Override
+					public Bytes getMaxFileSize()
+					{
+						return overriddenMaxFileSize != null ? overriddenMaxFileSize
+							: super.getMaxFileSize();
+					}
+
+					@Override
+					public int getMaxUploadsPerOwner()
+					{
+						return overriddenMaxUploadsPerOwner != null ? overriddenMaxUploadsPerOwner
+							: super.getMaxUploadsPerOwner();
+					}
 				}.setMaxFileSize(Bytes.bytes(100)).setMaxChunkSize(Bytes.bytes(40)));
 			}
 
@@ -166,6 +185,8 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		breakAt = -1;
 		owner = null;
 		failingToStore = false;
+		overriddenMaxFileSize = null;
+		overriddenMaxUploadsPerOwner = null;
 		clock = new MutableClock(Instant.parse("2026-11-24T10:00:00Z"));
 		reference().setClock(clock);
 		tester.getSession().bind();
@@ -1461,6 +1482,22 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		tester.startPage(tester.getLastRenderedPage());
 		assertTrue(settings().getBoolean("overridingMethod"));
 		assertTrue(field.isOverridingMethod());
+	}
+
+	@Test
+	void holdsUploadsToTheLimitsItsGettersReturn()
+	{
+		overriddenMaxFileSize = Bytes.bytes(200);
+		overriddenMaxUploadsPerOwner = 2;
+		renderAgain();
+		assertEquals(200, settings().getLong("fileMaxSize"));
+		assertEquals(800, reference().getMaxBytesPerOwner().bytes(), "four files at most");
+		create(150, "a.txt");
+		assertEquals(413, send("POST", PATH, Map.of("Upload-Length", "201"), null));
+		create(10, "b.txt");
+		assertEquals(403, send("POST", PATH, Map.of("Upload-Length", "1"), null));
+		assertEquals(ResumableUploadToResourceField.TOO_MANY_UPLOADS_RESOURCE_KEY,
+			header(ResumableUploadResource.ERROR_HEADER));
 	}
 
 	@Test
