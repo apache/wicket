@@ -17,10 +17,10 @@
 package org.apache.wicket.core.util.string.componentrenderer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.util.string.ComponentRenderer;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -43,11 +43,11 @@ class ComponentRendererTest extends WicketTestCase
 	}
 
 	@Test
-	void renderPage()
+	void renderPageWithCspEnabled()
 	{
 		tester.getApplication().getCspSettings().blocking().strict();
-		CharSequence html = new ComponentRenderer().renderPage(() -> new TemplatePage());
-		assertFalse(Strings.isEmpty(html));
+		CharSequence html = ComponentRenderer.renderPage(new PageProvider(new TemplatePage()));
+		assertTrue(html.toString().contains("href=\"http://google.com\""));
 	}
 
 	/**
