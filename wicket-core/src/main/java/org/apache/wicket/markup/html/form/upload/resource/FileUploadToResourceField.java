@@ -372,7 +372,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
      * present, is reported to {@link #onUploadFailure(AjaxRequestTarget, String)} instead.
      *
      * @param target         The {@link AjaxRequestTarget}
-     * @param fileInfos      The List<FileInfo
+     * @param fileInfos      the uploaded files
      */
     protected abstract void onUploadSuccess(AjaxRequestTarget target, List<UploadInfo> fileInfos);
 

@@ -335,7 +335,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * @param webRequest
 	 *            ServletWebRequest
 	 * @param fileItems
-	 *            List<FileUpload>
+	 *            the uploaded files
 	 */
 	protected void prepareResponse(ResourceResponse resourceResponse, ServletWebRequest webRequest, List<FileUpload> fileItems)
 	{
@@ -356,7 +356,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * Delegates to FileManager to store the uploaded files
 	 *
 	 * @param fileItems
-	 *            List<FileUpload>
+	 *            the uploaded files
 	 */
 	protected void saveFiles(List<FileUpload> fileItems, String uploadId)
 	{
@@ -431,7 +431,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * @param webRequest
 	 *            ServletWebRequest
 	 * @param files
-	 *            List<FileUpload>
+	 *            the uploaded files
 	 * @return The generated JSON
 	 */
 	protected abstract String generateJsonResponse(ResourceResponse resourceResponse,
