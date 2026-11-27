@@ -188,6 +188,44 @@ Wicket.Event.add(window, 'domready', function() {
 					'different "href" has been added');
 		});
 
+	// runs the step which processLink registers, without waiting for the browser to load anything
+	var runProcessLink = function (attributes) {
+		var link = createElement('link', attributes),
+			context = {
+				steps: []
+			};
+
+		Wicket.Head.Contributor.processLink(context, link);
+		var result = context.steps[0](function () {});
+
+		var added = document.head.querySelector('link[href="' + attributes.href + '"]');
+		if (added) {
+			added.parentNode.removeChild(added);
+		}
+		return { result: result, added: added !== null };
+	};
+
+	// the values of FunctionsExecuter.DONE and FunctionsExecuter.ASYNC
+	var DONE = 1, ASYNC = 3;
+
+	['stylesheet', 'STYLESHEET', 'alternate stylesheet', 'stylesheet alternate'].forEach(function (rel, index) {
+		test('Wicket.Head.Contributor.processLink - waits for a link with rel "' + rel + '"', assert => {
+			var outcome = runProcessLink({ rel: rel, href: 'data/test.css?waits=' + index });
+
+			assert.ok(outcome.added, 'The link should be added to the head.');
+			assert.equal(outcome.result, ASYNC);
+		});
+	});
+
+	['stylesheet/less', 'stylesheets', 'icon', ''].forEach(function (rel, index) {
+		test('Wicket.Head.Contributor.processLink - does not wait for a link with rel "' + rel + '"', assert => {
+			var outcome = runProcessLink({ rel: rel, href: 'data/test.css?skips=' + index });
+
+			assert.ok(outcome.added, 'The link should be added to the head.');
+			assert.equal(outcome.result, DONE);
+		});
+	});
+
 	test('Wicket.Head.Contributor.parse - parse head element with three script elements inside', assert => {
 
 		var xmlDocument = Wicket.Xml.parse('<header-contribution><![CDATA[<head><script type="text/javascript" src="data/test.js"></script><script type="text/javascript" id="wicket-ajax-debug-enable">/*<![CDATA[*/wicketAjaxDebugEnable=true;/*]]]]><![CDATA[>*/</script><script type="text/javascript" id="wicket-ajax-base-url">/*<![CDATA[*/Wicket.Ajax.baseUrl="clock";/*]]]]><![CDATA[>*/</script></head>]]></header-contribution>');

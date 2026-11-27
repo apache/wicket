@@ -2143,7 +2143,9 @@
 					// add element to head
 					Wicket.Head.addElement(css);
 
-					return FunctionsExecuter.ASYNC;
+					// browsers may report neither load nor error for other kinds of links
+					const isStylesheet = /(^|\s)stylesheet(\s|$)/i.test(css.getAttribute("rel"));
+					return isStylesheet ? FunctionsExecuter.ASYNC : FunctionsExecuter.DONE;
 				});
 			},
 
