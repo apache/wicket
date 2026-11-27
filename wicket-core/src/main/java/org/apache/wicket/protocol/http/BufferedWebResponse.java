@@ -195,7 +195,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	@Override
 	public boolean isHeaderSupported()
 	{
-		return originalResponse == null ? false : originalResponse.isHeaderSupported();
+		return originalResponse != null && originalResponse.isHeaderSupported();
 	}
 
 	@Override
