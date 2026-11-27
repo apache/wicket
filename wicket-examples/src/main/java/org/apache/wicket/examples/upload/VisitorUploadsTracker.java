@@ -61,14 +61,15 @@ public class VisitorUploadsTracker implements IUploadsTracker
 		// a file stored stays with the file manager, until it is taken
 		if (!upload.isStored())
 		{
-			uploadsOf(upload.owner()).remove(upload.id());
+			remove(upload.owner(), upload.id());
 		}
 	}
 
 	@Override
 	public List<TrackedUpload> getUploads(String context, String owner)
 	{
-		return uploadsOf(owner).values()
+		return uploadsByOwner.getOrDefault(owner, Map.of())
+			.values()
 			.stream()
 			.filter(upload -> context == null || context.equals(upload.context()))
 			.sorted(Comparator.comparing(TrackedUpload::created))
@@ -78,7 +79,7 @@ public class VisitorUploadsTracker implements IUploadsTracker
 	@Override
 	public void delete(String context, String owner, String uploadId)
 	{
-		uploadsOf(owner).remove(uploadId);
+		remove(owner, uploadId);
 	}
 
 	@Override
@@ -98,17 +99,29 @@ public class VisitorUploadsTracker implements IUploadsTracker
 	 */
 	public void takeAllOf(String owner, String uploadFieldId)
 	{
-		uploadsOf(owner).values()
-			.removeIf(upload -> upload.isStored() && uploadFieldId.equals(upload.storedFieldId()));
-	}
-
-	private Map<String, TrackedUpload> uploadsOf(String owner)
-	{
-		return uploadsByOwner.computeIfAbsent(owner, key -> new ConcurrentHashMap<>());
+		uploadsByOwner.computeIfPresent(owner, (key, uploads) -> {
+			uploads.values()
+				.removeIf(
+					upload -> upload.isStored() && uploadFieldId.equals(upload.storedFieldId()));
+			return uploads.isEmpty() ? null : uploads;
+		});
 	}
 
 	private void keep(TrackedUpload upload)
 	{
-		uploadsOf(upload.owner()).put(upload.id(), upload);
+		uploadsByOwner.computeIfAbsent(upload.owner(), key -> new ConcurrentHashMap<>())
+			.put(upload.id(), upload);
+	}
+
+	/**
+	 * Removes an upload, and the map of its owner once it is empty, so that only the owners with
+	 * uploads take memory.
+	 */
+	private void remove(String owner, String uploadId)
+	{
+		uploadsByOwner.computeIfPresent(owner, (key, uploads) -> {
+			uploads.remove(uploadId);
+			return uploads.isEmpty() ? null : uploads;
+		});
 	}
 }

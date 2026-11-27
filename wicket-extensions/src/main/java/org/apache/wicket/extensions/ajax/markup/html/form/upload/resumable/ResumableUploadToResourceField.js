@@ -39,6 +39,9 @@
     const UPLOAD_CANCELED = 'upload.canceled';
     const UPLOAD_LOST = 'resumableUploadLost';
 
+    // how often an upload starts over at most, after the server lost it, until the user resumes it
+    const MAX_RESTARTS = 2;
+
     // the state of the fields, by field id, which a new rendering of a field takes over: the
     // current field, its uploads, the question it asks and its look whether the server answers
     const statesOf = Object.create(null);
@@ -49,8 +52,9 @@
 
     /**
      * @param settings the settings of Wicket.FileUploadToResourceField, with grantExpires,
-     *        chunkSize, parallelUploads, remembering, rememberedAs, recalling, askingToResume,
-     *        retryDelays, probeDelays, stallMillis, inUseMillis and texts, as
+     *        uploadContext, chunkSize, parallelUploads, remembering, rememberedAs, recalling,
+     *        askingToResume, retryDelays, probeDelays, stallMillis, inUseMillis, overridingMethod
+     *        and texts, as
      *        ResumableUploadToResourceField#newClientSettings() renders them: the timings have no
      *        defaults here, the field sets them
      * @param resumeQuestionCallBack a function asking the user whether to go on with uploads,
@@ -65,12 +69,19 @@
         this.state.field = this;
         this.uploads = this.state.uploads;
         Base.call(this, settings, clientBeforeSendCallBack, clientSideSuccessCallBack, clientSideCancelCallBack, uploadErrorCallBack);
-        const query = this.resourceUrl.indexOf('?');
-        this.endpoint = this.resourceUrl.substring(0, query);
-        // the grant of the field, with when it expires, which its token signs too
-        this.query = this.resourceUrl.substring(query + 1) + '&grantExpires=' +
-            encodeURIComponent(settings.grantExpires) +
-            (settings.uploadContext ? '&uploadContext=' + encodeURIComponent(settings.uploadContext) : '');
+        this.endpoint = settings.resourceUrl;
+        // the path parameters of the endpoint, the id of a session without cookies: added to the
+        // address of an upload as it is sent, never kept with it
+        const session = /;[^\/]*$/.exec(this.endpoint);
+        this.session = session ? session[0] : '';
+        this.uploadContext = settings.uploadContext || null;
+        // the grant of the field, the only limit of the field the server holds a request to
+        this.query = 'uploadId=' + encodeURIComponent(this.inputName) +
+            '&fileMaxSize=' + encodeURIComponent(settings.fileMaxSize) +
+            '&uploadToken=' + encodeURIComponent(settings.uploadToken) +
+            '&grantExpires=' + encodeURIComponent(settings.grantExpires) +
+            (this.uploadContext ? '&uploadContext=' + encodeURIComponent(this.uploadContext) : '');
+        this.overridingMethod = settings.overridingMethod === true;
         this.chunkSize = settings.chunkSize;
         this.parallelUploads = settings.parallelUploads || 1;
         this.remembering = settings.remembering !== false;
@@ -129,13 +140,73 @@
     }
 
     /**
+     * @returns {string} a URL made absolute, to compare it with another
+     */
+    function absolute(url)
+    {
+        return new window.URL(url, document.baseURI).href;
+    }
+
+    /**
+     * @param field a field
+     * @param id the id of an upload
+     * @returns {string} the absolute URL of the upload, without the id of a session
+     */
+    function uploadUrl(field, id)
+    {
+        return absolute(field.endpoint.substring(0, field.endpoint.length - field.session.length) +
+            '/' + encodeURIComponent(id));
+    }
+
+    /**
+     * @param location the Location of an upload the server created
+     * @returns {string} the id of the upload, the last segment of its path
+     */
+    function idOf(location)
+    {
+        const path = location.split('?')[0].replace(/;[^\/]*$/, '');
+        return decodeURIComponent(path.substring(path.lastIndexOf('/') + 1));
+    }
+
+    /**
+     * @param field a field
+     * @param url a URL to send a request to
+     * @returns {string} the URL with the path parameters of the endpoint, unless it has some
+     */
+    function withSession(field, url)
+    {
+        return /;[^\/]*$/.test(url) ? url : url + field.session;
+    }
+
+    /**
      * @param field a field
      * @returns {string} the start of the keys the uploads of the endpoint of the field are
      *          remembered under in the local storage
      */
     function storagePrefix(field)
     {
-        return STORAGE_PREFIX + new window.URL(field.endpoint, document.baseURI).href + '::';
+        return STORAGE_PREFIX + uploadUrl(field, '') + '::';
+    }
+
+    /**
+     * @param field a field
+     * @returns {string} where the uploads of the field may go on: in its context, else in its place
+     */
+    function scopeOf(field)
+    {
+        return field.uploadContext !== null ? 'context:' + field.uploadContext : 'place:' + field.rememberedAs;
+    }
+
+    /**
+     * @param field a field
+     * @param value what is remembered of an upload
+     * @returns {boolean} whether the field may go on with the upload: one of its context, else of
+     *          its place
+     */
+    function belongs(field, value)
+    {
+        return field.uploadContext !== null ? value.context === field.uploadContext
+            : !value.context && value.field === field.rememberedAs;
     }
 
     /**
@@ -145,7 +216,8 @@
     function storageKey(upload)
     {
         const file = upload.file;
-        return storagePrefix(upload.field) + [file.name, file.size, file.lastModified, file.type].join('::');
+        return storagePrefix(upload.field) + scopeOf(upload.field) + '::' +
+            [file.name, file.size, file.lastModified, file.type].join('::');
     }
 
     /**
@@ -165,7 +237,8 @@
     }
 
     /**
-     * @returns {string} the URL of the upload of the same file the field remembers, or null
+     * @returns {string} the URL of the upload of the same file the field remembers, in its context
+     *          or place, or null
      */
     function remembered(upload)
     {
@@ -173,7 +246,7 @@
             return null;
         }
         const value = rememberedAt(storageKey(upload));
-        return value ? value.url : null;
+        return value && belongs(upload.field, value) ? value.url : null;
     }
 
     /**
@@ -190,7 +263,8 @@
             upload.alive = alive === undefined ? Date.now() : alive;
             try {
                 window.localStorage.setItem(storageKey(upload), JSON.stringify({
-                    'url': upload.url, 'field': upload.field.rememberedAs, 'name': file.name,
+                    'url': upload.url, 'field': upload.field.rememberedAs,
+                    'context': upload.field.uploadContext, 'name': file.name,
                     'size': file.size, 'lastModified': file.lastModified, 'type': file.type,
                     'alive': upload.alive
                 }));
@@ -232,12 +306,15 @@
     }
 
     /**
-     * @param status the status of an answer of the server
-     * @returns {boolean} whether the request is worth sending again
+     * @param xhr an answer of the server
+     * @returns {boolean} whether the request is worth sending again: not when the server refused
+     *          it, naming the error
      */
-    function isTransient(status)
+    function isTransient(xhr)
     {
-        return status === 0 || status === 409 || status === 423 || status === 429 || status >= 500;
+        const status = xhr.status;
+        return xhr.getResponseHeader(ERROR_HEADER) === null &&
+            (status === 0 || status === 409 || status === 423 || status === 429 || status >= 500);
     }
 
     /**
@@ -280,8 +357,12 @@
                     });
                 }, upload.field.stallMillis);
             };
-            xhr.open(method, withQuery(url, upload.field.query));
+            const overridden = upload.field.overridingMethod && (method === 'PATCH' || method === 'DELETE');
+            xhr.open(overridden ? 'POST' : method, withQuery(withSession(upload.field, url), upload.field.query));
             xhr.setRequestHeader('Tus-Resumable', TUS_RESUMABLE);
+            if (overridden) {
+                xhr.setRequestHeader('X-HTTP-Method-Override', method);
+            }
             Object.keys(headers).forEach(function (name) {
                 xhr.setRequestHeader(name, headers[name]);
             });
@@ -322,7 +403,8 @@
     {
         return {
             'key': ++lastKey, 'file': file, 'field': field, 'state': state, 'url': null,
-            'offset': 0, 'sent': 0, 'attempt': 0, 'run': 0, 'xhr': null, 'timer': null, 'error': null
+            'offset': 0, 'sent': 0, 'attempt': 0, 'restarts': 0, 'run': 0, 'xhr': null, 'timer': null,
+            'error': null
         };
     }
 
@@ -332,14 +414,6 @@
     function typeOf(file)
     {
         return file.type || 'application/octet-stream';
-    }
-
-    /**
-     * @returns {string} a URL made absolute, to compare it with another
-     */
-    function absolute(url)
-    {
-        return new window.URL(url, document.baseURI).href;
     }
 
     /**
@@ -481,7 +555,8 @@
             if (xhr.status !== 201) {
                 throw xhr;
             }
-            upload.url = xhr.getResponseHeader('Location');
+            // behind a proxy the path the server sees may not be the browser's: the endpoint is
+            upload.url = uploadUrl(upload.field, idOf(xhr.getResponseHeader('Location') || ''));
             upload.offset = 0;
             const fileName = xhr.getResponseHeader(FILE_NAME_HEADER);
             if (fileName !== null) {
@@ -598,8 +673,8 @@
             return;
         }
         const status = problem.status;
-        if (!isTransient(status)) {
-            if (status === 404 || status === 410) {
+        if (!isTransient(problem)) {
+            if ((status === 404 || status === 410) && problem.getResponseHeader(ERROR_HEADER) === null) {
                 forget(upload);
                 failed(upload, UPLOAD_LOST);
             } else {
@@ -667,6 +742,9 @@
                 if (!known && upload.run === run) {
                     forget(upload);
                     upload.url = null;
+                    if (++upload.restarts > MAX_RESTARTS) {
+                        throw UPLOAD_LOST;
+                    }
                     return create(upload, run);
                 }
             });
@@ -836,6 +914,7 @@
                 halt(each);
                 each.state = 'waiting';
                 each.attempt = 0;
+                each.restarts = 0;
             }
         });
         this.pump();
@@ -844,6 +923,32 @@
             this.input.click();
         }
     };
+
+    /**
+     * Deletes an upload on the server, trying again while the server is busy with it, a request
+     * just aborted still writing it for example, as long as the tries of the field take.
+     *
+     * @param field the field
+     * @param url the URL of the upload
+     * @param attempt the number of tries before
+     */
+    function deleteOnServer(field, url, attempt)
+    {
+        const again = function (problem) {
+            const delays = field.retryDelays;
+            if (attempt < delays.length && isTransient(problem)) {
+                window.setTimeout(function () {
+                    deleteOnServer(field, url, attempt + 1);
+                }, delays[attempt]);
+            }
+            // else the server deletes it once it expires
+        };
+        send({'field': field}, 'DELETE', url, {}, null).then(function (xhr) {
+            if (xhr.status !== 204 && xhr.status !== 404 && xhr.status !== 410) {
+                again(xhr);
+            }
+        }, again);
+    }
 
     /**
      * Cancels an upload, or all the uploads of the field, deleting them on the server, and tells
@@ -865,9 +970,7 @@
             each.state = 'canceled';
             forget(each);
             if (each.url) {
-                send(each, 'DELETE', each.url, {}, null).catch(function () {
-                    // the server deletes it once it expires
-                });
+                deleteOnServer(this, each.url, 0);
             }
             this.discard(each);
         }, this);
@@ -938,15 +1041,15 @@
             return {'key': key, 'value': rememberedAt(key)};
         });
         this.recalledByServer.forEach(function (upload) {
-            // without the id of a session in the path, as the server tells the address of an upload
-            const url = absolute(self.endpoint.replace(/;[^\/]*$/, '') + '/' + encodeURIComponent(upload.id));
+            const url = uploadUrl(self, upload.id);
             const remembered = entries.some(function (entry) {
-                return entry.value && absolute(entry.value.url) === url;
+                return entry.value && belongs(self, entry.value) && absolute(entry.value.url) === url;
             });
             if (!remembered) {
                 entries.push({'key': null, 'value': {
-                    'url': url, 'field': self.rememberedAs, 'name': upload.name, 'size': upload.size,
-                    'lastModified': upload.lastModified, 'type': upload.type, 'alive': 0
+                    'url': url, 'field': self.rememberedAs, 'context': self.uploadContext,
+                    'name': upload.name, 'size': upload.size, 'lastModified': upload.lastModified,
+                    'type': upload.type, 'alive': 0
                 }});
             }
         });
@@ -958,7 +1061,7 @@
                 return upload.url && absolute(upload.url) === absolute(value.url);
             });
             const sending = value && Date.now() - (Number(value.alive) || 0) < self.inUseMillis;
-            if (!value || value.field !== self.rememberedAs || known || sending) {
+            if (!value || !belongs(self, value) || known || sending) {
                 return null;
             }
             const upload = newUpload(self, {

@@ -21,6 +21,7 @@ import java.security.MessageDigest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.crypt.ICrypt;
+import org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory;
 
 /**
  * Signs the grants of the resumable uploads by encrypting them with the
@@ -62,6 +63,18 @@ public class CryptFactoryGrantSigner implements IUploadGrantSigner
 		}
 		return decrypted != null && MessageDigest.isEqual(
 			text.getBytes(StandardCharsets.UTF_8), decrypted.getBytes(StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * @return whether the crypt factory of the application keeps its key in the HTTP session, as
+	 *         it does by default
+	 */
+	@Override
+	public boolean isBoundToSession()
+	{
+		return Application.get()
+			.getSecuritySettings()
+			.getCryptFactory() instanceof KeyInSessionCryptFactory;
 	}
 
 	private static ICrypt crypt()

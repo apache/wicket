@@ -81,7 +81,9 @@ import com.github.openjson.JSONObject;
  * The limits of the field are those of its parent: {@link #setMaxSize(Bytes)} for the files
  * chosen at once and for each file, {@link #setFileMaxSize(Bytes)} for each file and
  * {@link #setFileCountMax(long)} for the number of files chosen at once. Those of the reference
- * apply too, and the lower one wins.
+ * apply too, and the lower one wins. Every file is an upload of its own, so the server holds each
+ * request to the size of each file only, {@link #getFileMaxSize()}, which the grant of the field
+ * signs: the size of the files chosen at once and their number are checked in the browser only.
  *
  * @since 11.1.0
  */
@@ -143,10 +145,10 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 	/** The resource key of the text of a file larger than the limits allow. */
 	public static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "resumableUploadTooLarge";
 
-	/** The resource key of the text of a session that has too many uploads running at once. */
+	/** The resource key of the text of an owner that has too many uploads running at once. */
 	public static final String TOO_MANY_UPLOADS_RESOURCE_KEY = "resumableUploadTooMany";
 
-	/** The resource key of the text of a session whose uploads together are too large. */
+	/** The resource key of the text of an owner whose uploads together are too large. */
 	public static final String TOO_MUCH_RESOURCE_KEY = "resumableUploadTooMuch";
 
 	/** The resource key of the text of a server that has no room for a file now. */
@@ -190,6 +192,8 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 	private String uploadContext;
 
 	private Duration inUseTimeout = DEFAULT_IN_USE_TIMEOUT;
+
+	private boolean overridingMethod;
 
 	/**
 	 * @param id
@@ -495,7 +499,8 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 	 * By default these are the unfinished uploads of the current owner in the
 	 * {@link #setUploadContext(String) context} of the field, wherever they started, or, without a
 	 * context, those a field in the same place started, {@link #getRememberedAs()}, as the
-	 * {@link ResumableUploadResourceReference#getUploadsTracker() tracker of the uploads} lists them.
+	 * {@link ResumableUploadResourceReference#getUploadsTracker() tracker of the uploads} lists them,
+	 * whose files are no larger than the field takes.
 	 *
 	 * @return the uploads to offer
 	 */
@@ -508,10 +513,12 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 			return List.of();
 		}
 		String place = getRememberedAs();
+		long fileMaxSize = getFileMaxSize().bytes();
 		return reference.getUploadsTracker()
 			.getUploads(uploadContext, owner)
 			.stream()
 			.filter(upload -> !upload.isStored() && !upload.isComplete() &&
+				upload.length() <= fileMaxSize &&
 				(uploadContext != null || place.equals(upload.place())))
 			.toList();
 	}
@@ -600,6 +607,31 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 	}
 
 	/**
+	 * @return whether the script sends {@code PATCH} and {@code DELETE} as {@code POST}, naming the
+	 *         method in the header {@code X-HTTP-Method-Override}
+	 */
+	public boolean isOverridingMethod()
+	{
+		return overridingMethod;
+	}
+
+	/**
+	 * Sets whether the script sends its chunks, {@code PATCH}, and the deletion of an upload,
+	 * {@code DELETE}, as {@code POST}, naming the method in the header
+	 * {@code X-HTTP-Method-Override}, for a proxy in front of the server that refuses those
+	 * methods.
+	 *
+	 * @param overridingMethod
+	 *            whether to override the method, {@code false} by default
+	 * @return {@code this}
+	 */
+	public ResumableUploadToResourceField setOverridingMethod(boolean overridingMethod)
+	{
+		this.overridingMethod = overridingMethod;
+		return this;
+	}
+
+	/**
 	 * @return the waits before the tries again in milliseconds, which together take a timeout
 	 */
 	static List<Long> retryDelaysOf(Duration timeout)
@@ -656,31 +688,32 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 	 * {@link ResumableUploadResourceReference#getGrantSigner() signer} for the
 	 * {@link ResumableUploadResourceReference#getCurrentOwner() current owner} as
 	 * {@code uploadToken}, and {@code grantExpires}, when the grant expires, in milliseconds since
-	 * the epoch, and {@code chunkSize},
+	 * the epoch, -1 for never, and {@code chunkSize},
 	 * {@code parallelUploads}, {@code remembering}, {@code rememberedAs}, {@code recalling},
 	 * {@code recalled}, the uploads of {@link #getRecalledUploads()}, {@code uploadContext}, the
 	 * {@link #setUploadContext(String) context} of the field when it has one,
 	 * {@code askingToResume}, {@code retryDelays}, the waits before the tries again in
 	 * milliseconds, {@code probeDelays}, the waits before each look whether the server answers again
 	 * once the connection is lost, the last one again and again, {@code stallMillis},
-	 * {@code inUseMillis} and {@code texts}.
+	 * {@code inUseMillis}, {@code overridingMethod} and {@code texts}. The script sends the id of
+	 * the field, {@code fileMaxSize}, {@code uploadToken}, {@code grantExpires} and
+	 * {@code uploadContext} along with each of its requests.
 	 *
 	 * @return the settings
 	 */
 	protected JSONObject newClientSettings()
 	{
 		ResumableUploadResourceReference reference = getResumableUploadResourceReference();
-		UploadGrant grant = reference.newGrant(getMarkupId(), uploadContext, getMaxSize(),
-			getFileMaxSize(),
-			getFileCountMax());
+		UploadGrant grant = reference.newGrant(getMarkupId(), uploadContext, getFileMaxSize());
 		JSONObject settings = new JSONObject();
 		settings.put("inputName", getMarkupId());
 		settings.put("resourceUrl", Strings.stripEnding(
 			urlFor(reference, new PageParameters()).toString(), "/"));
 		settings.put("ajaxCallBackUrl", getUploadCallbackUrl());
-		settings.put("maxSize", grant.maxSize());
+		// as large as a script holds exactly
+		settings.put("maxSize", Math.min(getMaxSize().bytes(), UploadGrant.MAX_SAFE_INTEGER));
 		settings.put("fileMaxSize", grant.fileMaxSize());
-		settings.put("fileCountMax", grant.fileCountMax());
+		settings.put("fileCountMax", getFileCountMax());
 		settings.put("uploadToken",
 			grant.token(reference.getGrantSigner(), reference.getCurrentOwner()));
 		settings.put("grantExpires", grant.expires());
@@ -701,6 +734,7 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 			settings.put("uploadContext", uploadContext);
 		}
 		settings.put("inUseMillis", inUseTimeout.toMillis());
+		settings.put("overridingMethod", overridingMethod);
 		JSONObject texts = new JSONObject();
 		for (String key : TEXTS)
 		{
@@ -724,8 +758,8 @@ public abstract class ResumableUploadToResourceField extends FileUploadToResourc
 		ResumableUploadResourceReference reference = getResumableUploadResourceReference();
 		Map<String, Object> model = new HashMap<>();
 		model.put("fileMaxSize", getFileMaxSize());
-		model.put("maxUploadsPerSession", reference.getMaxUploadsPerSession());
-		model.put("maxBytesPerSession", reference.getMaxBytesPerSession());
+		model.put("maxUploadsPerOwner", reference.getMaxUploadsPerOwner());
+		model.put("maxBytesPerOwner", reference.getMaxBytesPerOwner());
 		return getString(errorKey, Model.ofMap(model));
 	}
 

@@ -70,6 +70,12 @@ public final class ResumableUpload
 
 	private volatile String storedFieldId;
 
+	/** Set once the upload is to be deleted as soon as no request writes it. */
+	private volatile boolean ending;
+
+	/** Set once the reference forgot the upload. */
+	private volatile boolean forgotten;
+
 	ResumableUpload(String id, String owner, String context, boolean endingWithSession,
 		String uploadFieldId, long length, Map<String, String> metadata, Path file, Instant created)
 	{
@@ -149,11 +155,6 @@ public final class ResumableUpload
 		touched = now;
 	}
 
-	void touch(Instant now)
-	{
-		touched = now;
-	}
-
 	/**
 	 * @return whether the server holds all the bytes of the file
 	 */
@@ -191,6 +192,48 @@ public final class ResumableUpload
 		storedFieldId = fieldId;
 		storedName = name;
 		touched = now;
+	}
+
+	/**
+	 * @return whether the server holds no bytes of the file: none arrived yet, or the file went to
+	 *         the file manager
+	 */
+	boolean holdsNoBytes()
+	{
+		return offset == 0 || isStored();
+	}
+
+	/**
+	 * Marks the upload to be deleted as soon as no request writes it: its session ended, or the
+	 * application stops.
+	 */
+	void end()
+	{
+		ending = true;
+	}
+
+	/**
+	 * @return whether the upload is to be deleted as soon as no request writes it
+	 */
+	boolean isEnding()
+	{
+		return ending;
+	}
+
+	/**
+	 * Marks the upload as forgotten by the reference: no request goes on with it.
+	 */
+	void forget()
+	{
+		forgotten = true;
+	}
+
+	/**
+	 * @return whether the reference forgot the upload
+	 */
+	boolean isForgotten()
+	{
+		return forgotten;
 	}
 
 	/**

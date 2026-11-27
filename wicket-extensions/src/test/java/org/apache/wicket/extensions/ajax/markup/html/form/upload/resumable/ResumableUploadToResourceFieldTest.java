@@ -51,7 +51,9 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.resource.FileListBehavior;
+import org.apache.wicket.markup.html.form.upload.resource.FileUploadToResourceField;
 import org.apache.wicket.markup.html.form.upload.resource.FolderUploadsFileManager;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -82,9 +84,6 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 {
 	private static final String PATH = "resumable-uploads";
 
-	/** The root of the application of the tests on the server. */
-	private static final String ROOT = "/context/servlet/";
-
 	/** The body of the next request, with its content type; none when null. */
 	private static byte[] body;
 
@@ -95,6 +94,9 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 
 	/** The owner of the uploads, the session when null. */
 	private static String owner;
+
+	/** Whether the file manager fails to store a file. */
+	private static boolean failingToStore;
 
 	@TempDir
 	static Path folder;
@@ -117,7 +119,18 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 				super.init();
 				mountResource(PATH, new ResumableUploadResourceReference(
 					new FolderUploadsFileManager(
-						new org.apache.wicket.util.file.File(folder.resolve("stored").toString())),
+						new org.apache.wicket.util.file.File(folder.resolve("stored").toString()))
+					{
+						@Override
+						public String store(FileUpload fileItem, String uploadFieldId)
+						{
+							if (failingToStore)
+							{
+								throw new IllegalStateException("the disk is full");
+							}
+							return super.store(fileItem, uploadFieldId);
+						}
+					},
 					folder.resolve("parts").toFile())
 				{
 					private static final long serialVersionUID = 1L;
@@ -152,6 +165,7 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		bodyType = null;
 		breakAt = -1;
 		owner = null;
+		failingToStore = false;
 		clock = new MutableClock(Instant.parse("2026-11-24T10:00:00Z"));
 		reference().setClock(clock);
 		tester.getSession().bind();
@@ -200,15 +214,13 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 	}
 
 	/**
-	 * @return the query the script of Wicket.FileUploadToResourceField adds to its requests
+	 * @return the query the script of the field adds to its requests
 	 */
 	private static String queryOf(JSONObject settings)
 	{
 		Map<String, Object> parameters = new LinkedHashMap<>();
 		parameters.put("uploadId", settings.getString("inputName"));
-		parameters.put("maxSize", settings.get("maxSize"));
 		parameters.put("fileMaxSize", settings.get("fileMaxSize"));
-		parameters.put("fileCountMax", settings.get("fileCountMax"));
 		parameters.put("uploadToken", settings.getString("uploadToken"));
 		parameters.put("grantExpires", settings.get("grantExpires"));
 		if (settings.has("uploadContext"))
@@ -263,8 +275,8 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		assertEquals(201, send("POST", PATH, Map.of("Upload-Length", String.valueOf(length),
 			"Upload-Metadata", metadata), null));
 		String location = header("Location");
-		assertTrue(location.startsWith(ROOT + PATH + "/"), location);
-		return location.substring(ROOT.length());
+		assertTrue(location.startsWith(PATH + "/"), "relative to the endpoint: " + location);
+		return location;
 	}
 
 	/**
@@ -281,7 +293,7 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 			",place " + base64.encodeToString(place.getBytes(StandardCharsets.UTF_8));
 		assertEquals(201, send("POST", PATH, Map.of("Upload-Length", String.valueOf(length),
 			"Upload-Metadata", metadata), null));
-		return header("Location").substring(ROOT.length());
+		return header("Location");
 	}
 
 	private int patch(String url, long offset, byte[] bytes)
@@ -340,8 +352,9 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		assertEquals(30000, settings.getLong("stallMillis"));
 		assertTrue(settings.getBoolean("recalling"));
 		assertEquals(20000, settings.getLong("inUseMillis"));
-		assertEquals(Instant.parse("2026-11-24T10:30:00Z").toEpochMilli(),
-			settings.getLong("grantExpires"), "the expiry of the uploads after the rendering");
+		assertEquals(-1, settings.getLong("grantExpires"),
+			"never: the key of the grant ends with the session");
+		assertFalse(settings.getBoolean("overridingMethod"));
 		assertEquals(TestPage.class.getName() + ":" + field.getPageRelativePath(),
 			settings.getString("rememberedAs"), "the same on every page, unlike the id");
 		assertEquals("Pause", settings.getJSONObject("texts").getString("pause"));
@@ -362,7 +375,8 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 	{
 		String url = create(50, "../notes.txt");
 		assertEquals("0", header("Upload-Offset"));
-		assertEquals("Tue, 24 Nov 2026 10:30:00 GMT", header("Upload-Expires"));
+		assertEquals("Tue, 24 Nov 2026 10:05:00 GMT", header("Upload-Expires"),
+			"soon, while it holds no bytes");
 		assertEquals("1.0.0", header("Tus-Resumable"));
 		ResumableUpload upload = find(url);
 		assertEquals("notes.txt", upload.getClientFileName());
@@ -372,6 +386,7 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 
 		assertEquals(204, patch(url, 0, bytes(30, 0)));
 		assertEquals("30", header("Upload-Offset"));
+		assertEquals("Tue, 24 Nov 2026 10:30:00 GMT", header("Upload-Expires"));
 		assertNull(header(ResumableUploadResource.FILE_NAME_HEADER));
 		assertEquals(200, send("HEAD", url, Map.of(), null));
 		assertEquals("30", header("Upload-Offset"));
@@ -381,7 +396,8 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		clock.add(Duration.ofMinutes(10));
 		assertEquals(204, patch(url, 30, bytes(20, 30)));
 		assertEquals("50", header("Upload-Offset"));
-		assertEquals("Tue, 24 Nov 2026 10:40:00 GMT", header("Upload-Expires"));
+		assertEquals("Tue, 24 Nov 2026 10:15:00 GMT", header("Upload-Expires"),
+			"kept briefly, for a browser that lost the answer");
 		String fileName = header(ResumableUploadResource.FILE_NAME_HEADER);
 		assertNotNull(fileName);
 		assertFalse(Files.exists(upload.getFile()), "the parts went to the file manager");
@@ -421,14 +437,14 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 	@Test
 	void takesTheFilesOfAClientOfItsOwn()
 	{
-		query = reference().newQuery("an-app", Bytes.bytes(30), null, -1);
+		query = reference().newQuery("an-app", Bytes.bytes(30));
 		assertEquals(413, send("POST", PATH, Map.of("Upload-Length", "31"), null));
 		String url = create(30, "a.txt");
 		assertEquals(204, patch(url, 0, bytes(30, 0)));
 		String fileName = header(ResumableUploadResourceReference.FILE_NAME_HEADER);
 		assertTrue(reference().getFileManager().getFile("an-app", fileName).isFile());
 		assertThrows(IllegalArgumentException.class,
-			() -> reference().newQuery("", Bytes.bytes(1), null, -1));
+			() -> reference().newQuery("", Bytes.bytes(1)));
 	}
 
 	@Test
@@ -443,7 +459,7 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		assertEquals(403, send("POST", PATH, Map.of("Upload-Length", "10"), null, null));
 		assertEquals(ResumableUploadToResourceField.GRANT_REFUSED_RESOURCE_KEY,
 			header(ResumableUploadResource.ERROR_HEADER));
-		String raised = query.replace("maxSize=", "maxSize=1");
+		String raised = query.replace("fileMaxSize=", "fileMaxSize=1");
 		assertEquals(403,
 			send("POST", PATH + "?" + raised, Map.of("Upload-Length", "10"), null, null));
 		assertEquals(0, reference().size());
@@ -522,26 +538,27 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		assertEquals(ResumableUploadToResourceField.UPLOAD_TOO_LARGE_RESOURCE_KEY,
 			header(ResumableUploadResource.ERROR_HEADER));
 
-		reference().setMaxBytesPerSession(Bytes.bytes(150));
+		reference().setMaxBytesPerOwner(Bytes.bytes(150));
 		create(100, "a");
 		assertEquals(413, send("POST", PATH, Map.of("Upload-Length", "60"), null));
 		assertEquals(ResumableUploadToResourceField.TOO_MUCH_RESOURCE_KEY,
 			header(ResumableUploadResource.ERROR_HEADER));
-		reference().setMaxBytesPerSession(null);
-		assertEquals(400, reference().getMaxBytesPerSession().bytes());
+		reference().setMaxBytesPerOwner(null);
+		assertEquals(400, reference().getMaxBytesPerOwner().bytes());
 
-		reference().setMaxTotalBytes(Bytes.bytes(120));
-		assertEquals(507, send("POST", PATH, Map.of("Upload-Length", "30"), null));
+		reference().setMaxTotalBytes(Bytes.bytes(20));
+		assertEquals(507, send("POST", PATH, Map.of("Upload-Length", "30"), null),
+			"a file that could not fit now");
 		assertEquals(ResumableUploadToResourceField.NO_ROOM_RESOURCE_KEY,
 			header(ResumableUploadResource.ERROR_HEADER));
 		reference().setMaxTotalBytes(null);
 		assertEquals(4000, reference().getMaxTotalBytes().bytes(),
 			"ten times what an owner may have");
-		reference().setMaxBytesPerSession(Bytes.bytes(50));
+		reference().setMaxBytesPerOwner(Bytes.bytes(50));
 		assertEquals(500, reference().getMaxTotalBytes().bytes());
-		reference().setMaxBytesPerSession(null);
+		reference().setMaxBytesPerOwner(null);
 
-		reference().setMaxUploadsPerSession(2);
+		reference().setMaxUploadsPerOwner(2);
 		create(1, "b");
 		assertEquals(403, send("POST", PATH, Map.of("Upload-Length", "1"), null));
 		assertEquals(ResumableUploadToResourceField.TOO_MANY_UPLOADS_RESOURCE_KEY,
@@ -652,9 +669,11 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 	{
 		reference().setOwnerExpiry(Duration.ofDays(1));
 		String ofSession = create(10, "a.txt");
+		assertEquals(204, patch(ofSession, 0, bytes(4, 0)));
 		owner = "user-1";
 		renderAgain();
 		String ofUser = create(10, "b.txt");
+		assertEquals(204, patch(ofUser, 0, bytes(4, 0)));
 		assertEquals("Wed, 25 Nov 2026 10:00:00 GMT", header("Upload-Expires"));
 		clock.add(Duration.ofHours(2));
 		reference().deleteExpired(true);
@@ -820,7 +839,7 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		reference().setGrantSigner(HmacGrantSigner.random());
 		renderAgain();
 		String signed = query;
-		query = signed.replace("maxSize=", "maxSize=1");
+		query = signed.replace("fileMaxSize=", "fileMaxSize=1");
 		assertEquals(403, send("POST", PATH, Map.of("Upload-Length", "1"), null), "a larger size");
 		query = signed.replaceAll("grantExpires=\\d+", "grantExpires=" + Long.MAX_VALUE);
 		assertEquals(403, send("POST", PATH, Map.of("Upload-Length", "1"), null), "a later expiry");
@@ -840,18 +859,23 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		reference().setGrantExpiry(Duration.ofMinutes(5));
 		renderAgain();
 		String url = create(10, "a.txt");
+		assertEquals(204, patch(url, 0, bytes(4, 0)));
 		clock.add(Duration.ofMinutes(6));
 		assertEquals(403, send("POST", PATH, Map.of("Upload-Length", "1"), null));
 		assertEquals(ResumableUploadToResourceField.GRANT_REFUSED_RESOURCE_KEY,
 			header(ResumableUploadResource.ERROR_HEADER));
 		assertEquals(200, send("HEAD", url, Map.of(), null), "the upload started goes on");
-		assertEquals(204, patch(url, 0, bytes(10, 0)));
+		assertEquals(204, patch(url, 4, bytes(6, 4)));
 		assertNotNull(header(ResumableUploadResource.FILE_NAME_HEADER));
 		assertEquals(403, send("HEAD", PATH + "/0123456789abcdef0123456789abcdef", Map.of(), null),
 			"not told whether the server has another one");
 
 		assertEquals(Duration.ofMinutes(5), reference().getGrantExpiry());
 		reference().setGrantExpiry(null);
+		assertNull(reference().getGrantExpiry(), "the key of the grant ends with the session");
+		reference().setGrantSigner(HmacGrantSigner.inSession());
+		assertNull(reference().getGrantExpiry());
+		reference().setGrantSigner(HmacGrantSigner.random());
 		assertEquals(reference().getOwnerExpiry(), reference().getGrantExpiry());
 		reference().setOwnerExpiry(Duration.ofDays(1));
 		assertEquals(Duration.ofDays(1), reference().getGrantExpiry());
@@ -899,6 +923,7 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 	void deletesTheUploadsTheBrowserLeft()
 	{
 		String url = create(10, "a.txt");
+		assertEquals(204, patch(url, 0, bytes(4, 0)));
 		ResumableUpload upload = find(url);
 		clock.add(Duration.ofSeconds(29 * 60 + 30));
 		reference().deleteExpired(true);
@@ -1072,14 +1097,14 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		assertEquals(204, patch(whole, 0, bytes(5, 0)));
 
 		List<TrackedUpload> uploads = reference().getUploads(null, tester.getSession().getId());
-		assertEquals(List.of("a.txt", "b.txt", "c.txt"),
-			uploads.stream().map(TrackedUpload::clientFileName).toList(), "the oldest first");
+		assertEquals(List.of("a.txt", "b.txt"),
+			uploads.stream().map(TrackedUpload::clientFileName).toList(),
+			"the oldest first, and not the stored one");
 		TrackedUpload first = uploads.get(0);
 		assertEquals(place, first.place());
 		assertEquals(1000, first.lastModified());
 		assertEquals(4, first.offset());
 		assertFalse(first.isStored());
-		assertTrue(uploads.get(2).isStored());
 		assertEquals(List.of(), reference().getUploads(null, "another owner"));
 		assertTrue(reference().getUploadsTracker().getUploads(null, tester.getSession().getId())
 			.stream().anyMatch(upload -> upload.id().equals(first.id())), "the tracker by default");
@@ -1165,6 +1190,276 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 		assertFalse(Files.exists(file));
 		assertTrue(Files.exists(other), "not a part of an upload");
 		assertEquals(0, reference().size());
+	}
+
+	@Test
+	void refusesFinallyAFileTheFileManagerCannotStore()
+	{
+		String url = create(10, "a.txt");
+		failingToStore = true;
+		assertEquals(500, patch(url, 0, bytes(10, 0)));
+		assertEquals(FileUploadToResourceField.UPLOAD_FAILED_RESOURCE_KEY,
+			header(ResumableUploadResource.ERROR_HEADER), "which the script does not try again");
+		assertNull(find(url), "deleted with its bytes");
+		assertEquals(0, reference().heldBytes());
+		assertEquals(404, send("HEAD", url, Map.of(), null));
+	}
+
+	@Test
+	void holdsEveryRequestOfAnUploadToTheGrantItCarries()
+	{
+		String url = create(50, "a.txt");
+		assertEquals(204, patch(url, 0, bytes(10, 0)));
+
+		field = new TestField("files");
+		field.setFileMaxSize(Bytes.bytes(20));
+		tester.startPage(new TestPage(field));
+		query = queryOf(settings());
+		assertEquals(413, send("HEAD", url, Map.of(), null), "the file is too large for the field");
+		assertEquals(ResumableUploadToResourceField.UPLOAD_TOO_LARGE_RESOURCE_KEY,
+			header(ResumableUploadResource.ERROR_HEADER));
+		assertEquals(413, patch(url, 10, bytes(10, 10)));
+		assertEquals(10, find(url).getOffset(), "nothing appended");
+
+		field = new TestField("files");
+		field.setUploadContext("avatars");
+		tester.startPage(new TestPage(field));
+		query = queryOf(settings());
+		assertEquals(404, send("HEAD", url, Map.of(), null), "none of its context");
+		assertEquals(404, patch(url, 10, bytes(10, 10)));
+		assertEquals(404, send("DELETE", url, Map.of(), null));
+		String avatar = create(10, "b.txt");
+
+		renderAgain();
+		assertEquals(404, send("HEAD", avatar, Map.of(), null), "a field without a context");
+		field = new TestField("files");
+		field.setFileMaxSize(Bytes.bytes(20));
+		tester.startPage(new TestPage(field));
+		query = queryOf(settings());
+		assertEquals(204, send("DELETE", url, Map.of(), null), "deleted whatever its size");
+		assertNull(find(url));
+	}
+
+	@Test
+	void offersNoUploadLargerThanTheFieldTakes()
+	{
+		String place = field.getRememberedAs();
+		createAt(50, "large.txt", place, 1000);
+		createAt(10, "small.txt", place, 1000);
+		field = new TestField("files");
+		field.setRemembering(true);
+		field.setFileMaxSize(Bytes.bytes(20));
+		tester.startPage(new TestPage(field));
+		JSONArray recalled = settings().getJSONArray("recalled");
+		assertEquals(1, recalled.length());
+		assertEquals("small.txt", recalled.getJSONObject(0).getString("name"));
+	}
+
+	@Test
+	void countsTheBytesOfAllOwnersAsTheyArrive()
+	{
+		reference().setMaxTotalBytes(Bytes.bytes(60));
+		String first = create(50, "a.txt");
+		String second = create(50, "b.txt");
+		assertEquals(0, reference().heldBytes(), "uploads created and not sent take no room");
+		assertEquals(204, patch(first, 0, bytes(40, 0)));
+		assertEquals(40, reference().heldBytes());
+		assertEquals(507, patch(second, 0, bytes(30, 0)), "more than the room left");
+		assertEquals(ResumableUploadToResourceField.NO_ROOM_RESOURCE_KEY,
+			header(ResumableUploadResource.ERROR_HEADER));
+		assertEquals("0", header("Upload-Offset"));
+		assertEquals(40, reference().heldBytes(), "the room reserved given back");
+		assertEquals(204, patch(second, 0, bytes(20, 0)));
+		assertEquals(204, send("DELETE", first, Map.of(), null));
+		assertEquals(20, reference().heldBytes());
+		assertEquals(204, patch(second, 20, bytes(30, 20)));
+		assertNotNull(header(ResumableUploadResource.FILE_NAME_HEADER));
+		assertEquals(0, reference().heldBytes(), "the file went to the file manager");
+
+		String broken = create(50, "c.txt");
+		breakAt = 12;
+		assertEquals(500, patch(broken, 0, bytes(30, 0)));
+		assertEquals(12, reference().heldBytes(), "what arrived of a chunk that broke off");
+
+		reference().setMinFreeSpace(Bytes.bytes(Long.MAX_VALUE / 2));
+		breakAt = -1;
+		assertEquals(507, patch(broken, 12, bytes(10, 12)), "checked as each chunk arrives");
+	}
+
+	@Test
+	void keepsUploadsThatHoldNoBytesBriefly()
+	{
+		String empty = create(10, "a.txt");
+		String started = create(10, "b.txt");
+		assertEquals(204, patch(started, 0, bytes(1, 0)));
+		clock.add(Duration.ofMinutes(5));
+		reference().deleteExpired(true);
+		assertNull(find(empty), "created and never sent");
+		assertNotNull(find(started));
+
+		reference().setEmptyExpiry(Duration.ofHours(1));
+		assertEquals(Duration.ofHours(1), reference().getEmptyExpiry());
+		String later = create(10, "c.txt");
+		clock.add(Duration.ofMinutes(31));
+		reference().deleteExpired(true);
+		assertNull(find(later), "no longer than the expiry");
+		assertThrows(IllegalArgumentException.class,
+			() -> reference().setEmptyExpiry(Duration.ZERO));
+	}
+
+	@Test
+	void remembersAsManyStoredUploadsOfAnOwnerAsItRunsAtMost()
+	{
+		reference().setMaxUploadsPerOwner(2);
+		List<String> urls = new ArrayList<>();
+		for (int index = 0; index < 3; index++)
+		{
+			assertEquals(201, send("POST", PATH, Map.of("Upload-Length", "0"), null));
+			urls.add(header("Location"));
+			clock.add(Duration.ofSeconds(1));
+		}
+		assertEquals(2, reference().size());
+		assertEquals(404, send("HEAD", urls.get(0), Map.of(), null), "the oldest forgotten");
+		assertEquals(200, send("HEAD", urls.get(2), Map.of(), null));
+		assertNotNull(header(ResumableUploadResource.FILE_NAME_HEADER));
+		assertEquals(List.of(), reference().getUploads(null, tester.getSession().getId()),
+			"not listed once stored");
+	}
+
+	@Test
+	void tellsTheBrowserToAskAgainWhileTheFileIsStored()
+	{
+		String url = create(10, "a.txt");
+		ResumableUpload upload = find(url);
+		upload.setOffset(10, clock.instant());
+		assertEquals(423, send("HEAD", url, Map.of(), null), "complete, not yet stored");
+		assertNull(header("Upload-Offset"));
+	}
+
+	@Test
+	void deletesTheUploadsOfAnEndedSessionOnceTheRequestWritingThemIsDone() throws Exception
+	{
+		List<String> events = new ArrayList<>();
+		reference().setUploadsTracker(new IUploadsTracker()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onDeleted(String context, TrackedUpload upload)
+			{
+				events.add("deleted " + upload.clientFileName());
+			}
+
+			@Override
+			public void destroy()
+			{
+				events.add("destroyed");
+			}
+
+			@Override
+			public List<TrackedUpload> getUploads(String context, String owner)
+			{
+				return List.of();
+			}
+
+			@Override
+			public void delete(String context, String owner, String uploadId)
+			{
+			}
+		});
+		String url = create(10, "a.txt");
+		assertEquals(204, patch(url, 0, bytes(4, 0)));
+		ResumableUpload upload = find(url);
+		String session = tester.getSession().getId();
+		Writer writer = new Writer(upload);
+		try
+		{
+			tester.getApplication()
+				.getSessionStore()
+				.getUnboundListener()
+				.forEach(listener -> listener.sessionUnbound(session));
+			assertNotNull(find(url), "not under the request writing it");
+			assertTrue(Files.exists(upload.getFile()));
+			assertEquals(List.of(), events);
+		}
+		finally
+		{
+			writer.done();
+		}
+		reference().endIfEnding(upload);
+		assertNull(find(url), "once the request is done");
+		assertFalse(Files.exists(upload.getFile()));
+		assertEquals(List.of("deleted a.txt"), events);
+		assertEquals(0, reference().heldBytes());
+
+		renderAgain();
+		String other = create(10, "b.txt");
+		ResumableUpload stopping = find(other);
+		writer = new Writer(stopping);
+		try
+		{
+			tester.getApplication()
+				.getApplicationListeners()
+				.onBeforeDestroyed(tester.getApplication());
+			assertTrue(Files.exists(stopping.getFile()), "not under the request writing it");
+		}
+		finally
+		{
+			writer.done();
+		}
+		reference().endIfEnding(stopping);
+		assertFalse(Files.exists(stopping.getFile()));
+		assertEquals(List.of("deleted a.txt", "destroyed"), events,
+			"the tracker hears nothing once destroyed");
+	}
+
+	@Test
+	void sweepsAnUploadThatEndedWhileARequestWroteIt() throws Exception
+	{
+		String url = create(10, "a.txt");
+		assertEquals(204, patch(url, 0, bytes(4, 0)));
+		ResumableUpload upload = find(url);
+		String session = tester.getSession().getId();
+		Writer writer = new Writer(upload);
+		try
+		{
+			tester.getApplication()
+				.getSessionStore()
+				.getUnboundListener()
+				.forEach(listener -> listener.sessionUnbound(session));
+		}
+		finally
+		{
+			writer.done();
+		}
+		assertNotNull(find(url));
+		reference().deleteExpired(true);
+		assertNull(find(url), "though it did not expire");
+	}
+
+	@Test
+	void tellsTheAddressOfANewUploadRelativeToTheEndpoint()
+	{
+		assertEquals(201, send("POST", PATH, Map.of("Upload-Length", "10"), null));
+		String location = header("Location");
+		assertTrue(location.matches(PATH + "/[0-9a-f]{32}"), location);
+	}
+
+	@Test
+	void takesTheDeletionOfAnUploadByPostOverridingTheMethod()
+	{
+		String url = create(10, "a.txt");
+		assertEquals(204, send("POST", url, Map.of("X-HTTP-Method-Override", "DELETE"), null));
+		assertNull(find(url));
+	}
+
+	@Test
+	void overridesTheMethodWhenToldTo()
+	{
+		field.setOverridingMethod(true);
+		tester.startPage(tester.getLastRenderedPage());
+		assertTrue(settings().getBoolean("overridingMethod"));
+		assertTrue(field.isOverridingMethod());
 	}
 
 	@Test
@@ -1350,6 +1645,44 @@ class ResumableUploadToResourceFieldTest extends WicketTestCase
 				{
 				}
 			};
+		}
+	}
+
+	/** Holds the lock of an upload in a thread of its own, as a request writing it does. */
+	private static final class Writer
+	{
+		private final java.util.concurrent.CountDownLatch done = new java.util.concurrent.CountDownLatch(
+			1);
+
+		private final Thread thread;
+
+		Writer(ResumableUpload upload) throws InterruptedException
+		{
+			java.util.concurrent.CountDownLatch locked = new java.util.concurrent.CountDownLatch(1);
+			thread = new Thread(() -> {
+				upload.lock.lock();
+				try
+				{
+					locked.countDown();
+					done.await();
+				}
+				catch (InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+				}
+				finally
+				{
+					upload.lock.unlock();
+				}
+			});
+			thread.start();
+			locked.await();
+		}
+
+		void done() throws InterruptedException
+		{
+			done.countDown();
+			thread.join();
 		}
 	}
 
