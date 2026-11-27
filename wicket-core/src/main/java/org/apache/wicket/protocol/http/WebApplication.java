@@ -757,6 +757,7 @@ public abstract class WebApplication extends Application
 
 		// Configure the app.
 		configure();
+		getCspSettings().blocking().strict();
 		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
 		{
 			// Add optional sourceFolder for resources.
@@ -767,7 +768,6 @@ public abstract class WebApplication extends Application
 			}
 			getCspSettings().blocking().reportBack();
 		}
-		getCspSettings().blocking().strict();
 	}
 
 	@Override
@@ -1134,3 +1134,4 @@ public abstract class WebApplication extends Application
 		this.cspSettings = cspSettings;
 	}
 }
+
