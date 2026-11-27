@@ -191,10 +191,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * A helper that registers the opened connection in the application-level registry.
 	 * <p>
 	 * The connection may already be closed again when this returns. Broadcasting the
-	 * {@link ConnectedMessage} is where the {@link IAuthorizationStrategy} is asked about a shared
-	 * {@link WebSocketResource}, and a refusal closes the connection there. This happens before the
-	 * transport registers its message handlers, so no frame of the client can be delivered to a
-	 * resource that was refused.
+	 * {@link ConnectedMessage} looks up the page the connection was opened for, and when the page
+	 * store no longer holds it - after a restart or an eviction, the most common case - the
+	 * connection is removed from the registry and closed with the reason "Page expired". The same
+	 * broadcast is where the {@link IAuthorizationStrategy} is asked about a shared
+	 * {@link WebSocketResource}, and a refusal closes the connection there too. Both happen before
+	 * the transport registers its message handlers, so no frame of the client can be delivered to a
+	 * page that has expired or to a resource that was refused.
 	 *
 	 * @param connection
 	 *            the web socket connection to use to communicate with the client
