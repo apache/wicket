@@ -77,6 +77,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private static final String BEFORE_HANDLER_FUNCTION_SIGNATURE = "function(attrs)";
 	private static final String INIT_HANDLER_FUNCTION_SIGNATURE = "function(attrs)";
 	private static final String DONE_HANDLER_FUNCTION_SIGNATURE = "function(attrs)";
+	private static final String QUEUED_HANDLER_FUNCTION_SIGNATURE = "function(attrs, channel)";
+	private static final String DROPPED_HANDLER_FUNCTION_SIGNATURE = "function(attrs, reason)";
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -312,6 +314,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					appendListenerHandler(doneHandler, attributesJson,
 						AjaxAttributeName.DONE_HANDLER.jsonName(),
 						DONE_HANDLER_FUNCTION_SIGNATURE);
+
+					CharSequence queuedHandler = ajaxCallListener.getQueuedHandler(component);
+					appendListenerHandler(queuedHandler, attributesJson,
+						AjaxAttributeName.QUEUED_HANDLER.jsonName(),
+						QUEUED_HANDLER_FUNCTION_SIGNATURE);
+
+					CharSequence droppedHandler = ajaxCallListener.getDroppedHandler(component);
+					appendListenerHandler(droppedHandler, attributesJson,
+						AjaxAttributeName.DROPPED_HANDLER.jsonName(),
+						DROPPED_HANDLER_FUNCTION_SIGNATURE);
 
 				}
 			}

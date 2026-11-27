@@ -188,6 +188,22 @@ public enum AjaxAttributeName {
 	DONE_HANDLER("dh"),
 
 	/**
+	 * queued handler (qh)
+	 *
+	 * @see AjaxCallListener#getQueuedHandler(org.apache.wicket.Component)
+	 * @since 11.1.0
+	 */
+	QUEUED_HANDLER("qh"),
+
+	/**
+	 * dropped handler (drh)
+	 *
+	 * @see AjaxCallListener#getDroppedHandler(org.apache.wicket.Component)
+	 * @since 11.1.0
+	 */
+	DROPPED_HANDLER("drh"),
+
+	/**
 	 * the indicator id, if any found (i)
 	 * 
 	 * See AbstractDefaultAjaxBehavior#findIndicatorId()

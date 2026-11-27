@@ -59,7 +59,7 @@ class AjaxAttributeNameTest
 		}
 
 		assertEquals(
-			"tr|p|d|id|dt|wr|rt|pd|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|ih|dh|i|sc|mp|f|c|m|u|sel|sr|",
+			"tr|p|d|id|dt|wr|rt|pd|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|ih|dh|qh|drh|i|sc|mp|f|c|m|u|sel|sr|",
 			sb.toString(), "all known json parameter names");
 	}
 }
