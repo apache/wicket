@@ -683,6 +683,43 @@ public abstract class AbstractResource implements IResource
 	}
 
 	/**
+	 * Marks the response as content that must not run in the origin of the application, if the
+	 * {@link ResourceSandboxConfiguration} of the application asks for it. A header the resource
+	 * set itself is left alone.
+	 */
+	private void setSandboxHeaders(WebResponse webResponse, Attributes attributes,
+		boolean hasContentType, HttpHeaderCollection customHeaders)
+	{
+		if (Application.exists() == false)
+		{
+			return;
+		}
+
+		ResourceSandboxConfiguration sandbox = Application.get()
+			.getSecuritySettings()
+			.getResourceSandboxConfiguration();
+		if (sandbox.isEnabled() == false || sandbox.isExempted(this, attributes.getRequest()))
+		{
+			return;
+		}
+
+		// without a content type a browser refuses a nosniff response as script or stylesheet
+		if (hasContentType && customHeaders
+			.containsHeader(ResourceSandboxConfiguration.CONTENT_TYPE_OPTIONS_HEADER) == false)
+		{
+			webResponse.setHeader(ResourceSandboxConfiguration.CONTENT_TYPE_OPTIONS_HEADER,
+				ResourceSandboxConfiguration.NOSNIFF);
+		}
+
+		if (customHeaders
+			.containsHeader(ResourceSandboxConfiguration.CONTENT_SECURITY_POLICY_HEADER) == false)
+		{
+			webResponse.addHeader(ResourceSandboxConfiguration.CONTENT_SECURITY_POLICY_HEADER,
+				ResourceSandboxConfiguration.SANDBOX);
+		}
+	}
+
+	/**
 	 * check if header is directly modifiable
 	 * 
 	 * @param name
@@ -877,6 +914,8 @@ public abstract class AbstractResource implements IResource
 					webResponse.addHeader(name, value);
 				}
 			}
+
+			setSandboxHeaders(webResponse, attributes, mimeType != null, headers);
 		}
 	}
 
