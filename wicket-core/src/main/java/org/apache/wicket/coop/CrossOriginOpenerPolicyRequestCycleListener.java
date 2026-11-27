@@ -78,25 +78,20 @@ public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycl
 
 	protected void protect(RequestCycle cycle, IRequestHandler handler)
 	{
-		final Object containerRequest = cycle.getRequest().getContainerRequest();
-		if (containerRequest instanceof HttpServletRequest)
+		String path = cycle.getRequest().getUrl().getPath();
+
+		if (coopConfig.getExemptions().contains(path))
 		{
-			HttpServletRequest request = (HttpServletRequest) containerRequest;
-			String path = request.getContextPath();
+			log.debug("Request path {} is exempted from COOP, no {} header added", path, COOP_HEADER);
+			return;
+		}
 
-			if (coopConfig.getExemptions().contains(path))
+		if (cycle.getResponse() instanceof WebResponse)
+		{
+			WebResponse webResponse = (WebResponse) cycle.getResponse();
+			if (webResponse.isHeaderSupported())
 			{
-				log.debug("Request path {} is exempted from COOP, no {} header added", path, COOP_HEADER);
-				return;
-			}
-
-			if (cycle.getResponse() instanceof WebResponse)
-			{
-				WebResponse webResponse = (WebResponse) cycle.getResponse();
-				if (webResponse.isHeaderSupported())
-				{
-					webResponse.setHeader(COOP_HEADER, coopConfig.getHeaderValue());
-				}
+				webResponse.setHeader(COOP_HEADER, coopConfig.getHeaderValue());
 			}
 		}
 	}
