@@ -52,6 +52,15 @@ import org.apache.wicket.util.lang.Args;
  * dropped, its repeats and its release are dropped too, even once the veil is lowered; when it
  * passed, its release passes, and only its repeats under the veil are dropped.
  * <p>
+ * A click that starts before the veil appears and ends on it is not lost. That happens when
+ * pressing a button takes the focus from a field whose {@code change} event sends a request: the
+ * veil comes up before the mouse button does, and the browser clicks the page instead of the
+ * button. Once the veil is lowered, the element the click was meant for gets it, in place of the
+ * click the browser sent to the region holding the veil, unless it has been hidden or disabled
+ * meanwhile, or a new press has started outside the veil. If the response replaced the element,
+ * the one now carrying its markup id gets the click. A release with Ctrl, Meta, Shift or Alt held
+ * is not clicked, so that a Ctrl-click on a link does not open it in the current tab.
+ * <p>
  * The look comes from {@code wicket-veil.css} and can be overridden with the classes
  * {@code wicket-veil}, {@code wicket-veil-busy}, {@code wicket-veil-host} and
  * {@code wicket-veil-host-static}.

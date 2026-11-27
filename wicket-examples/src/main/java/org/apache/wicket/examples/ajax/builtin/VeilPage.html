@@ -58,6 +58,21 @@
 	<button wicket:id="save" class="veil-save">Save</button>
 </form>
 
+<h2>A click while a field updates</h2>
+
+<p>
+	The field sends its value to the server when it loses the focus, which takes a second. Type
+	something and click Save right away: pressing Save takes the focus from the field, so the
+	field's request veils the page before the mouse button comes up, and the release lands on the
+	veil. The click is not lost: Save runs once the veil is lowered. Updates:
+	<span wicket:id="updateCounter" class="update-counter"></span>, saves:
+	<span wicket:id="citySaveCounter" class="city-save-counter"></span>.
+</p>
+<form wicket:id="updatingForm" class="veil-panel veil-updating">
+	<input type="text" wicket:id="city" class="veil-city" aria-label="City"/>
+	<button wicket:id="saveCity" class="veil-save-city">Save</button>
+</form>
+
 <h2>Delegated clicks</h2>
 
 <p>

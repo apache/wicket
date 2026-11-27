@@ -22,7 +22,8 @@
  * unless they type text. If a request is still running after the target's spinner delay, the
  * veil gets the 'wicket-veil-busy' class, which shows a spinner; once shown, the spinner stays
  * for at least the target's minimum time, so it does not flicker.
- * A request carrying the extra parameter 'wicket_nb' is never veiled.
+ * A request carrying the extra parameter 'wicket_nb' is never veiled. A press that started before
+ * the veil came up and is released on it is clicked once the veil is lowered.
  *
  * A local veil can also be raised by the server, for a component it is about to update through a
  * WebSocket push: a WebSocket text message {"wicketVeil":"show","id":"<markup id>"} raises it,
@@ -48,6 +49,9 @@
 	let pageTarget = null;
 	const localTargets = new Map();
 	const droppedKeys = new Set();
+	let press = null;
+	let replay = null;
+	let releasedOn = null;
 	let subscribed = false;
 
 	// the veil scrolls with the content of its host, so it is moved back over the visible part
@@ -149,6 +153,31 @@
 		return false;
 	}
 
+	function replayTarget() {
+		if (replay.element.isConnected) {
+			return replay.element;
+		}
+		return replay.id !== null ? document.getElementById(replay.id) : null;
+	}
+
+	function isClickable(element) {
+		return element.getClientRects().length > 0 && element.closest(':disabled') === null;
+	}
+
+	function replayClick() {
+		if (replay === null) {
+			return;
+		}
+		const element = replayTarget();
+		if (element !== null && isVeiled(element)) {
+			return;
+		}
+		replay = null;
+		if (element !== null && isClickable(element)) {
+			element.click();
+		}
+	}
+
 	function hide(target) {
 		const clock = Wicket.Veil._clock;
 		clock.clearTimeout(target.spinnerTimer);
@@ -164,6 +193,9 @@
 		}
 		target.veil = null;
 		target.host = null;
+		if (replay !== null) {
+			clock.setTimeout(replayClick, 0);
+		}
 	}
 
 	function show(target) {
@@ -330,6 +362,83 @@
 		}
 	}
 
+	function isVeil(element) {
+		return element instanceof Element && element.classList.contains(VEIL_CLASS);
+	}
+
+	function hasModifier(event) {
+		return event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
+	}
+
+	function elementUnderVeil(event) {
+		const elements = document.elementsFromPoint(event.clientX, event.clientY);
+		return elements.find(function (element) {
+			return !isVeil(element);
+		}) || null;
+	}
+
+	function commonAncestor(element, other) {
+		let node = element;
+		while (node !== null && !node.contains(other)) {
+			node = node.parentNode;
+		}
+		return node;
+	}
+
+	function onMouseDown(event) {
+		if (event.button !== 0) {
+			return;
+		}
+		if (isVeil(event.target)) {
+			press = null;
+			return;
+		}
+		press = event.target instanceof Element ? event.target : null;
+		replay = null;
+	}
+
+	// a dragged element gets no mouseup
+	function onDragStart() {
+		press = null;
+	}
+
+	// a release on the veil makes the browser click an ancestor of the veil, not what was pressed
+	function onMouseUp(event) {
+		if (event.button !== 0) {
+			return;
+		}
+		const pressed = press;
+		press = null;
+		if (pressed === null || !isVeil(event.target) || hasModifier(event)) {
+			return;
+		}
+		const veil = event.target;
+		const under = elementUnderVeil(event);
+		const clicked = under !== null ? commonAncestor(pressed, under) : null;
+		if (clicked !== null && !clicked.contains(veil)) {
+			const withId = clicked.closest('[id]');
+			replay = {
+				element: clicked,
+				id: withId !== null && !withId.contains(veil) ? withId.id : null
+			};
+			releasedOn = veil;
+			Wicket.Veil._clock.setTimeout(function () {
+				if (releasedOn === veil) {
+					releasedOn = null;
+				}
+			}, 0);
+		}
+	}
+
+	// the replay stands in for the click the browser sends to the ancestor holding the veil
+	function onClick(event) {
+		const veil = releasedOn;
+		releasedOn = null;
+		if (veil !== null && event.target instanceof Node && event.target.contains(veil)) {
+			drop(event);
+		}
+	}
+
 	function onWebSocketMessage(jqEvent, message) {
 		if (typeof(message) !== "string" || message.indexOf(MESSAGE_PREFIX) !== 0) {
 			return;
@@ -356,6 +465,10 @@
 			Wicket.Event.subscribe(WEBSOCKET_MESSAGE_TOPIC, onWebSocketMessage);
 			window.addEventListener('keydown', onKeyDown, true);
 			window.addEventListener('keyup', onKeyUp, true);
+			window.addEventListener('mousedown', onMouseDown, true);
+			window.addEventListener('mouseup', onMouseUp, true);
+			window.addEventListener('dragstart', onDragStart, true);
+			window.addEventListener('click', onClick, true);
 		}
 	}
 
@@ -441,6 +554,9 @@
 			pageTarget = null;
 			localTargets.clear();
 			droppedKeys.clear();
+			press = null;
+			replay = null;
+			releasedOn = null;
 		}
 	};
 })();
