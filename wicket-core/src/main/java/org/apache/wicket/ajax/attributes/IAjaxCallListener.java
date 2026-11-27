@@ -196,8 +196,9 @@ public interface IAjaxCallListener
 
 	/**
 	 * The JavaScript that will be executed after the Ajax call is done, regardless whether it was
-	 * sent or not. The script will be executed in a function that receives the following
-	 * parameters:
+	 * sent or not, e.g. because a precondition stopped it. A call that never runs ends with the
+	 * {@linkplain #getDroppedHandler(Component) dropped handler} instead. The script will be
+	 * executed in a function that receives the following parameters:
 	 * <ol>
 	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
 	 * </ol>
@@ -207,6 +208,55 @@ public interface IAjaxCallListener
 	 * @return the JavaScript that will be executed after the Ajax call is done.
 	 */
 	default CharSequence getDoneHandler(Component component)
+	{
+		return null;
+	}
+
+	/**
+	 * The JavaScript that will be executed when the Ajax call has to wait in its channel's queue,
+	 * because another call in the same {@linkplain org.apache.wicket.ajax.AjaxChannel channel} is
+	 * still running. The call ends with the {@linkplain #getDoneHandler(Component) done handler}
+	 * once it has run, or with the {@linkplain #getDroppedHandler(Component) dropped handler} if
+	 * a later call replaces it. The script will be executed in a function that receives the
+	 * following parameters:
+	 * <ol>
+	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * <li>channel - the name of the channel</li>
+	 * </ol>
+	 *
+	 * @param component
+	 *            the Component with the Ajax behavior
+	 * @return the JavaScript that will be executed when the Ajax call waits in its channel's
+	 *         queue.
+	 * @since 11.1.0
+	 */
+	default CharSequence getQueuedHandler(Component component)
+	{
+		return null;
+	}
+
+	/**
+	 * The JavaScript that will be executed when the Ajax call will never run, and so never
+	 * reaches the {@linkplain #getDoneHandler(Component) done handler}. Every call that executes
+	 * the {@linkplain #getInitHandler(Component) init handler} or the
+	 * {@linkplain #getQueuedHandler(Component) queued handler} ends with exactly one of the done
+	 * handler and this one. The script will be executed in a function that receives the following
+	 * parameters:
+	 * <ol>
+	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * <li>reason - why the call was dropped: {@code 'drop'} if a later call replaced it in the
+	 * queue of a {@linkplain org.apache.wicket.ajax.AjaxChannel.Type#DROP dropping channel},
+	 * {@code 'active'} if an {@linkplain org.apache.wicket.ajax.AjaxChannel.Type#ACTIVE active
+	 * channel} discarded it because another call was running, or {@code 'throttle'} if a later
+	 * call replaced it while it was {@linkplain ThrottlingSettings throttled}</li>
+	 * </ol>
+	 *
+	 * @param component
+	 *            the Component with the Ajax behavior
+	 * @return the JavaScript that will be executed when the Ajax call is dropped.
+	 * @since 11.1.0
+	 */
+	default CharSequence getDroppedHandler(Component component)
 	{
 		return null;
 	}

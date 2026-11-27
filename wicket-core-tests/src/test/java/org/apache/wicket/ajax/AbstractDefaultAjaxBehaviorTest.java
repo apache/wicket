@@ -100,6 +100,52 @@ class AbstractDefaultAjaxBehaviorTest extends WicketTestCase
 		assertEquals(expected, json);
 	}
 
+	/**
+	 * Checks that the handlers for a call that waits in its channel's queue, and for a call that is
+	 * dropped, are rendered with their arguments.
+	 */
+	@Test
+	void renderQueuedAndDroppedHandlers()
+	{
+		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+
+		AjaxCallListener listener = new AjaxCallListener();
+		listener.onQueued("waiting(attrs, channel);");
+		listener.onDropped("gone(attrs, reason);");
+		listener.onDropped("alsoGone(reason);");
+		attributes.getAjaxCallListeners().add(listener);
+		attributes.getAjaxCallListeners().add(new AjaxCallListener().onQueued("again(channel);"));
+
+		Component component = Mockito.mock(Component.class);
+		AbstractDefaultAjaxBehavior behavior = new AbstractDefaultAjaxBehavior()
+		{
+			@Override
+			protected void respond(AjaxRequestTarget target)
+			{
+			}
+
+			@Override
+			public CharSequence getCallbackUrl()
+			{
+				return "some/url";
+			}
+		};
+		behavior.bind(component);
+
+		CharSequence json = behavior.renderAjaxAttributes(component, attributes);
+
+		String expected = "{\"" +
+			AjaxAttributeName.URL + "\":\"some/url\",\"" +
+			AjaxAttributeName.QUEUED_HANDLER +
+				"\":[function(attrs, channel){waiting(attrs, channel);}," +
+				"function(attrs, channel){again(channel);}],\"" +
+			AjaxAttributeName.DROPPED_HANDLER +
+				"\":[function(attrs, reason){gone(attrs, reason);alsoGone(reason);}]" +
+			"}";
+
+		assertEquals(expected, json);
+	}
+
 	@Test
 	void onMethodMismatch_whenAbortAndMethodsDiffer_thenDoNotProcess()
 	{
