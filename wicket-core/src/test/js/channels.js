@@ -315,26 +315,39 @@
 
 		const topics = Wicket.Event.Topic;
 
-		// records the topics an Ajax call publishes and the handlers it executes
-		const recorder = function () {
+		// records the topics an Ajax call publishes and the handlers it executes; asserts once for
+		// each done or dropped, and once in stop(), that every call ends with the attrs object it
+		// published on init or queued
+		const recorder = function (assert) {
 			const events = [];
 			const subscriptions = [];
+			const pending = new Set();
 			const nameOf = function (attrs) {
 				return attrs.event ? attrs.event.extraData.round : attrs.call;
 			};
-			const record = function (topic, label, withArgument) {
+			const start = function (label, attrs) {
+				pending.add(attrs);
+			};
+			const end = function (label, attrs) {
+				assert.ok(pending.delete(attrs),
+					label + ' ' + nameOf(attrs) + ' receives the attrs of its init or queued');
+			};
+			const record = function (topic, label, withArgument, track) {
 				const subscriber = function (jqEvent, attrs, argument) {
 					events.push(label + ' ' + nameOf(attrs) + (withArgument ? ' ' + argument : ''));
+					if (track) {
+						track(label, attrs);
+					}
 				};
 				Wicket.Event.subscribe(topic, subscriber);
 				subscriptions.push({ topic: topic, subscriber: subscriber });
 			};
 
-			record(topics.AJAX_CALL_INIT, 'init');
-			record(topics.AJAX_CALL_QUEUED, 'queued', true);
-			record(topics.AJAX_CALL_DROPPED, 'dropped', true);
+			record(topics.AJAX_CALL_INIT, 'init', false, start);
+			record(topics.AJAX_CALL_QUEUED, 'queued', true, start);
+			record(topics.AJAX_CALL_DROPPED, 'dropped', true, end);
 			record(topics.AJAX_CALL_BEFORE, 'before');
-			record(topics.AJAX_CALL_DONE, 'done');
+			record(topics.AJAX_CALL_DONE, 'done', false, end);
 
 			return {
 				events: events,
@@ -360,6 +373,8 @@
 					subscriptions.forEach(function (subscription) {
 						Wicket.Event.unsubscribe(subscription.topic, subscription.subscriber);
 					});
+					assert.strictEqual(pending.size, 0,
+						'every call that published init or queued published done or dropped');
 				}
 			};
 		};
@@ -371,10 +386,10 @@
 
 		test('a dropping channel publishes queued for the calls that wait and dropped for those it replaces', assert => {
 			const done = assert.async();
-			assert.expect(1);
+			assert.expect(5);
 
 			const ch = 'dropChannel|d';
-			const calls = recorder();
+			const calls = recorder(assert);
 
 			Wicket.Event.subscribe(topics.AJAX_CALL_DONE, function finish() {
 				Wicket.Event.unsubscribe(topics.AJAX_CALL_DONE, finish);
@@ -399,10 +414,10 @@
 
 		test('an active channel publishes dropped for the calls it ignores', assert => {
 			const done = assert.async();
-			assert.expect(1);
+			assert.expect(4);
 
 			const ch = 'activeChannel|a';
-			const calls = recorder();
+			const calls = recorder(assert);
 
 			Wicket.Event.subscribe(topics.AJAX_CALL_DONE, function finish() {
 				Wicket.Event.unsubscribe(topics.AJAX_CALL_DONE, finish);
@@ -422,38 +437,111 @@
 			Wicket.Event.remove(window, 'event1');
 		});
 
-		test('throttling publishes dropped for the calls a later one replaces', assert => {
+		[ false, true ].forEach(function (postponeTimerOnUpdate) {
+			test('throttling publishes dropped for the calls a later one replaces, postponeTimerOnUpdate: ' +
+					postponeTimerOnUpdate, assert => {
+				const done = assert.async();
+				assert.expect(5);
+
+				const calls = recorder(assert);
+
+				Wicket.Event.subscribe(topics.AJAX_CALL_DONE, function finish() {
+					Wicket.Event.unsubscribe(topics.AJAX_CALL_DONE, finish);
+					calls.stop();
+					assert.deepEqual(calls.events, [
+						'init 0',
+						'init 1', 'drh 0 throttle', 'dropped 0 throttle',
+						'init 2', 'drh 1 throttle', 'dropped 1 throttle',
+						'before 2', 'dh 2', 'done 2'
+					]);
+					done();
+				});
+
+				Wicket.Ajax.ajax(calls.attributes({ e: 'event1', ch: 'throttleChannel|s',
+					tr: { id: 'throttledCall', d: 20, p: postponeTimerOnUpdate } }));
+				Wicket.Event.fire(window, 'event1', { round: 0 });
+				Wicket.Event.fire(window, 'event1', { round: 1 });
+				Wicket.Event.fire(window, 'event1', { round: 2 });
+				Wicket.Event.remove(window, 'event1');
+			});
+		});
+
+		test('a throttled call on a busy dropping channel is dropped by the throttler, then by the channel', assert => {
 			const done = assert.async();
-			assert.expect(1);
+			assert.expect(5);
 
-			const calls = recorder();
+			const ch = 'throttledDropChannel|d';
+			const calls = recorder(assert);
 
+			Wicket.Event.subscribe(topics.AJAX_CALL_QUEUED, function next() {
+				Wicket.Event.unsubscribe(topics.AJAX_CALL_QUEUED, next);
+				Wicket.Event.fire(window, 'event1', { round: 2 });
+				Wicket.Event.remove(window, 'event1');
+			});
+			Wicket.Event.subscribe(topics.AJAX_CALL_DROPPED, function release(jqEvent, attrs, reason) {
+				if (reason === 'drop') {
+					Wicket.Event.unsubscribe(topics.AJAX_CALL_DROPPED, release);
+					Wicket.channelManager.done(ch);
+				}
+			});
 			Wicket.Event.subscribe(topics.AJAX_CALL_DONE, function finish() {
 				Wicket.Event.unsubscribe(topics.AJAX_CALL_DONE, finish);
 				calls.stop();
 				assert.deepEqual(calls.events, [
 					'init 0',
 					'init 1', 'drh 0 throttle', 'dropped 0 throttle',
-					'init 2', 'drh 1 throttle', 'dropped 1 throttle',
+					'qh 1 throttledDropChannel', 'queued 1 throttledDropChannel',
+					'init 2',
+					'qh 2 throttledDropChannel', 'queued 2 throttledDropChannel',
+					'drh 1 drop', 'dropped 1 drop',
 					'before 2', 'dh 2', 'done 2'
 				]);
 				done();
 			});
 
-			Wicket.Ajax.ajax(calls.attributes({ e: 'event1', ch: 'throttleChannel|s',
-				tr: { id: 'throttledCall', d: 20 } }));
+			occupy(ch);
+			Wicket.Ajax.ajax(calls.attributes({ e: 'event1', ch: ch,
+				tr: { id: 'throttledDropCall', d: 20 } }));
 			Wicket.Event.fire(window, 'event1', { round: 0 });
 			Wicket.Event.fire(window, 'event1', { round: 1 });
-			Wicket.Event.fire(window, 'event1', { round: 2 });
-			Wicket.Event.remove(window, 'event1');
+		});
+
+		test('a channel whose type changes between calls treats each call as its own type says', assert => {
+			const done = assert.async();
+			assert.expect(5);
+
+			const calls = recorder(assert);
+
+			Wicket.Event.subscribe(topics.AJAX_CALL_DONE, function finish() {
+				Wicket.Event.unsubscribe(topics.AJAX_CALL_DONE, finish);
+				calls.stop();
+				assert.deepEqual(calls.events, [
+					'init queue', 'qh queue mixedChannel', 'queued queue mixedChannel',
+					'init drop', 'qh drop mixedChannel', 'queued drop mixedChannel',
+					'drh queue drop', 'dropped queue drop',
+					'init active', 'drh active active', 'dropped active active',
+					'before drop', 'dh drop', 'done drop'
+				]);
+				done();
+			});
+
+			const types = { queue: 's', drop: 'd', active: 'a' };
+			occupy('mixedChannel|s');
+			Object.keys(types).forEach(function (round) {
+				const event = round + 'Event';
+				Wicket.Ajax.ajax(calls.attributes({ e: event, ch: 'mixedChannel|' + types[round] }));
+				Wicket.Event.fire(window, event, { round: round });
+				Wicket.Event.remove(window, event);
+			});
+			Wicket.channelManager.done('mixedChannel|s');
 		});
 
 		test('a queueing channel publishes queued, for Wicket.Ajax.get() and Wicket.Ajax.Call#ajax() too', assert => {
 			const done = assert.async();
-			assert.expect(1);
+			assert.expect(4);
 
 			const ch = 'queueChannel|s';
-			const calls = recorder();
+			const calls = recorder(assert);
 
 			Wicket.Event.subscribe(topics.AJAX_CALL_QUEUED, function next(jqEvent, attrs) {
 				if (attrs.call === 'get') {
