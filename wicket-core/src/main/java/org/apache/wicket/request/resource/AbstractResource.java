@@ -57,13 +57,20 @@ public abstract class AbstractResource implements IResource
 	/** header values that are managed internally and must not be set directly */
 	public static final Set<String> INTERNAL_HEADERS;
 
-	/** The meta data key of the content range start byte **/
+	/**
+	 * The meta data key of the content range start byte. A negative value stands for a suffix
+	 * range, the last that many bytes of the content. A value at or past the end of the content
+	 * makes the range unsatisfiable.
+	 */
 	public static final MetaDataKey<Long> CONTENT_RANGE_STARTBYTE = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	/** The meta data key of the content range end byte **/
+	/**
+	 * The meta data key of the content range end byte, -1 if the range extends to the end of the
+	 * content.
+	 */
 	public static final MetaDataKey<Long> CONTENT_RANGE_ENDBYTE = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
@@ -744,8 +751,25 @@ public abstract class AbstractResource implements IResource
 			String startByteString = rangeParts[0];
 			String endByteString = rangeParts[1];
 
-			long startbyte = !Strings.isEmpty(startByteString) ? Long.parseLong(startByteString) : 0;
-			long endbyte = !Strings.isEmpty(endByteString) ? Long.parseLong(endByteString) : -1;
+			Long startbyte = null;
+			Long endbyte = null;
+			if (!Strings.isEmpty(startByteString))
+			{
+				long first = Long.parseLong(startByteString);
+				long last = !Strings.isEmpty(endByteString) ? Long.parseLong(endByteString) : -1;
+				if (last == -1 || last >= first)
+				{
+					startbyte = first;
+					endbyte = last;
+				}
+			}
+			else if (!Strings.isEmpty(endByteString))
+			{
+				long suffixLength = Long.parseLong(endByteString);
+				// a zero-length suffix selects no bytes, just like a range starting past the end
+				startbyte = suffixLength > 0 ? -suffixLength : Long.MAX_VALUE;
+				endbyte = -1L;
+			}
 
 			// Make the content range information available for the whole request cycle
 			RequestCycle requestCycle = RequestCycle.get();
@@ -850,9 +874,9 @@ public abstract class AbstractResource implements IResource
 			else
 			{
 				// content length has to be set otherwise the content range header can not be
-				// calculated - accept range must be set to bytes - others are not supported at the
-				// moment
-				if (contentLength != -1 && ContentRangeType.BYTES.equals(acceptRange))
+				// calculated, and empty content has no part to describe - accept range must be set
+				// to bytes - others are not supported at the moment
+				if (contentLength > 0 && ContentRangeType.BYTES.equals(acceptRange))
 				{
 					contentRangeApplied = setResponseContentRangeHeaderFields(webResponse,
 						attributes, contentLength);
@@ -881,7 +905,9 @@ public abstract class AbstractResource implements IResource
 	}
 
 	/**
-	 * Sets the content range header fields to the given web response
+	 * Sets the content range header fields to the given web response: status 206 with the
+	 * requested range, a suffix range resolved and the last byte limited to the end of the content,
+	 * or status 416 if the range starts at or past the end of the content.
 	 *
 	 * @param webResponse
 	 *            the web response to apply the content range information to
@@ -902,26 +928,43 @@ public abstract class AbstractResource implements IResource
 
 			if (startbyte != null && endbyte != null)
 			{
-				// if end byte hasn't been set
-				if (endbyte == -1)
+				long first = firstBytePosition(startbyte, contentLength);
+				if (first >= contentLength)
 				{
-					endbyte = contentLength - 1;
+					webResponse.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+					webResponse.setContentRange(
+						ContentRangeType.BYTES.getTypeName() + " */" + contentLength);
 				}
+				else
+				{
+					long last = endbyte == -1 ? contentLength - 1
+						: Math.min(endbyte, contentLength - 1);
 
-				// Change the status code to 206 partial content
-				webResponse.setStatus(206);
-				// currently only bytes are supported.
-				webResponse.setContentRange(ContentRangeType.BYTES.getTypeName() + " " + startbyte +
-					'-' + endbyte + '/' + contentLength);
-				// WARNING - DO NOT SET THE CONTENT LENGTH, even if it is calculated right - 
-				// SAFARI / CHROME are causing issues otherwise!
-				// webResponse.setContentLength((endbyte - startbyte) + 1);
+					// Change the status code to 206 partial content
+					webResponse.setStatus(206);
+					// currently only bytes are supported.
+					webResponse.setContentRange(ContentRangeType.BYTES.getTypeName() + " " +
+						first + '-' + last + '/' + contentLength);
+					// WARNING - DO NOT SET THE CONTENT LENGTH, even if it is calculated right -
+					// SAFARI / CHROME are causing issues otherwise!
+					// webResponse.setContentLength((last - first) + 1);
+				}
 
 				// content range has been applied do not set the content length again!
 				contentRangeApplied = true;
 			}
 		}
 		return contentRangeApplied;
+	}
+
+	/**
+	 * Resolves a start byte taken from {@link #CONTENT_RANGE_STARTBYTE} against the length of the
+	 * content, so that a suffix range starts that many bytes before the end, but not before the
+	 * first byte.
+	 */
+	static long firstBytePosition(long startbyte, long contentLength)
+	{
+		return startbyte < 0 ? Math.max(0, contentLength + startbyte) : startbyte;
 	}
 
 	/**
