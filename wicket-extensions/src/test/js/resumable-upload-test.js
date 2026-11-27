@@ -852,6 +852,25 @@
 			assert.equal(last().url.split('?')[0], '/uploads/u1', 'remembered all the same');
 		});
 
+		test('lets another field go on at once with an upload it paused', assert => {
+			const field = newField({remembering: true, rememberedAs: 'files'});
+			choose(field, [newFile('a.txt', 10)]);
+			field.upload();
+			return created('/uploads/u1').then(function () {
+				last().upload.onprogress({loaded: 2});
+				field.pause();
+				const requests = FakeXhr.instances.length;
+				const other = newField({remembering: true, rememberedAs: 'files'});
+				assert.equal(FakeXhr.instances.length, requests + 1, 'not taken for one being sent');
+				assert.equal(last().method, 'HEAD');
+				assert.equal(last().url.split('?')[0], abs('/uploads/u1'));
+				last().respond(200, {'Upload-Offset': '2', 'Upload-Length': '10'});
+				return until(() => items(other).length === 2).then(function () {
+					assert.equal(items(other)[1].getAttribute('data-state'), 'recalled');
+				});
+			});
+		});
+
 		test('takes an upload sent a while ago for in use by another page for as long as told', assert => {
 			const id = 'resumable' + (++inputs);
 			rememberUpload(id, '/uploads/u1', 'a.txt', 10, Date.now() - 30000);

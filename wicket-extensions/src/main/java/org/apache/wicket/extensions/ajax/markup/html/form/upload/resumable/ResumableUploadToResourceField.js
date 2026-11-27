@@ -888,6 +888,8 @@
         paused.forEach(function (each) {
             halt(each);
             each.state = 'paused';
+            // no longer sending: another page may go on with it at once
+            remember(each, 0);
         });
         this.renderLists();
         this.pump();
