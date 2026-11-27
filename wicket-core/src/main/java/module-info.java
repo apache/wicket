@@ -82,6 +82,7 @@ module org.apache.wicket.core {
     exports org.apache.wicket.markup.html.debug;
     exports org.apache.wicket.markup.html.form;
     exports org.apache.wicket.markup.html.form.upload;
+    exports org.apache.wicket.markup.html.form.upload.resource;
     exports org.apache.wicket.markup.html.form.validation;
     exports org.apache.wicket.markup.html.image;
     exports org.apache.wicket.markup.html.image.resource;
