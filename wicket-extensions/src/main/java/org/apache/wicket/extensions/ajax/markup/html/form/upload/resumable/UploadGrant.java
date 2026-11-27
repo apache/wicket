@@ -26,10 +26,11 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValueConversionException;
 
 /**
- * The id of an upload field and the limits of its uploads, which the field signs and its script
- * sends along with every request, as the query parameters of
- * {@link org.apache.wicket.markup.html.form.upload.resource.FileUploadToResourceField} are. The
- * signature also covers when the grant expires, which is sent along, and who it was made for,
+ * The id of an upload field, the context of its uploads and the size of each of its files at most,
+ * which the field signs and its script sends along with every request, the only limit of the field
+ * the server holds each request to: every file is an upload of its own, so the size of the files
+ * chosen at once and their number are checked in the browser only. The signature also covers when
+ * the grant expires, which is sent along, and who it was made for,
  * {@link ResumableUploadResourceReference#getCurrentOwner()}, which is not: the server puts in the
  * owner of each request when it checks the signature, so the grant of one owner never works for
  * another, and no id of a session ends up in the page.
@@ -39,17 +40,12 @@ import org.apache.wicket.util.string.StringValueConversionException;
  * @param context
  *            the part of the application the uploads belong to, see
  *            {@link ResumableUploadToResourceField#setUploadContext(String)}, {@code null} for none
- * @param maxSize
- *            the size of the files sent at once at most, in bytes
  * @param fileMaxSize
- *            the size of a file at most, in bytes, -1 for none
- * @param fileCountMax
- *            the number of files sent at once at most, -1 for any
+ *            the size of a file at most, in bytes
  * @param expires
- *            when the grant expires, in milliseconds since the epoch
+ *            when the grant expires, in milliseconds since the epoch, {@link #NEVER} for never
  */
-record UploadGrant(String uploadFieldId, String context, long maxSize, long fileMaxSize,
-	long fileCountMax, long expires)
+record UploadGrant(String uploadFieldId, String context, long fileMaxSize, long expires)
 {
 	/** The query parameter of when the grant expires. */
 	static final String EXPIRES = "grantExpires";
@@ -57,30 +53,24 @@ record UploadGrant(String uploadFieldId, String context, long maxSize, long file
 	/** The query parameter of the context of the uploads. */
 	static final String CONTEXT = "uploadContext";
 
+	/** When a grant that does not expire expires. */
+	static final long NEVER = -1;
+
 	/** Keeps the tokens of these fields apart from those of other uploads. */
 	private static final String PURPOSE = "resumable-upload";
 
 	/** The largest number a script holds exactly, {@code Number.MAX_SAFE_INTEGER}. */
-	private static final long MAX_SAFE_INTEGER = (1L << 53) - 1;
+	static final long MAX_SAFE_INTEGER = (1L << 53) - 1;
 
 	/**
-	 * @return the grant of a field, its sizes no larger than a script holds exactly: it sends them
-	 *         back as it got them
+	 * @return the grant of a field, its size no larger than a script holds exactly: it sends it
+	 *         back as it got it
 	 */
-	static UploadGrant of(String uploadFieldId, String context, Bytes maxSize, Bytes fileMaxSize,
-		long fileCountMax, Instant expires)
+	static UploadGrant of(String uploadFieldId, String context, Bytes fileMaxSize, Instant expires)
 	{
-		return new UploadGrant(uploadFieldId, context, Math.min(maxSize.bytes(), MAX_SAFE_INTEGER),
-			fileMaxSize != null ? Math.min(fileMaxSize.bytes(), MAX_SAFE_INTEGER) : -1,
-			fileCountMax, expires.toEpochMilli());
-	}
-
-	/**
-	 * @return the size of a file at most, in bytes
-	 */
-	long maxFileSize()
-	{
-		return fileMaxSize >= 0 ? Math.min(maxSize, fileMaxSize) : maxSize;
+		return new UploadGrant(uploadFieldId, context,
+			Math.min(fileMaxSize.bytes(), MAX_SAFE_INTEGER),
+			expires != null ? expires.toEpochMilli() : NEVER);
 	}
 
 	/**
@@ -90,7 +80,7 @@ record UploadGrant(String uploadFieldId, String context, long maxSize, long file
 	 */
 	boolean isExpired(Instant now)
 	{
-		return now.toEpochMilli() >= expires;
+		return expires != NEVER && now.toEpochMilli() >= expires;
 	}
 
 	/**
@@ -110,16 +100,12 @@ record UploadGrant(String uploadFieldId, String context, long maxSize, long file
 	 *            the signer of the grants
 	 * @param owner
 	 *            whom the grant is for, {@code null} for nobody
-	 * @return the query of the grant, as the script of
-	 *         {@link org.apache.wicket.markup.html.form.upload.resource.FileUploadToResourceField}
-	 *         writes it, with when it expires
+	 * @return the query of the grant, as the script of the field writes it
 	 */
 	String query(IUploadGrantSigner signer, String owner)
 	{
 		return AbstractFileUploadResource.UPLOAD_ID + '=' + encoded(uploadFieldId) + '&' +
-			AbstractFileUploadResource.MAX_SIZE + '=' + maxSize + '&' +
 			AbstractFileUploadResource.FILE_MAX_SIZE + '=' + fileMaxSize + '&' +
-			AbstractFileUploadResource.FILE_COUNT_MAX + '=' + fileCountMax + '&' +
 			AbstractFileUploadResource.UPLOAD_TOKEN + '=' + encoded(token(signer, owner)) + '&' +
 			EXPIRES + '=' + expires + (context != null ? '&' + CONTEXT + '=' + encoded(context) : "");
 	}
@@ -141,8 +127,7 @@ record UploadGrant(String uploadFieldId, String context, long maxSize, long file
 	private String serialized(String owner)
 	{
 		return PURPOSE + '\n' + uploadFieldId + '\n' + (context != null ? context : "") + '\n' +
-			maxSize + '\n' + fileMaxSize + '\n' +
-			fileCountMax + '\n' + expires + '\n' + (owner != null ? owner : "");
+			fileMaxSize + '\n' + expires + '\n' + (owner != null ? owner : "");
 	}
 
 	/**
@@ -171,9 +156,7 @@ record UploadGrant(String uploadFieldId, String context, long maxSize, long file
 		try
 		{
 			grant = new UploadGrant(uploadFieldId, context,
-				parameters.getParameterValue(AbstractFileUploadResource.MAX_SIZE).toLong(),
-				parameters.getParameterValue(AbstractFileUploadResource.FILE_MAX_SIZE).toLong(-1),
-				parameters.getParameterValue(AbstractFileUploadResource.FILE_COUNT_MAX).toLong(-1),
+				parameters.getParameterValue(AbstractFileUploadResource.FILE_MAX_SIZE).toLong(),
 				parameters.getParameterValue(EXPIRES).toLong());
 		}
 		catch (StringValueConversionException e)

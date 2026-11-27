@@ -28,6 +28,7 @@ import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.markup.html.form.Form;
@@ -46,9 +47,13 @@ import jakarta.servlet.http.HttpServletRequest;
  * mounted at creates an upload, {@code HEAD}, {@code PATCH} and {@code DELETE} at the URL of an
  * upload ask how many bytes it holds, append a chunk to it and delete it.
  * <p>
+ * Each request for an upload is held to the grant it carries: an upload of another context is
+ * none of its, and one larger than it allows is refused.
+ * <p>
  * Refusals carry the resource key of their error in the header {@value #ERROR_HEADER}, which the
- * script of the field reports. The answer that completes an upload, and any {@code HEAD} after it,
- * carries the name the file was stored under in the header {@value #FILE_NAME_HEADER}.
+ * script of the field reports and takes as final. The answer that completes an upload, and any
+ * {@code HEAD} after it, carries the name the file was stored under in the header
+ * {@value #FILE_NAME_HEADER}.
  */
 class ResumableUploadResource implements IResource
 {
@@ -113,6 +118,12 @@ class ResumableUploadResource implements IResource
 	{
 		Answer answer = answer(attributes);
 		WebResponse response = (WebResponse)attributes.getResponse();
+		String location = answer.headers.get("Location");
+		if (location != null)
+		{
+			// a browser without cookies sends the session along in the URL
+			answer.header("Location", response.encodeURL(location));
+		}
 		response.setStatus(answer.status);
 		response.disableCaching();
 		response.setHeader("Tus-Resumable", VERSION);
@@ -164,10 +175,19 @@ class ResumableUploadResource implements IResource
 				: create(grant, request, owner, answer);
 		}
 		ResumableUpload upload = reference.find(id, owner);
+		if (upload != null && !Objects.equals(upload.getContext(), grant.context()))
+		{
+			upload = null;
+		}
 		if (upload == null && expired)
 		{
 			// an expired grant goes on with the uploads the server keeps, and starts no others
 			return answer.refuse(403, ResumableUploadToResourceField.GRANT_REFUSED_RESOURCE_KEY);
+		}
+		if (upload != null && !"DELETE".equals(method) &&
+			upload.getLength() > grant.fileMaxSize())
+		{
+			return answer.refuse(413, ResumableUploadToResourceField.UPLOAD_TOO_LARGE_RESOURCE_KEY);
 		}
 		return switch (method)
 		{
@@ -207,10 +227,7 @@ class ResumableUploadResource implements IResource
 		{
 			return answer.refuse(refusal.status, refusal.key);
 		}
-		// without a session id in the path, nor a slash at its end
-		String location = request.getRequestURI().replaceAll(";.*$", "").replaceAll("/+$", "") +
-			"/" + upload.getId();
-		answer.header("Location", location);
+		answer.header("Location", locationOf(request, upload));
 		answer.header("Upload-Offset", "0");
 		if (upload.isComplete())
 		{
@@ -228,11 +245,30 @@ class ResumableUploadResource implements IResource
 		return answer.status(201);
 	}
 
+	/**
+	 * @return the URL of an upload relative to that of the request creating it, whatever path a
+	 *         proxy maps the application to
+	 */
+	private static String locationOf(HttpServletRequest request, ResumableUpload upload)
+	{
+		String path = request.getRequestURI().replaceAll(";.*$", "");
+		if (path.endsWith("/"))
+		{
+			return upload.getId();
+		}
+		return path.substring(path.lastIndexOf('/') + 1) + "/" + upload.getId();
+	}
+
 	private Answer head(UploadGrant grant, ResumableUpload upload, Answer answer)
 	{
 		if (upload == null)
 		{
 			return answer.status(404);
+		}
+		if (upload.isComplete() && !upload.isStored())
+		{
+			// the file manager is storing it: the browser asks again
+			return answer.status(423);
 		}
 		answer.header("Upload-Offset", String.valueOf(upload.getOffset()));
 		answer.header("Upload-Length", String.valueOf(upload.getLength()));
@@ -261,9 +297,8 @@ class ResumableUploadResource implements IResource
 		{
 			return answer.status(400);
 		}
-		long maxChunk = reference.getMaxChunkSize().bytes();
 		long contentLength = request.getContentLengthLong();
-		if (contentLength > maxChunk)
+		if (contentLength > reference.getMaxChunkSize().bytes())
 		{
 			return answer.refuse(413, Form.UPLOAD_TOO_LARGE_RESOURCE_KEY);
 		}
@@ -282,41 +317,62 @@ class ResumableUploadResource implements IResource
 		}
 		try
 		{
-			if (reference.find(upload.getId(), upload.getOwner()) == null || upload.isStored())
-			{
-				// deleted while the request waited, or whole already
-				return answer.header("Upload-Offset", String.valueOf(upload.getOffset()))
-					.status(upload.isStored() ? 409 : 404);
-			}
-			if (offset != upload.getOffset())
-			{
-				return answer.header("Upload-Offset", String.valueOf(upload.getOffset()))
-					.status(409);
-			}
-			if (contentLength > upload.getLength() - offset)
-			{
-				return answer.status(400);
-			}
-			long before = upload.getOffset();
-			boolean broken = !append(upload, request,
-				Math.min(maxChunk, upload.getLength() - offset));
-			if (upload.getOffset() > before)
-			{
-				reference.track(upload, IUploadsTracker::onProgress);
-			}
-			answer.header("Upload-Offset", String.valueOf(upload.getOffset()));
-			if (upload.isComplete())
-			{
-				return completed(grant, upload, answer.status(204));
-			}
-			expires(upload, answer);
-			// what arrived is kept: the browser asks how far it got and sends the rest
-			return answer.status(broken ? 500 : 204);
+			return patchLocked(grant, upload, request, offset, contentLength, answer);
 		}
 		finally
 		{
 			upload.lock.unlock();
+			reference.endIfEnding(upload);
 		}
+	}
+
+	private Answer patchLocked(UploadGrant grant, ResumableUpload upload,
+		HttpServletRequest request, long offset, long contentLength, Answer answer)
+	{
+		if (upload.isForgotten() || upload.isStored())
+		{
+			// deleted while the request waited, or whole already
+			return answer.header("Upload-Offset", String.valueOf(upload.getOffset()))
+				.status(upload.isStored() ? 409 : 404);
+		}
+		if (offset != upload.getOffset())
+		{
+			return answer.header("Upload-Offset", String.valueOf(upload.getOffset())).status(409);
+		}
+		long left = upload.getLength() - offset;
+		if (contentLength > left)
+		{
+			return answer.status(400);
+		}
+		long most = Math.min(reference.getMaxChunkSize().bytes(), left);
+		long incoming = contentLength >= 0 ? contentLength : most;
+		if (!reference.reserve(incoming))
+		{
+			return answer.header("Upload-Offset", String.valueOf(upload.getOffset()))
+				.refuse(507, ResumableUploadToResourceField.NO_ROOM_RESOURCE_KEY);
+		}
+		long before = upload.getOffset();
+		boolean broken;
+		try
+		{
+			broken = !append(upload, request, incoming);
+		}
+		finally
+		{
+			reference.release(incoming - (upload.getOffset() - before));
+		}
+		if (upload.getOffset() > before)
+		{
+			reference.track(upload, IUploadsTracker::onProgress);
+		}
+		answer.header("Upload-Offset", String.valueOf(upload.getOffset()));
+		if (upload.isComplete())
+		{
+			return completed(grant, upload, answer.status(204));
+		}
+		expires(upload, answer);
+		// what arrived is kept: the browser asks how far it got and sends the rest
+		return answer.status(broken ? 500 : 204);
 	}
 
 	/**
