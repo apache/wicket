@@ -401,6 +401,15 @@
 	</filter>
 
 	<filter>
+		<filter-name>DeviceBoundApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.devicebound.DeviceBoundApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>SpringExample</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -740,6 +749,13 @@
 	<filter-mapping>
 		<filter-name>MyAuthenticatedWebApplication</filter-name>
 		<url-pattern>/authentication3/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>DeviceBoundApplication</filter-name>
+		<url-pattern>/devicebound/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
