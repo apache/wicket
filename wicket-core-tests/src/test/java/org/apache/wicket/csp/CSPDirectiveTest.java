@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -159,6 +160,21 @@ class CSPDirectiveTest {
         assertEquals("require-trusted-types-for 'script'; trusted-types wicket myPolicy 'allow-duplicates'",
                 configuration.renderHeaderValue(null, null));
     }
+
+	@Test
+	void reportUriAcceptsRelativeURICSPValueWithRelativeUri()
+	{
+		assertDoesNotThrow(() -> CSPDirective.REPORT_URI.checkValueForDirective(
+			new RelativeURICSPValue("reporting-endpoint"), List.of()));
+	}
+
+	@Test
+	void reportUriRejectsRelativeURICSPValueWithAbsoluteUri()
+	{
+		assertThrows(IllegalArgumentException.class,
+			() -> CSPDirective.REPORT_URI.checkValueForDirective(
+				new RelativeURICSPValue("https://evil.com"), List.of()));
+	}
 
     @Test
     void presetsDoNotRequireTrustedTypes()

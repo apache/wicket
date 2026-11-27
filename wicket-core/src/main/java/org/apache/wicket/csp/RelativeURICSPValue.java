@@ -19,6 +19,7 @@ package org.apache.wicket.csp;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 
@@ -52,6 +53,8 @@ public class RelativeURICSPValue implements CSPRenderable
 	@Override
 	public void checkValidityForSrc()
 	{
+		if (!UrlUtils.isRelative(relativeUri))
+			throw new IllegalArgumentException("You must provide a relative URI and not " + relativeUri);
 		try
 		{
 			new URI("https://example.com/" + relativeUri);

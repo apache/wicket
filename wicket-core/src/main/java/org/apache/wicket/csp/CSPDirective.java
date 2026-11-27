@@ -108,6 +108,7 @@ public enum CSPDirective
 			}
 			if (value instanceof RelativeURICSPValue)
 			{
+				value.checkValidityForSrc();
 				return;
 			}
 			if (!(value instanceof FixedCSPValue))
