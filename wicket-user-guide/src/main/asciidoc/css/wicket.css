@@ -357,6 +357,7 @@ table.tableblock > caption.title {
 	padding-bottom: 6px; color: var(--ink-soft); font: italic 400 1.05rem/1.3 var(--serif); text-align: left;
 }
 @media (max-width: 767px) { table.tableblock { display: block; overflow-x: auto; } }
+table.tableblock.wide { display: block; overflow-x: auto; }
 
 /* ---------------------------------------------------------------- images and other blocks */
 

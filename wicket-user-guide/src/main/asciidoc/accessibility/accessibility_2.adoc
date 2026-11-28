@@ -19,7 +19,7 @@ The following table lists every success criterion of WCAG 2.2 at level A and AA,
 
 The descriptions of the criteria are shortened; the full text and the techniques that meet each criterion are in https://www.w3.org/TR/WCAG22/[the WCAG 2.2 specification] and https://www.w3.org/WAI/WCAG22/Understanding/[Understanding WCAG 2.2].
 
-[cols="3,1,5,5,1",options="header"]
+[cols="3,1,5,5,1",options="header",role="wide"]
 |===
 |Success criterion |Level |Wicket |Application |Code
 
