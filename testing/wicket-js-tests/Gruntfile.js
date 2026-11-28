@@ -70,6 +70,7 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/browser-info.js"
 		],
 		extensionsTestsJs = [
+			"../../wicket-extensions/src/test/js/autocomplete-test.js",
 			"../../wicket-extensions/src/test/js/modal-dialog-test.js",
 			"../../wicket-extensions/src/test/js/palette-test.js",
 			"../../wicket-extensions/src/test/js/trapfocus-test.js",
@@ -138,6 +139,7 @@ module.exports = function(grunt) {
 				options: {
 					urls: [
 						'http://localhost:38887/test/js/all.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/autocomplete.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/modal-dialog.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0',
@@ -160,6 +162,7 @@ module.exports = function(grunt) {
 				options: {
 					urls: [
 						'http://localhost:38887/test/js/all.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/autocomplete.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/modal-dialog.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?vanilla',
