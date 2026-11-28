@@ -421,7 +421,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
      * present, is reported to {@link #onUploadFailure(AjaxRequestTarget, String)} instead.
      *
      * @param target         The {@link AjaxRequestTarget}
-     * @param fileInfos      The List<FileInfo
+     * @param fileInfos      the uploaded files
      */
     protected abstract void onUploadSuccess(AjaxRequestTarget target, List<UploadInfo> fileInfos);
 
@@ -463,7 +463,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("inputName", getMarkupId());
         jsonObject.put("resourceUrl", urlFor(getFileUploadResourceReference(), new PageParameters()).toString());
-        jsonObject.put("ajaxCallBackUrl", ajaxBehavior.getCallbackUrl());
+        jsonObject.put("ajaxCallBackUrl", getUploadCallbackUrl());
         jsonObject.put("maxSize", getMaxSize().bytes());
         Bytes fileMaxSize = getFileMaxSize();
         if (fileMaxSize != null)
@@ -480,6 +480,23 @@ public abstract class FileUploadToResourceField extends FileUploadField
                 + getClientSideSuccessCallBack() + ","
                 + getClientSideCancelCallBack() + ","
                 + getClientSideUploadErrorCallBack() + ");"));
+    }
+
+    /**
+     * The URL the script of the field posts to once an upload ended, for
+     * {@link #onUploadSuccess(AjaxRequestTarget, List)}, {@link #onUploadFailure(AjaxRequestTarget, String)}
+     * or {@link #onUploadCanceled(AjaxRequestTarget)} to be called: with {@code error=false} and
+     * {@code filesInfo}, the JSON array of the files stored, each with its {@code fileName},
+     * {@code clientFileName} and {@code contentType}, or with {@code error=true} and
+     * {@code errorMessage}, the key of the error. A subclass rendering a script of its own reports
+     * there.
+     *
+     * @return the URL of the callback of the field
+     * @since 12.0.0
+     */
+    protected final CharSequence getUploadCallbackUrl()
+    {
+        return ajaxBehavior.getCallbackUrl();
     }
 
     /**
